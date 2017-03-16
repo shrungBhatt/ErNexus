@@ -40,6 +40,7 @@ public class UserScanAttendanceActivity extends AppCompatActivity {
             @Override
             public void onClick (View v) {
 
+                qrScan.setBeepEnabled(false);
                 qrScan.initiateScan();
             }
         });
