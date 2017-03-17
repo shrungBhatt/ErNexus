@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
@@ -13,14 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.example.andorid.ersnexus.util.DatePickerFragment;
 import com.example.andorid.ersnexus.R;
+import com.example.andorid.ersnexus.database.UserBaseHelper;
 import com.example.andorid.ersnexus.userdata.UserData;
 import com.example.andorid.ersnexus.userdata.UserLab;
-import com.example.andorid.ersnexus.database.UserBaseHelper;
 import com.example.andorid.ersnexus.userlogin.UserLoginActivity;
+import com.example.andorid.ersnexus.util.DatePickerFragment;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -487,13 +487,13 @@ public class UserSignUpFragment extends Fragment {
             public void onClick (View v) {
 
                 if (mUserName.length() == 0) {
-                    createToast("Enter UserName");
+                    createSnack("Enter UserName");
                 } else if (mFullName.length() == 0) {
-                    createToast("Enter FullName");
+                    createSnack("Enter FullName");
                 } else if (mPassword.length() == 0) {
-                    createToast("Enter Password");
+                    createSnack("Enter Password");
                 } else if (!mUserData.getPassword().equals(mUserData.getCorrectPassword())) {
-                    createToast("Password And Confirm PassWord does not match");
+                    createSnack("Password And Confirm PassWord does not match");
                 } else if (mErNo1.length() == 0 &&
                         mErNo2.length() == 0 &&
                         mErNo3.length() == 0 &&
@@ -506,13 +506,13 @@ public class UserSignUpFragment extends Fragment {
                         mErNo10.length() == 0 &&
                         mErNo11.length() == 0 &&
                         mErNo12.length() == 0) {
-                    createToast("Enter Enrollment Number");
+                    createSnack("Enter Enrollment Number");
                 } else {
                     try {
                         createNewUser();
                     } catch (SQLException e) {
-                        Toast.makeText(getActivity(),
-                                "DATABASE NOT SAVED", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(getView(),
+                                "DATABASE NOT SAVED", Snackbar.LENGTH_SHORT).show();
                     }
                     Intent i = new Intent(getActivity(), UserLoginActivity.class);
                     startActivity(i);
@@ -528,8 +528,8 @@ public class UserSignUpFragment extends Fragment {
         return v;
     }
 
-    public void createToast (String toast) {
-        Toast.makeText(getActivity(), toast, Toast.LENGTH_SHORT).show();
+    public void createSnack (String snack) {
+        Snackbar.make(getView(), snack,Snackbar.LENGTH_SHORT).show();
     }
 
 

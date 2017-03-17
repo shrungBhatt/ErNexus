@@ -39,6 +39,7 @@
                     android:layout_width="22dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="number"
                     android:maxLength="1"/>
 
                 <EditText
@@ -46,6 +47,7 @@
                     android:layout_width="22dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="number"
                     android:maxLength="1"/>
 
                 <EditText
@@ -53,6 +55,7 @@
                     android:layout_width="22dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="number"
                     android:maxLength="1"/>
 
                 <EditText
@@ -60,6 +63,7 @@
                     android:layout_width="22dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="number"
                     android:maxLength="1"/>
 
                 <EditText
@@ -67,6 +71,7 @@
                     android:layout_width="22dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="number"
                     android:maxLength="1"/>
 
                 <EditText
@@ -74,6 +79,7 @@
                     android:layout_width="22dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="number"
                     android:maxLength="1"/>
 
                 <EditText
@@ -81,6 +87,7 @@
                     android:layout_width="22dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="number"
                     android:maxLength="1"/>
 
                 <EditText
@@ -88,6 +95,7 @@
                     android:layout_width="22dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="number"
                     android:maxLength="1"/>
 
                 <EditText
@@ -95,6 +103,7 @@
                     android:layout_width="22dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="number"
                     android:maxLength="1"/>
 
                 <EditText
@@ -102,6 +111,7 @@
                     android:layout_width="22dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="number"
                     android:maxLength="1"/>
 
                 <EditText
@@ -109,6 +119,7 @@
                     android:layout_width="22dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="number"
                     android:maxLength="1"/>
 
                 <EditText
@@ -116,6 +127,7 @@
                     android:layout_width="22dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="number"
                     android:maxLength="1"/>
             </LinearLayout>
 
@@ -138,6 +150,9 @@
                     android:id="@+id/userName_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_gravity="center"/>
             </LinearLayout>
 
@@ -159,6 +174,9 @@
                     android:id="@+id/fullName_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_gravity="center"/>
             </LinearLayout>
 
@@ -182,6 +200,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:inputType="textPassword"/>
             </LinearLayout>
 
@@ -205,6 +225,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:inputType="textPassword"/>
             </LinearLayout>
 
@@ -227,6 +249,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:inputType="textEmailAddress"/>
 
 

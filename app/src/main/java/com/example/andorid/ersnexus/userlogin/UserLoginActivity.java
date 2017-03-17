@@ -30,12 +30,12 @@ public class UserLoginActivity extends AppCompatActivity {
     @Override
     public void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_user_login);
+        setContentView(R.layout.activity_user_login);
 
         mHelper = new UserBaseHelper(this);
 
 
-        //user UserName editText in fragment_user_login
+        //user UserName editText in activity_user_login
         mUserName = (EditText) findViewById(R.id.login_user_name);
 
 

@@ -23,7 +23,9 @@
             android:name=".usersignup.UserSignUpActivity"
             android:parentActivityName=".userlogin.UserLoginActivity">
         </activity>
-        <activity android:name=".userscanattendance.UserScanAttendanceActivity">
+        <activity
+            android:name=".userscanattendance.UserScanAttendanceActivity"
+            android:parentActivityName=".userprofile.homeactivity.UserProfileHomeActivity">
 
         </activity>
         <activity

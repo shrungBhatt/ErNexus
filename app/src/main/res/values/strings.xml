@@ -22,4 +22,6 @@
     <string name="assignments_tab">Assignments</string>
     <string name="newsfeed_tab">NewsFeed</string>
     <string name="achievements_tab">Achievements</string>
+    <string name="scan_attendance">Scan Attendance</string>
+    <string name="scan_qr_code">Scan QR Code</string>
 </resources>

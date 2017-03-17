@@ -9,16 +9,14 @@ import android.view.ViewGroup;
 
 import com.example.andorid.ersnexus.R;
 
-/**
- * Created by Bhatt on 17-03-2017.
- */
+
 
 public class Achievements extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View v =inflater.inflate(R.layout.achievements,container,false);
+        View v =inflater.inflate(R.layout.tab_achievements,container,false);
         return v;
     }
 }

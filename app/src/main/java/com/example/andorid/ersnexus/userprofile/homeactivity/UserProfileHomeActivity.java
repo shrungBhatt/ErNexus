@@ -39,7 +39,7 @@ public class UserProfileHomeActivity extends AppCompatActivity
         mTabLayout.addTab(mTabLayout.newTab());
         mTabLayout.addTab(mTabLayout.newTab());
         mTabLayout.addTab(mTabLayout.newTab());
-        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        mTabLayout.setTabGravity(TabLayout.MODE_SCROLLABLE);
 
         //Initializing mViewPager
         mViewPager = (ViewPager) findViewById(R.id.home_activity_viewPager);
