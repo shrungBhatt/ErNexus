@@ -27,7 +27,7 @@ public class Attendance extends Fragment {
             @Override
             public void onClick (View v) {
                 Intent i = new Intent(getActivity(), UserScanAttendanceActivity.class);
-                startActivity(i);
+                startActivityForResult(i,1);
             }
         });
 

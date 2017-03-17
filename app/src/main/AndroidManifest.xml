@@ -30,7 +30,6 @@
         </activity>
         <activity
             android:name=".userprofile.homeactivity.UserProfileHomeActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
