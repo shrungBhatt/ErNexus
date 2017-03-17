@@ -9,9 +9,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.andorid.ersnexus.R;
-import com.example.andorid.ersnexus.userprofile.UserProfileActivity;
-import com.example.andorid.ersnexus.usersignup.UserSignUpActivity;
 import com.example.andorid.ersnexus.database.UserBaseHelper;
+import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
+import com.example.andorid.ersnexus.usersignup.UserSignUpActivity;
 
 
 
@@ -71,7 +71,8 @@ public class UserLoginActivity extends AppCompatActivity {
                 String fullName = mHelper.fetchFullName(userName);
 
                 if (pass.equals(password)) {
-                    Intent i = UserProfileActivity.newIntent(UserLoginActivity.this, userName, fullName, erNo);
+                    //Intent i = UserProfileActivity.newIntent(UserLoginActivity.this, userName, fullName, erNo);
+                    Intent i = new Intent(UserLoginActivity.this, UserProfileHomeActivity.class);
                     startActivity(i);
                 }
                 else{

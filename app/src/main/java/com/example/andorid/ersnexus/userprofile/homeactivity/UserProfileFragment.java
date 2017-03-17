@@ -1,4 +1,4 @@
-package com.example.andorid.ersnexus.userprofile;
+package com.example.andorid.ersnexus.userprofile.homeactivity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

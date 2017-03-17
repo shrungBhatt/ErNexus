@@ -1,4 +1,4 @@
-package com.example.andorid.ersnexus.userprofile;
+package com.example.andorid.ersnexus.userprofile.homeactivity;
 
 
 import android.content.Context;

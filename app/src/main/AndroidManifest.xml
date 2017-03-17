@@ -9,24 +9,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".userlogin.UserLoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity
-            android:name=".userprofile.UserProfileActivity"
+            android:name=".userprofile.homeactivity.UserProfileActivity"
             android:parentActivityName=".userlogin.UserLoginActivity">
-
         </activity>
         <activity
             android:name=".usersignup.UserSignUpActivity"
             android:parentActivityName=".userlogin.UserLoginActivity">
-
         </activity>
         <activity android:name=".userscanattendance.UserScanAttendanceActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
 
-            </intent-filter>
+        </activity>
+        <activity
+            android:name=".userprofile.homeactivity.UserProfileHomeActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
