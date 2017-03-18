@@ -46,8 +46,8 @@
         android:text="@string/scan_qr_code"
         android:background="@color/colorPrimary"
         android:textColor="@android:color/white"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginLeft="@dimen/layout_marginLeft"
+        android:layout_marginRight="@dimen/layout_marginRight"
+        android:layout_marginBottom="@dimen/layout_marginBottom"/>
 
 </RelativeLayout>

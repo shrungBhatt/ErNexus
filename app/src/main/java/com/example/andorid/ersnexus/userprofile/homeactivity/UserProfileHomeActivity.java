@@ -14,6 +14,8 @@ import android.view.MenuItem;
 
 import com.example.andorid.ersnexus.R;
 
+//This is the activity where all the tabs are showed where user interacts with everything.
+
 public class UserProfileHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
         ,TabLayout.OnTabSelectedListener {

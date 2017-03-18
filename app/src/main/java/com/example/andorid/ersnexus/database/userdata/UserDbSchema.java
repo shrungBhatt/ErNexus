@@ -1,4 +1,4 @@
-package com.example.andorid.ersnexus.database;
+package com.example.andorid.ersnexus.database.userdata;
 
 
 public class UserDbSchema {

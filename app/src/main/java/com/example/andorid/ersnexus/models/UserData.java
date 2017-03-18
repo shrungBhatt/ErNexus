@@ -1,9 +1,9 @@
-package com.example.andorid.ersnexus.userdata;
+package com.example.andorid.ersnexus.models;
 
 import java.util.Date;
 import java.util.UUID;
 
-
+//This model class contains getter and setters of user information .
 
 public class UserData {
     private UUID mId;

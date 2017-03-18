@@ -16,9 +16,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.andorid.ersnexus.R;
-import com.example.andorid.ersnexus.database.UserBaseHelper;
-import com.example.andorid.ersnexus.userdata.UserData;
-import com.example.andorid.ersnexus.userdata.UserLab;
+import com.example.andorid.ersnexus.database.userdata.UserBaseHelper;
+import com.example.andorid.ersnexus.models.UserData;
+import com.example.andorid.ersnexus.database.userdata.UserLab;
 import com.example.andorid.ersnexus.userlogin.UserLoginActivity;
 import com.example.andorid.ersnexus.util.DatePickerFragment;
 

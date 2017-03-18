@@ -9,12 +9,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.andorid.ersnexus.R;
-import com.example.andorid.ersnexus.database.UserBaseHelper;
+import com.example.andorid.ersnexus.database.userdata.UserBaseHelper;
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
 import com.example.andorid.ersnexus.usersignup.UserSignUpActivity;
 
 
-
+//This is the main activity of the app.
+//It is the user login screen where users logs in or sign up's.
 
 public class UserLoginActivity extends AppCompatActivity {
 
@@ -66,9 +67,9 @@ public class UserLoginActivity extends AppCompatActivity {
             public void onClick (View v) {
                 userName = mUserName.getText().toString();
                 pass = mUserPassword.getText().toString();
-                password = mHelper.fetchUser(userName);
-                String erNo = mHelper.fetchErNo(userName);
-                String fullName = mHelper.fetchFullName(userName);
+                password = mHelper.fetchUserPass(userName);
+                //String erNo = mHelper.fetchErNo(userName);
+                //String fullName = mHelper.fetchFullName(userName);
 
                 if (pass.equals(password)) {
                     //Intent i = UserProfileActivity.newIntent(UserLoginActivity.this, userName, fullName, erNo);
