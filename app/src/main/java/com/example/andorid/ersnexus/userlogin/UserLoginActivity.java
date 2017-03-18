@@ -12,6 +12,7 @@ import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.database.userdata.UserBaseHelper;
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
 import com.example.andorid.ersnexus.usersignup.UserSignUpActivity;
+import com.example.andorid.ersnexus.util.EnrollmentSharedPreferences;
 
 
 //This is the main activity of the app.
@@ -27,6 +28,7 @@ public class UserLoginActivity extends AppCompatActivity {
     private String userName;
     private String pass;
     private String password;
+    private String mErno;
 
     @Override
     public void onCreate (Bundle savedInstanceState) {
@@ -68,7 +70,8 @@ public class UserLoginActivity extends AppCompatActivity {
                 userName = mUserName.getText().toString();
                 pass = mUserPassword.getText().toString();
                 password = mHelper.fetchUserPass(userName);
-                //String erNo = mHelper.fetchErNo(userName);
+                mErno = mHelper.fetchErNo(userName);
+                EnrollmentSharedPreferences.setStoredErno(UserLoginActivity.this,mErno);
                 //String fullName = mHelper.fetchFullName(userName);
 
                 if (pass.equals(password)) {

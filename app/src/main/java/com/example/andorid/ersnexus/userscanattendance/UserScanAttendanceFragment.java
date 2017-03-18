@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.andorid.ersnexus.R;
+import com.example.andorid.ersnexus.util.EnrollmentSharedPreferences;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -38,7 +39,10 @@ public class UserScanAttendanceFragment extends Fragment {
         textViewName = (TextView)v. findViewById(R.id.textViewName);
         textViewAddress = (TextView)v. findViewById(R.id.textViewAddress);
 
+        String erno = EnrollmentSharedPreferences.getStoredErno(getActivity());
+
         qrScan = new IntentIntegrator(getActivity());
+        textViewName.setText(erno);
 
         buttonScan.setOnClickListener(new View.OnClickListener() {
             @Override
