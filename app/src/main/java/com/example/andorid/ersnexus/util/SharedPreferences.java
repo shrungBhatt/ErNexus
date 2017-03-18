@@ -5,7 +5,7 @@ import android.preference.PreferenceManager;
 
 
 
-public class EnrollmentSharedPreferences {
+public class SharedPreferences {
     private static final String PREF_ERNO = "enrollmentNumber";
 
     public static String getStoredErno(Context context){

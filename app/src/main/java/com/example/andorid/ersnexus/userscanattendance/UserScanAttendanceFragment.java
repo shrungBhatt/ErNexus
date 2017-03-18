@@ -11,7 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.andorid.ersnexus.R;
-import com.example.andorid.ersnexus.util.EnrollmentSharedPreferences;
+import com.example.andorid.ersnexus.database.attendance.AttendanceLab;
+import com.example.andorid.ersnexus.models.AttendanceData;
+import com.example.andorid.ersnexus.util.SharedPreferences;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -19,30 +21,49 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-
 public class UserScanAttendanceFragment extends Fragment {
 
-    private Button buttonScan;
-    private TextView textViewName, textViewAddress;
+    private Button buttonScan, mSubmitButton;
+    private TextView mErno, mSubjectCode, mFacultyCode, mDate;
+    private String erNo, subjectCode, facultyCode, date;
     //qr code scanner object
     private IntentIntegrator qrScan;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.fragment_user_scan_attendance,container,false);
+    public View onCreateView (LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_user_scan_attendance, container, false);
 
 
+        buttonScan = (Button) v.findViewById(R.id.buttonScan);
+        mErno = (TextView) v.findViewById(R.id.enrollment_number_textView);
+        mSubjectCode = (TextView) v.findViewById(R.id.subject_code_textView);
+        mFacultyCode = (TextView) v.findViewById(R.id.faculty_code_textView);
+        mDate = (TextView) v.findViewById(R.id.date_textView);
 
-        buttonScan = (Button)v. findViewById(R.id.buttonScan);
-        textViewName = (TextView)v. findViewById(R.id.textViewName);
-        textViewAddress = (TextView)v. findViewById(R.id.textViewAddress);
+        erNo = mErno.getText().toString();
 
-        String erno = EnrollmentSharedPreferences.getStoredErno(getActivity());
+
+        mErno.setText(SharedPreferences.getStoredErno(getActivity()));
+
+        mSubmitButton = (Button) v.findViewById(R.id.attendance_submit_button);
+        mSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v) {
+                AttendanceData attendanceData = new AttendanceData(subjectCode, facultyCode,
+                        date, erNo);
+
+
+                attendanceData.setEnrollmentNumber(SharedPreferences.getStoredErno(getActivity()));
+                attendanceData.getEnrollmentNumber();
+                attendanceData.getSubjectCode();
+                attendanceData.getFacultyCode();
+                AttendanceLab.get(getActivity()).addAttendance(attendanceData);
+            }
+        });
 
         qrScan = new IntentIntegrator(getActivity());
-        textViewName.setText(erno);
 
         buttonScan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +78,7 @@ public class UserScanAttendanceFragment extends Fragment {
 
     @Override
     public void onActivityResult (int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             //if qrcode has nothing in it
@@ -69,8 +90,17 @@ public class UserScanAttendanceFragment extends Fragment {
                     //converting the data to json
                     JSONObject obj = new JSONObject(result.getContents());
                     //setting values to textviews
-                    textViewName.setText(obj.getString("name"));
-                    textViewAddress.setText(obj.getString("address"));
+                    mSubjectCode.setText(obj.getString("subject"));
+                    subjectCode = mSubjectCode.getText().toString();
+
+
+                    mFacultyCode.setText(obj.getString("faculty"));
+                    facultyCode = mFacultyCode.getText().toString();
+
+
+                    mDate.setText(obj.getString("date"));
+                    date = mDate.getText().toString();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                     //if control comes here

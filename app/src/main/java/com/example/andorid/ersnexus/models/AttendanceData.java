@@ -1,22 +1,18 @@
 package com.example.andorid.ersnexus.models;
 
 
-import java.util.Date;
-
-
-
-public class Attendance {
-    private int mSubjectCode;
-    private int mFacultyCode;
-    private Date mDate;
-    private Date mTime;
+public class AttendanceData {
+    private String mSubjectCode;
+    private String mFacultyCode;
+    private String mDate;
+    private String mTime;
     private String mEnrollmentNumber;
 
-    public Attendance(int subjectCode,int facultyCode,Date date,Date time,String enrollmentNumber){
+    public AttendanceData (String subjectCode, String facultyCode, String date,
+                           String enrollmentNumber) {
         mSubjectCode = subjectCode;
         mFacultyCode = facultyCode;
         mDate = date;
-        mTime = time;
         mEnrollmentNumber = enrollmentNumber;
     }
 
@@ -29,35 +25,28 @@ public class Attendance {
         mEnrollmentNumber = enrollmentNumber;
     }
 
-    public int getSubjectCode () {
+    public String getSubjectCode () {
         return mSubjectCode;
     }
 
-    public void setSubjectCode (int subjectCode) {
+    public void setSubjectCode (String subjectCode) {
         mSubjectCode = subjectCode;
     }
 
-    public int getFacultyCode () {
+    public String getFacultyCode () {
         return mFacultyCode;
     }
 
-    public void setFacultyCode (int facultyCode) {
+    public void setFacultyCode (String facultyCode) {
         mFacultyCode = facultyCode;
     }
 
-    public Date getDate () {
+    public String getDate () {
         return mDate;
     }
 
-    public void setDate (Date date) {
+    public void setDate (String date) {
         mDate = date;
     }
 
-    public Date getTime () {
-        return mTime;
-    }
-
-    public void setTime (Date time) {
-        mTime = time;
-    }
 }

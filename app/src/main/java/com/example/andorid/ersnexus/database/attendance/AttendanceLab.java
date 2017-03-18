@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.andorid.ersnexus.database.attendance.AttendanceDbSchema.AttendanceTable;
-import com.example.andorid.ersnexus.models.Attendance;
+import com.example.andorid.ersnexus.models.AttendanceData;
 
 
 public class AttendanceLab {
@@ -29,19 +29,18 @@ public class AttendanceLab {
 
     }
 
-    public void addAttendance(Attendance attendance){
-        ContentValues values = getContentValues(attendance);
+    public void addAttendance(AttendanceData attendanceData){
+        ContentValues values = getContentValues(attendanceData);
         mDatabase.insert(AttendanceTable.NAME, null, values);
     }
 
-    private static ContentValues getContentValues(Attendance attendance){
+    private static ContentValues getContentValues(AttendanceData attendanceData){
         ContentValues values = new ContentValues();
 
-        values.put(AttendanceTable.Cols.ENROLLMENT_NUMBER,attendance.getEnrollmentNumber());
-        values.put(AttendanceTable.Cols.SUBJECT_CODE,attendance.getSubjectCode());
-        values.put(AttendanceTable.Cols.FACULTY_CODE,attendance.getSubjectCode());
-        values.put(AttendanceTable.Cols.DATE,attendance.getDate().toString());
-        values.put(AttendanceTable.Cols.TIME,attendance.getTime().toString());
+        values.put(AttendanceTable.Cols.ENROLLMENT_NUMBER, attendanceData.getEnrollmentNumber());
+        values.put(AttendanceTable.Cols.SUBJECT_CODE, attendanceData.getSubjectCode());
+        values.put(AttendanceTable.Cols.FACULTY_CODE, attendanceData.getSubjectCode());
+        values.put(AttendanceTable.Cols.DATE, attendanceData.getDate());
 
         return values;
     }
