@@ -23,11 +23,29 @@ import org.json.JSONObject;
 
 public class UserScanAttendanceFragment extends Fragment {
 
+    private static final String KEY_SUBJECT_CODE = "subjectCode";
+    private static final String KEY_FACULTY_CODE = "facultyCode";
+    private static final String KEY_DATE = "date";
     private Button buttonScan, mSubmitButton;
     private TextView mErno, mSubjectCode, mFacultyCode, mDate;
     private String erNo, subjectCode, facultyCode, date;
     //qr code scanner object
     private IntentIntegrator qrScan;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            subjectCode = savedInstanceState.getString(KEY_SUBJECT_CODE,null);
+            facultyCode = savedInstanceState.getString(KEY_FACULTY_CODE,null);
+            date = savedInstanceState.getString(date,null);
+
+            mSubjectCode.setText(subjectCode);
+            mFacultyCode.setText(facultyCode);
+            mDate.setText(date);
+        }
+    }
 
 
     @Override
@@ -113,6 +131,14 @@ public class UserScanAttendanceFragment extends Fragment {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_SUBJECT_CODE,subjectCode);
+        outState.putString(KEY_FACULTY_CODE,facultyCode);
+        outState.putString(KEY_DATE,date);
     }
 }
 
