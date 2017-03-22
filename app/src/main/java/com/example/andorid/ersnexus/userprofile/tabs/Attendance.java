@@ -4,33 +4,124 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.andorid.ersnexus.R;
+import com.example.andorid.ersnexus.database.attendance.AttendanceLab;
+import com.example.andorid.ersnexus.models.AttendanceData;
 import com.example.andorid.ersnexus.userscanattendance.UserScanAttendanceActivity;
+
+import java.util.List;
 
 
 public class Attendance extends Fragment {
 
     private Button mScanAttendanceButton;
+    private AttendanceAdapter mAdapter;
+    private RecyclerView mAttendanceRecyclerView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View v =inflater.inflate(R.layout.tab_attendance,container,false);
+    public View onCreateView (LayoutInflater inflater, @Nullable ViewGroup container,
+                              @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.tab_attendance, container, false);
 
-        mScanAttendanceButton = (Button)v.findViewById(R.id.scan_attendance_button);
+        mScanAttendanceButton = (Button) v.findViewById(R.id.scan_attendance_button);
         mScanAttendanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
                 Intent i = new Intent(getActivity(), UserScanAttendanceActivity.class);
-                startActivityForResult(i,1);
+                startActivityForResult(i, 1);
             }
         });
 
+        mAttendanceRecyclerView = (RecyclerView) v.findViewById(R.id.attendance_recyvlerView);
+        mAttendanceRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        updateUI();
+
         return v;
+    }
+
+    @Override
+    public void onResume () {
+        super.onResume();
+        updateUI();// To update the data in recyclerView after editing the data in crimeFragment
+    }
+
+    private class AttendanceHolder extends RecyclerView.ViewHolder {
+
+        private TextView mDateTextView, mErnoTextView, mFacultyTextView, mSubjectTextView;
+        private AttendanceData mAttendanceData;
+
+        public AttendanceHolder (LayoutInflater layoutInflater, ViewGroup container) {
+            super(layoutInflater.inflate(R.layout.list_item_attendance_recycler_view, container,
+                    false));
+
+            mDateTextView = (TextView) itemView.findViewById(R.id.date_list_item_textView);
+            mErnoTextView = (TextView) itemView.findViewById(R.id.erNo_code_list_item_textView);
+            mFacultyTextView = (TextView) itemView.
+                    findViewById(R.id.faculty_code_list_item_textView);
+            mSubjectTextView = (TextView) itemView.
+                    findViewById(R.id.subject_code_list_item_textView);
+
+        }
+
+        public void bindAttendance(AttendanceData attendancedata){
+            mAttendanceData = attendancedata;
+            mDateTextView.setText(mAttendanceData.getDate());
+            mFacultyTextView.setText(mAttendanceData.getFacultyCode());
+            mSubjectTextView.setText(mAttendanceData.getSubjectCode());
+            mErnoTextView.setText(mAttendanceData.getEnrollmentNumber());
+
+        }
+    }
+
+
+    private void updateUI () {
+        AttendanceLab attendanceLab = AttendanceLab.get(getActivity());
+        List<AttendanceData> attendances = attendanceLab.getAttendances();
+        if (mAdapter == null) {
+            mAdapter = new AttendanceAdapter(attendances);
+            mAttendanceRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setAttendances(attendances);
+        }
+
+    }
+
+
+    private class AttendanceAdapter extends RecyclerView.Adapter<AttendanceHolder> {
+        private List<AttendanceData> mAttendanceDatas;
+
+        public AttendanceAdapter (List<AttendanceData> attendanceDatas) {
+            mAttendanceDatas = attendanceDatas;
+        }
+
+        @Override
+        public AttendanceHolder onCreateViewHolder (ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            return new AttendanceHolder(inflater, parent);
+        }
+
+        @Override
+        public void onBindViewHolder (AttendanceHolder holder, int position) {
+            AttendanceData attendanceData = mAttendanceDatas.get(position);
+            holder.bindAttendance(attendanceData);
+
+        }
+
+        @Override
+        public int getItemCount () {
+            return mAttendanceDatas.size();
+        }
+
+        public void setAttendances (List<AttendanceData> attendances) {
+            mAttendanceDatas = attendances;
+        }
     }
 }

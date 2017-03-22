@@ -2,10 +2,14 @@ package com.example.andorid.ersnexus.database.attendance;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.andorid.ersnexus.database.attendance.AttendanceDbSchema.AttendanceTable;
 import com.example.andorid.ersnexus.models.AttendanceData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AttendanceLab {
@@ -43,6 +47,37 @@ public class AttendanceLab {
         values.put(AttendanceTable.Cols.DATE, attendanceData.getDate());
 
         return values;
+    }
+
+    public List<AttendanceData> getAttendances(){
+
+        List<AttendanceData> attendanceDatas = new ArrayList<>();
+
+        AttendanceCursorWrapper cursor  = queryAttendance();
+
+        try{
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()) {
+                attendanceDatas.add(cursor.getAttendance());
+                cursor.moveToNext();
+            }
+        }finally{
+            cursor.close();
+        }
+        return attendanceDatas;
+    }
+
+    private AttendanceCursorWrapper queryAttendance() {
+        Cursor cursor = mDatabase.query(
+                AttendanceTable.NAME,
+                null,//Columns - null select columns
+                null,
+                null,
+                null,//groupBy
+                null,//having
+                null //orderBy
+        );
+        return new AttendanceCursorWrapper(cursor);
     }
 
 

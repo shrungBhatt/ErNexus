@@ -2,6 +2,7 @@ package com.example.andorid.ersnexus.userscanattendance;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +79,8 @@ public class UserScanAttendanceFragment extends Fragment {
                 attendanceData.getSubjectCode();
                 attendanceData.getFacultyCode();
                 AttendanceLab.get(getActivity()).addAttendance(attendanceData);
+
+                Snackbar.make(getView(),"Attendance Submitted",Snackbar.LENGTH_SHORT).show();
             }
         });
 
