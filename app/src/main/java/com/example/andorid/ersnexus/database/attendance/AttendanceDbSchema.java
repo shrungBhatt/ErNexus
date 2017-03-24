@@ -1,6 +1,8 @@
 package com.example.andorid.ersnexus.database.attendance;
 
 
+//This class is of attendance database schema.
+
 public class AttendanceDbSchema {
     public static final class AttendanceTable{
         public static final String NAME = "attendance";

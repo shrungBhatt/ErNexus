@@ -1,5 +1,6 @@
 package com.example.andorid.ersnexus.database.userdata;
 
+//This class is the database schema of users.
 
 public class UserDbSchema {
     public static final class UserTable{

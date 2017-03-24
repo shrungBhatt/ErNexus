@@ -9,6 +9,8 @@ import com.example.andorid.ersnexus.userprofile.tabs.Assignments;
 import com.example.andorid.ersnexus.userprofile.tabs.Attendance;
 import com.example.andorid.ersnexus.userprofile.tabs.NewsFeed;
 
+//This class is used for viewPager used in the TabLayout in UserProfileHomeActivity.
+
 
 public class UserProfileHomeActivityViewPager extends FragmentStatePagerAdapter {
 

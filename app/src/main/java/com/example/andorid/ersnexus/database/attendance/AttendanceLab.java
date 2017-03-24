@@ -11,6 +11,9 @@ import com.example.andorid.ersnexus.models.AttendanceData;
 import java.util.ArrayList;
 import java.util.List;
 
+//This is a singleton class and used to fetch and store the values in attendance database.
+//And also used to query out the attendances from the attendance database.
+
 
 public class AttendanceLab {
     private static AttendanceLab sAttendanceLab;
@@ -33,11 +36,13 @@ public class AttendanceLab {
 
     }
 
+    //Method used to fetch the values and insert it in the database
     public void addAttendance(AttendanceData attendanceData){
         ContentValues values = getContentValues(attendanceData);
         mDatabase.insert(AttendanceTable.NAME, null, values);
     }
 
+    //method used to store the values in the attendance database.
     private static ContentValues getContentValues(AttendanceData attendanceData){
         ContentValues values = new ContentValues();
 
@@ -49,6 +54,9 @@ public class AttendanceLab {
         return values;
     }
 
+    //This method is used to create an arrayList which is to be given to the recyclerView in
+    //attendance tab.
+    //It also queries the attendances from the attendance database.
     public List<AttendanceData> getAttendances(){
 
         List<AttendanceData> attendanceDatas = new ArrayList<>();
@@ -67,6 +75,7 @@ public class AttendanceLab {
         return attendanceDatas;
     }
 
+    //Method used to make queries.
     private AttendanceCursorWrapper queryAttendance() {
         Cursor cursor = mDatabase.query(
                 AttendanceTable.NAME,

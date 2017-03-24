@@ -1,5 +1,7 @@
 package com.example.andorid.ersnexus.models;
 
+//This is a model class which contains getters and setters used for attendances purpose.
+
 
 public class AttendanceData {
     private String mSubjectCode;
@@ -8,6 +10,8 @@ public class AttendanceData {
     private String mTime;
     private String mEnrollmentNumber;
 
+
+    //Constructor method used to set the values for the getters.
     public AttendanceData (String subjectCode, String facultyCode, String date,
                            String enrollmentNumber) {
         mSubjectCode = subjectCode;

@@ -19,6 +19,8 @@ import com.example.andorid.ersnexus.userscanattendance.UserScanAttendanceActivit
 
 import java.util.List;
 
+//This class is the attendance tab in userProfileHomeActivity screen.
+
 
 public class Attendance extends Fragment {
 
@@ -31,6 +33,7 @@ public class Attendance extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_attendance, container, false);
 
+        //Button used to start the scanAttendance activity.
         mScanAttendanceButton = (Button) v.findViewById(R.id.scan_attendance_button);
         mScanAttendanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,6 +43,7 @@ public class Attendance extends Fragment {
             }
         });
 
+        //RecyclerView that displays the attendances after fetching it from the database.
         mAttendanceRecyclerView = (RecyclerView) v.findViewById(R.id.attendance_recyvlerView);
         mAttendanceRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         updateUI();
@@ -50,9 +54,11 @@ public class Attendance extends Fragment {
     @Override
     public void onResume () {
         super.onResume();
-        updateUI();// To update the data in recyclerView after editing the data in crimeFragment
+        updateUI();// To update the data in recyclerView after editing the data in attendance tab.
     }
 
+
+    //ViewHolder class of the recyclerView.
     private class AttendanceHolder extends RecyclerView.ViewHolder {
 
         private TextView mDateTextView, mErnoTextView, mFacultyTextView, mSubjectTextView;
@@ -63,15 +69,18 @@ public class Attendance extends Fragment {
                     false));
 
             mDateTextView = (TextView) itemView.findViewById(R.id.date_list_item_textView);
+
             mErnoTextView = (TextView) itemView.findViewById(R.id.erNo_code_list_item_textView);
+
             mFacultyTextView = (TextView) itemView.
                     findViewById(R.id.faculty_code_list_item_textView);
+
             mSubjectTextView = (TextView) itemView.
                     findViewById(R.id.subject_code_list_item_textView);
 
         }
 
-        public void bindAttendance(AttendanceData attendancedata){
+        public void bindAttendance (AttendanceData attendancedata){
             mAttendanceData = attendancedata;
             mDateTextView.setText(mAttendanceData.getDate());
             mFacultyTextView.setText(mAttendanceData.getFacultyCode());
@@ -82,6 +91,7 @@ public class Attendance extends Fragment {
     }
 
 
+    //method used to initialise the adpater of the recyclerView.
     private void updateUI () {
         AttendanceLab attendanceLab = AttendanceLab.get(getActivity());
         List<AttendanceData> attendances = attendanceLab.getAttendances();
@@ -95,6 +105,7 @@ public class Attendance extends Fragment {
     }
 
 
+    //Adapter class for the recyclerView.
     private class AttendanceAdapter extends RecyclerView.Adapter<AttendanceHolder> {
         private List<AttendanceData> mAttendanceDatas;
 

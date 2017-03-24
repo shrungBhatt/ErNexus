@@ -7,13 +7,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import static com.example.andorid.ersnexus.database.attendance.AttendanceDbSchema.AttendanceTable;
 
+//This class is used to create the database table and upgrade it if there is some alteration.
+
 public class AttendanceBaseHelper extends SQLiteOpenHelper{
 
     private static final int VERSION = 1;
     private static final String DATABASE_NAME = "attendance.db";
 
     //variable to call the write and readable methods of SQLiteDatabase.
-    private SQLiteDatabase mDatabase;
     private Context context;
 
     //Constructor used to get the instance of this class in other classes to get the use of
@@ -38,6 +39,7 @@ public class AttendanceBaseHelper extends SQLiteOpenHelper{
 
     }
 
+    //upgrade method is used when there is some alteration in the pre-exisiting database.
     @Override
     public void onUpgrade (SQLiteDatabase db, int oldVersion, int newVersion) {
 

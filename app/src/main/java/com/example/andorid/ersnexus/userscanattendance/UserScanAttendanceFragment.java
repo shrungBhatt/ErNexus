@@ -21,13 +21,14 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//This class is used for scanning the Qr code and submitting the attendance to the database.
 
 public class UserScanAttendanceFragment extends Fragment {
 
     private static final String KEY_SUBJECT_CODE = "subjectCode";
     private static final String KEY_FACULTY_CODE = "facultyCode";
     private static final String KEY_DATE = "date";
-    private Button buttonScan, mSubmitButton;
+    private Button mScanButton, mSubmitButton;
     private TextView mErno, mSubjectCode, mFacultyCode, mDate;
     private String erNo, subjectCode, facultyCode, date;
     //qr code scanner object
@@ -37,13 +38,15 @@ public class UserScanAttendanceFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        //If screen is rotated the textViews will still have the values.
         if (savedInstanceState != null) {
             subjectCode = savedInstanceState.getString(KEY_SUBJECT_CODE,null);
-            facultyCode = savedInstanceState.getString(KEY_FACULTY_CODE,null);
-            date = savedInstanceState.getString(date,null);
-
             mSubjectCode.setText(subjectCode);
+
+            facultyCode = savedInstanceState.getString(KEY_FACULTY_CODE,null);
             mFacultyCode.setText(facultyCode);
+
+            date = savedInstanceState.getString(date,null);
             mDate.setText(date);
         }
     }
@@ -55,24 +58,25 @@ public class UserScanAttendanceFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_user_scan_attendance, container, false);
 
 
-        buttonScan = (Button) v.findViewById(R.id.buttonScan);
-        mErno = (TextView) v.findViewById(R.id.enrollment_number_textView);
-        mSubjectCode = (TextView) v.findViewById(R.id.subject_code_textView);
-        mFacultyCode = (TextView) v.findViewById(R.id.faculty_code_textView);
-        mDate = (TextView) v.findViewById(R.id.date_textView);
 
+
+        mErno = (TextView) v.findViewById(R.id.enrollment_number_textView);
+        mErno.setText(SharedPreferences.getStoredErno(getActivity()));
         erNo = mErno.getText().toString();
 
+        mSubjectCode = (TextView) v.findViewById(R.id.subject_code_textView);
 
-        mErno.setText(SharedPreferences.getStoredErno(getActivity()));
+        mFacultyCode = (TextView) v.findViewById(R.id.faculty_code_textView);
+
+        mDate = (TextView) v.findViewById(R.id.date_textView);
 
         mSubmitButton = (Button) v.findViewById(R.id.attendance_submit_button);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
+
                 AttendanceData attendanceData = new AttendanceData(subjectCode, facultyCode,
                         date, erNo);
-
 
                 attendanceData.setEnrollmentNumber(SharedPreferences.getStoredErno(getActivity()));
                 attendanceData.getEnrollmentNumber();
@@ -84,9 +88,8 @@ public class UserScanAttendanceFragment extends Fragment {
             }
         });
 
-        qrScan = new IntentIntegrator(getActivity());
-
-        buttonScan.setOnClickListener(new View.OnClickListener() {
+        mScanButton = (Button) v.findViewById(R.id.buttonScan);
+        mScanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
 
@@ -94,12 +97,17 @@ public class UserScanAttendanceFragment extends Fragment {
                 qrScan.initiateScan();
             }
         });
+
+        qrScan = new IntentIntegrator(getActivity());
+
+
         return v;
     }
 
     @Override
     public void onActivityResult (int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             //if qrcode has nothing in it
