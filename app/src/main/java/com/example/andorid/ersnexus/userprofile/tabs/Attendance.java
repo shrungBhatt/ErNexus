@@ -16,6 +16,7 @@ import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.database.attendance.AttendanceLab;
 import com.example.andorid.ersnexus.models.AttendanceData;
 import com.example.andorid.ersnexus.userscanattendance.UserScanAttendanceActivity;
+import com.example.andorid.ersnexus.util.SharedPreferences;
 
 import java.util.List;
 
@@ -94,7 +95,8 @@ public class Attendance extends Fragment {
     //method used to initialise the adpater of the recyclerView.
     private void updateUI () {
         AttendanceLab attendanceLab = AttendanceLab.get(getActivity());
-        List<AttendanceData> attendances = attendanceLab.getAttendances();
+        String erNo = SharedPreferences.getStoredErno(getActivity());
+        List<AttendanceData> attendances = attendanceLab.getAttendances(erNo);
         if (mAdapter == null) {
             mAdapter = new AttendanceAdapter(attendances);
             mAttendanceRecyclerView.setAdapter(mAdapter);

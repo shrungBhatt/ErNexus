@@ -22,7 +22,7 @@ public class AttendanceLab {
     private Context mContext;
 
 
-    public static AttendanceLab get(Context context){
+    public static AttendanceLab get (Context context) {
         if (sAttendanceLab == null) {
             sAttendanceLab = new AttendanceLab(context);
         }
@@ -37,13 +37,13 @@ public class AttendanceLab {
     }
 
     //Method used to fetch the values and insert it in the database
-    public void addAttendance(AttendanceData attendanceData){
+    public void addAttendance (AttendanceData attendanceData) {
         ContentValues values = getContentValues(attendanceData);
         mDatabase.insert(AttendanceTable.NAME, null, values);
     }
 
     //method used to store the values in the attendance database.
-    private static ContentValues getContentValues(AttendanceData attendanceData){
+    private static ContentValues getContentValues (AttendanceData attendanceData) {
         ContentValues values = new ContentValues();
 
         values.put(AttendanceTable.Cols.ENROLLMENT_NUMBER, attendanceData.getEnrollmentNumber());
@@ -57,39 +57,38 @@ public class AttendanceLab {
     //This method is used to create an arrayList which is to be given to the recyclerView in
     //attendance tab.
     //It also queries the attendances from the attendance database.
-    public List<AttendanceData> getAttendances(){
+    public List<AttendanceData> getAttendances (String erNo) {
 
         List<AttendanceData> attendanceDatas = new ArrayList<>();
 
-        AttendanceCursorWrapper cursor  = queryAttendance();
+        AttendanceCursorWrapper cursor =
+                queryAttendance(AttendanceTable.Cols.ENROLLMENT_NUMBER + " = ?",new String[]{erNo});
 
-        try{
+        try {
             cursor.moveToFirst();
-            while(!cursor.isAfterLast()) {
+            while (!cursor.isAfterLast()) {
                 attendanceDatas.add(cursor.getAttendance());
                 cursor.moveToNext();
             }
-        }finally{
+        } finally {
             cursor.close();
         }
         return attendanceDatas;
     }
 
     //Method used to make queries.
-    private AttendanceCursorWrapper queryAttendance() {
+    private AttendanceCursorWrapper queryAttendance (String selection, String[] selectionArgs) {
         Cursor cursor = mDatabase.query(
                 AttendanceTable.NAME,
                 null,//Columns - null select columns
-                null,
-                null,
+                selection,
+                selectionArgs,
                 null,//groupBy
                 null,//having
                 null //orderBy
         );
         return new AttendanceCursorWrapper(cursor);
     }
-
-
 
 
 }
