@@ -56,18 +56,18 @@ public class UserBaseHelper extends SQLiteOpenHelper {
                 UserTable.Cols.USER_NAME + " = ?", new String[]{userName});
 
 
-        String uName,pass;
+        String uName, pass;
         pass = "not found";
         try {
             c.moveToFirst();
             while (!c.isAfterLast()) {
                 uName = c.getString(c.getColumnIndex(UserTable.Cols.USER_NAME));
-                if(uName.equals(userName)){
+                if (uName.equals(userName)) {
                     pass = c.getString(c.getColumnIndex(UserTable.Cols.PASSWORD));
                 }
                 c.moveToNext();
             }
-        }finally{
+        } finally {
             c.close();
         }
         return pass;
@@ -79,22 +79,23 @@ public class UserBaseHelper extends SQLiteOpenHelper {
         mDatabase = this.getReadableDatabase();
 
 
-        Cursor c = queryUsers(new String[]{UserTable.Cols.USER_NAME, UserTable.Cols.ENROLLMENT_NUMBER},
+        Cursor c = queryUsers(new String[]{UserTable.Cols.USER_NAME,
+                        UserTable.Cols.ENROLLMENT_NUMBER},
                 UserTable.Cols.USER_NAME + " = ?", new String[]{userName});
 
 
-        String uName,erNo;
+        String uName, erNo;
         erNo = "not found";
         try {
             c.moveToFirst();
             while (!c.isAfterLast()) {
                 uName = c.getString(c.getColumnIndex(UserTable.Cols.USER_NAME));
-                if(uName.equals(userName)){
+                if (uName.equals(userName)) {
                     erNo = c.getString(c.getColumnIndex(UserTable.Cols.ENROLLMENT_NUMBER));
                 }
                 c.moveToNext();
             }
-        }finally{
+        } finally {
             c.close();
         }
         return erNo;
@@ -110,18 +111,18 @@ public class UserBaseHelper extends SQLiteOpenHelper {
                 UserTable.Cols.USER_NAME + " = ?", new String[]{userName});
 
 
-        String uName,fullName;
+        String uName, fullName;
         fullName = "not found";
         try {
             c.moveToFirst();
             while (!c.isAfterLast()) {
                 uName = c.getString(c.getColumnIndex(UserTable.Cols.USER_NAME));
-                if(uName.equals(userName)){
+                if (uName.equals(userName)) {
                     fullName = c.getString(c.getColumnIndex(UserTable.Cols.FULL_NAME));
                 }
                 c.moveToNext();
             }
-        }finally{
+        } finally {
             c.close();
         }
         return fullName;

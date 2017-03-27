@@ -9,7 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.andorid.ersnexus.R;
@@ -43,6 +45,16 @@ public class Attendance extends Fragment {
                 startActivityForResult(i, 1);
             }
         });
+
+        Spinner spinner = (Spinner) v.findViewById(R.id.sort_attendance_by_spinner);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.sort_attendance_by, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
 
         //RecyclerView that displays the attendances after fetching it from the database.
         mAttendanceRecyclerView = (RecyclerView) v.findViewById(R.id.attendance_recyvlerView);
@@ -81,7 +93,7 @@ public class Attendance extends Fragment {
 
         }
 
-        public void bindAttendance (AttendanceData attendancedata){
+        public void bindAttendance (AttendanceData attendancedata) {
             mAttendanceData = attendancedata;
             mDateTextView.setText(mAttendanceData.getDate());
             mFacultyTextView.setText(mAttendanceData.getFacultyCode());

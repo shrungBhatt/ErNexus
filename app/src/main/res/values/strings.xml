@@ -24,4 +24,10 @@
     <string name="achievements_tab">Achievements</string>
     <string name="scan_attendance">Scan Attendance</string>
     <string name="scan_qr_code">Scan QR Code</string>
+    <string-array name="sort_attendance_by">
+        <item>Enrollment Number</item>
+        <item>Subject Code</item>
+        <item>Faculty Code</item>
+        <item>Date</item>
+    </string-array>
 </resources>

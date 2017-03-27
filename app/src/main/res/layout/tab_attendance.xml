@@ -1,31 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/scan_attendance_button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/layout_marginLeft"
-        android:layout_marginRight="@dimen/layout_marginRight"
-        android:layout_marginTop="@dimen/layout_marginTop"
-        android:layout_marginBottom="@dimen/layout_marginBottom"
-        android:textColor="@android:color/white"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:background="@color/colorPrimary"
-        android:text="@string/scan_attendance"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/attendance_recyvlerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/layout_marginBottom"
-        android:layout_marginLeft="@dimen/layout_marginLeft"
-        android:layout_marginRight="@dimen/layout_marginRight"
-        android:layout_marginTop="@dimen/layout_marginTop"/>
+        android:orientation="vertical">
 
 
-</LinearLayout>
+
+        <Button
+            android:id="@+id/scan_attendance_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/layout_marginBottom"
+            android:layout_marginLeft="@dimen/layout_marginLeft"
+            android:layout_marginRight="@dimen/layout_marginRight"
+            android:layout_marginTop="@dimen/layout_marginTop"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="@string/scan_attendance"
+            android:textColor="@android:color/white"/>
+
+        <Spinner
+            android:id="@+id/sort_attendance_by_spinner"
+            style="@style/Widget.AppCompat.Spinner.DropDown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/layout_marginBottom"
+            android:layout_marginLeft="@dimen/layout_marginLeft"
+            android:layout_marginRight="@dimen/layout_marginRight">
+
+        </Spinner>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/attendance_recyvlerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/layout_marginBottom"
+            android:layout_marginLeft="@dimen/layout_marginLeft"
+            android:layout_marginRight="@dimen/layout_marginRight"
+            android:layout_marginTop="@dimen/layout_marginTop"/>
+
+
+    </LinearLayout>
+</ScrollView>
