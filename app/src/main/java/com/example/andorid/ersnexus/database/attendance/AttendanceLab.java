@@ -76,6 +76,68 @@ public class AttendanceLab {
         return attendanceDatas;
     }
 
+    public List<AttendanceData> getAttendances (String erNo,String subjectCode) {
+
+        List<AttendanceData> attendanceDatas = new ArrayList<>();
+
+        AttendanceCursorWrapper cursor =
+                queryAttendance(AttendanceTable.Cols.ENROLLMENT_NUMBER + " = ?" + " AND " +
+                        AttendanceTable.Cols.SUBJECT_CODE + " = ?",new String[]{erNo,subjectCode});
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                attendanceDatas.add(cursor.getAttendance());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return attendanceDatas;
+    }
+
+    public List<AttendanceData> getAttendances (String erNo,String subjectCode,String facultyCode) {
+
+        List<AttendanceData> attendanceDatas = new ArrayList<>();
+
+        AttendanceCursorWrapper cursor =
+                queryAttendance(AttendanceTable.Cols.ENROLLMENT_NUMBER + " = ?" + " AND " +
+                        AttendanceTable.Cols.FACULTY_CODE + " = ?",new String[]{erNo,facultyCode});
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                attendanceDatas.add(cursor.getAttendance());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return attendanceDatas;
+    }
+
+    public List<AttendanceData> getAttendances (String erNo,String subjectCode,String facultyCode,
+                                                String date) {
+
+        List<AttendanceData> attendanceDatas = new ArrayList<>();
+
+        AttendanceCursorWrapper cursor =
+                queryAttendance(AttendanceTable.Cols.ENROLLMENT_NUMBER + " = ?" + " AND " +
+                        AttendanceTable.Cols.DATE + " = ?",new String[]{erNo,date});
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                attendanceDatas.add(cursor.getAttendance());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return attendanceDatas;
+    }
+
+
     //Method used to make queries.
     private AttendanceCursorWrapper queryAttendance (String selection, String[] selectionArgs) {
         Cursor cursor = mDatabase.query(

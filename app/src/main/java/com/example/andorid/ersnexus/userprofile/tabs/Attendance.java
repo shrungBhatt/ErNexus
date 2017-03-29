@@ -9,8 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -25,16 +27,25 @@ import java.util.List;
 //This class is the attendance tab in userProfileHomeActivity screen.
 
 
-public class Attendance extends Fragment {
+public class Attendance extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private Button mScanAttendanceButton;
     private AttendanceAdapter mAdapter;
     private RecyclerView mAttendanceRecyclerView;
+    private int mPosition;
+    private EditText mSortAttendanceEditText;
+    private Button mSortAttendanceButton;
+    private String mErno;
+    private AttendanceLab mAttendanceLab;
+    private List<AttendanceData> mAttendanceDatas;
 
     @Override
     public View onCreateView (LayoutInflater inflater, @Nullable ViewGroup container,
                               @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_attendance, container, false);
+
+        mErno = SharedPreferences.getStoredErno(getActivity());
+        mAttendanceLab = AttendanceLab.get(getActivity());
 
         //Button used to start the scanAttendance activity.
         mScanAttendanceButton = (Button) v.findViewById(R.id.scan_attendance_button);
@@ -56,6 +67,37 @@ public class Attendance extends Fragment {
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
+        spinner.setOnItemSelectedListener(this);
+
+        mSortAttendanceEditText = (EditText) v.findViewById(R.id.sort_attendance_by_editText);
+
+        mSortAttendanceButton = (Button) v.findViewById(R.id.sort_attendance_by_button);
+        mSortAttendanceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v) {
+                switch (mPosition) {
+                    case 0:
+                        String sortSubject = mSortAttendanceEditText.getText().toString();
+                        mAttendanceDatas = mAttendanceLab.getAttendances(mErno, sortSubject);
+                        checkAndSetAdapter();
+                        break;
+                    case 1:
+                        String sortFaculty = mSortAttendanceEditText.getText().toString();
+                        mAttendanceDatas = mAttendanceLab.getAttendances(mErno, null, sortFaculty);
+                        checkAndSetAdapter();
+
+                        break;
+                    case 2:
+                        String sortDate = mSortAttendanceEditText.getText().toString();
+                        mAttendanceDatas = mAttendanceLab.getAttendances(mErno, null, null, sortDate);
+                        checkAndSetAdapter();
+                        break;
+
+                }
+
+            }
+        });
+
         //RecyclerView that displays the attendances after fetching it from the database.
         mAttendanceRecyclerView = (RecyclerView) v.findViewById(R.id.attendance_recyvlerView);
         mAttendanceRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -68,6 +110,25 @@ public class Attendance extends Fragment {
     public void onResume () {
         super.onResume();
         updateUI();// To update the data in recyclerView after editing the data in attendance tab.
+    }
+
+    @Override
+    public void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
+        mPosition = position;
+    }
+
+    @Override
+    public void onNothingSelected (AdapterView<?> parent) {
+
+    }
+
+    private void checkAndSetAdapter () {
+        if (mAdapter == null) {
+            mAdapter = new AttendanceAdapter(mAttendanceDatas);
+            mAttendanceRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setAttendances(mAttendanceDatas);
+        }
     }
 
 
@@ -107,8 +168,7 @@ public class Attendance extends Fragment {
     //method used to initialise the adpater of the recyclerView.
     private void updateUI () {
         AttendanceLab attendanceLab = AttendanceLab.get(getActivity());
-        String erNo = SharedPreferences.getStoredErno(getActivity());
-        List<AttendanceData> attendances = attendanceLab.getAttendances(erNo);
+        List<AttendanceData> attendances = attendanceLab.getAttendances(mErno);
         if (mAdapter == null) {
             mAdapter = new AttendanceAdapter(attendances);
             mAttendanceRecyclerView.setAdapter(mAdapter);
@@ -149,4 +209,6 @@ public class Attendance extends Fragment {
             mAttendanceDatas = attendances;
         }
     }
+
+
 }
