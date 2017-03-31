@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -19,9 +17,9 @@
             android:layout_marginRight="@dimen/layout_marginRight"
             android:layout_marginTop="@dimen/layout_marginTop"
             android:text="@string/erNo"
-            android:freezesText="true"
             android:textColor="@android:color/black"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:freezesText="true"/>
 
         <TextView
             android:id="@+id/enrollment_number_textView"
@@ -40,8 +38,8 @@
             android:layout_marginRight="@dimen/layout_marginRight"
             android:layout_marginTop="@dimen/layout_marginTop"
             android:text="Subject"
-            android:freezesText="true"
             android:textColor="@android:color/black"
+            android:freezesText="true"
             android:textSize="20sp"/>
 
         <TextView
@@ -62,7 +60,6 @@
             android:layout_marginRight="@dimen/layout_marginRight"
             android:layout_marginTop="@dimen/layout_marginTop"
             android:text="Faculty"
-            android:freezesText="true"
             android:textColor="@android:color/black"
             android:textSize="20sp"/>
 
@@ -83,7 +80,6 @@
             android:layout_marginRight="@dimen/layout_marginRight"
             android:layout_marginTop="@dimen/layout_marginTop"
             android:text="Date"
-            android:freezesText="true"
             android:textColor="@android:color/black"
             android:textSize="20sp"/>
 

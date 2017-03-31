@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -38,6 +39,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     private String mErno;
     private AttendanceLab mAttendanceLab;
     private List<AttendanceData> mAttendanceDatas;
+    private ImageButton mClearButton;
 
     @Override
     public View onCreateView (LayoutInflater inflater, @Nullable ViewGroup container,
@@ -54,6 +56,15 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             public void onClick (View v) {
                 Intent i = new Intent(getActivity(), UserScanAttendanceActivity.class);
                 startActivityForResult(i, 1);
+            }
+        });
+
+        mClearButton = (ImageButton)v.findViewById(R.id.clear_button);
+        mClearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v) {
+                mSortAttendanceEditText.getText().clear();
+                updateUI();
             }
         });
 
@@ -77,22 +88,22 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             public void onClick (View v) {
                 switch (mPosition) {
                     case 0:
+                        updateUI();
+                    case 1:
                         String sortSubject = mSortAttendanceEditText.getText().toString();
                         mAttendanceDatas = mAttendanceLab.getAttendances(mErno, sortSubject);
                         checkAndSetAdapter();
                         break;
-                    case 1:
+                    case 2:
                         String sortFaculty = mSortAttendanceEditText.getText().toString();
                         mAttendanceDatas = mAttendanceLab.getAttendances(mErno, null, sortFaculty);
                         checkAndSetAdapter();
-
                         break;
-                    case 2:
+                    case 3:
                         String sortDate = mSortAttendanceEditText.getText().toString();
                         mAttendanceDatas = mAttendanceLab.getAttendances(mErno, null, null, sortDate);
                         checkAndSetAdapter();
                         break;
-
                 }
 
             }

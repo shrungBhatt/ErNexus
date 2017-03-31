@@ -2,7 +2,6 @@ package com.example.andorid.ersnexus.userscanattendance;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.database.attendance.AttendanceLab;
 import com.example.andorid.ersnexus.models.AttendanceData;
+import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
 import com.example.andorid.ersnexus.util.SharedPreferences;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -84,7 +84,10 @@ public class UserScanAttendanceFragment extends Fragment {
                 attendanceData.getFacultyCode();
                 AttendanceLab.get(getActivity()).addAttendance(attendanceData);
 
-                Snackbar.make(getView(),"Attendance Submitted",Snackbar.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"Submitted",Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(getActivity(), UserProfileHomeActivity.class);
+                startActivity(intent);
             }
         });
 

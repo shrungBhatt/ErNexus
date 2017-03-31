@@ -18,10 +18,10 @@
             android:layout_marginLeft="@dimen/layout_marginLeft"
             android:layout_marginRight="@dimen/layout_marginRight"
             android:layout_marginTop="@dimen/layout_marginTop"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorAccent"
             android:gravity="center"
             android:text="@string/scan_attendance"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/black"/>
 
         <Spinner
             android:id="@+id/sort_attendance_by_spinner"
@@ -44,25 +44,36 @@
 
             <EditText
                 android:id="@+id/sort_attendance_by_editText"
-                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:hint="Subject Code/Faculty Code/Date"
-                android:layout_marginRight="@dimen/layout_marginRight"
                 android:textSize="12sp"/>
+
+            <ImageButton
+                android:id="@+id/clear_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="4dp"
+                android:background="@color/zxing_transparent"
+                android:src="@android:drawable/ic_delete"/>
+
 
             <Button
                 android:id="@+id/sort_attendance_by_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Search"/>
+                android:background="@color/colorPrimary"
+                android:text="Search"
+                android:textColor="@android:color/white"/>
 
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/attendance_recyvlerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="200dp"
             android:layout_marginBottom="@dimen/layout_marginBottom"
             android:layout_marginLeft="@dimen/layout_marginLeft"
             android:layout_marginRight="@dimen/layout_marginRight"

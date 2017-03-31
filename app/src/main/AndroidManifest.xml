@@ -8,7 +8,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".userlogin.UserLoginActivity">
+        <activity
+            android:name=".userlogin.UserLoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -16,20 +18,25 @@
         </activity>
         <activity
             android:name=".userprofile.homeactivity.UserProfileActivity"
-            android:parentActivityName=".userlogin.UserLoginActivity">
+            android:parentActivityName=".userlogin.UserLoginActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".usersignup.UserSignUpActivity"
-            android:parentActivityName=".userlogin.UserLoginActivity">
+            android:parentActivityName=".userlogin.UserLoginActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".userscanattendance.UserScanAttendanceActivity"
-            android:parentActivityName=".userprofile.homeactivity.UserProfileHomeActivity">
+            android:parentActivityName=".userprofile.homeactivity.UserProfileHomeActivity"
+            android:screenOrientation="portrait">
 
         </activity>
         <activity
             android:name=".userprofile.homeactivity.UserProfileHomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
