@@ -139,6 +139,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             mAttendanceRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setAttendances(mAttendanceDatas);
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -185,8 +186,8 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             mAttendanceRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setAttendances(attendances);
+            mAdapter.notifyDataSetChanged();
         }
-
     }
 
 
