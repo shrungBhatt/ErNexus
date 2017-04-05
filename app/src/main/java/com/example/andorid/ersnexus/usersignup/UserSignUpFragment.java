@@ -20,6 +20,7 @@ import com.example.andorid.ersnexus.database.userdata.UserBaseHelper;
 import com.example.andorid.ersnexus.models.UserData;
 import com.example.andorid.ersnexus.database.userdata.UserLab;
 import com.example.andorid.ersnexus.userlogin.UserLoginActivity;
+import com.example.andorid.ersnexus.util.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.DatePickerFragment;
 
 import java.text.DateFormat;
@@ -510,6 +511,16 @@ public class UserSignUpFragment extends Fragment {
                 } else {
                     try {
                         createNewUser();
+                        String type = "register";
+                        BackgroundDbConnector backgroundDbConnector = new
+                                BackgroundDbConnector(getActivity());
+                        backgroundDbConnector.execute(type,
+                                mUserData.getEnrollmentNumber(),
+                                mUserData.getUserName(),
+                                mUserData.getFullName(),
+                                mUserData.getPassword(),
+                                mUserData.getEmail(),
+                                mUserData.getDob().toString());
                     } catch (SQLException e) {
                         Snackbar.make(getView(),
                                 "DATABASE NOT SAVED", Snackbar.LENGTH_SHORT).show();

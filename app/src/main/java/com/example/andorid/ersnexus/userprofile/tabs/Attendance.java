@@ -35,7 +35,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     private RecyclerView mAttendanceRecyclerView;
     private int mPosition;
     private EditText mSortAttendanceEditText;
-    private Button mSortAttendanceButton;
+    private ImageButton mSortAttendanceButton;
     private String mErno;
     private AttendanceLab mAttendanceLab;
     private List<AttendanceData> mAttendanceDatas;
@@ -82,7 +82,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
         mSortAttendanceEditText = (EditText) v.findViewById(R.id.sort_attendance_by_editText);
 
-        mSortAttendanceButton = (Button) v.findViewById(R.id.sort_attendance_by_button);
+        mSortAttendanceButton = (ImageButton) v.findViewById(R.id.sort_attendance_by_button);
         mSortAttendanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
