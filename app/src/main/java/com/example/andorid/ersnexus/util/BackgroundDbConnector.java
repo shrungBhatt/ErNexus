@@ -1,6 +1,6 @@
 package com.example.andorid.ersnexus.util;
 
-import android.content.Context;
+import android.content.*;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -92,6 +92,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                 inputStream.close();
                 httpURLConnection.disconnect();
                 //Returning the results
+                SharedPreferences.setStoredResultOfLogin(mContext,result);
                 return result;
 
             } catch (IOException e) {

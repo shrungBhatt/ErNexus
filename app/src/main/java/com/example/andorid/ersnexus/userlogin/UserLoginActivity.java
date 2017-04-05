@@ -6,12 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.database.userdata.UserBaseHelper;
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
 import com.example.andorid.ersnexus.usersignup.UserSignUpActivity;
+import com.example.andorid.ersnexus.util.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.SharedPreferences;
 
 
@@ -42,11 +42,8 @@ public class UserLoginActivity extends AppCompatActivity {
         mUserName = (EditText) findViewById(R.id.login_user_name);
 
 
-
         //PASSWORD editText
         mUserPassword = (EditText) findViewById(R.id.login_user_pass);
-
-
 
 
         //SignUp button
@@ -61,26 +58,29 @@ public class UserLoginActivity extends AppCompatActivity {
         });
 
 
-
         //Login Button
         mLoginButton = (Button) findViewById(R.id.login_button);
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
+                String type = "login";
                 userName = mUserName.getText().toString();
                 pass = mUserPassword.getText().toString();
                 password = mHelper.fetchUserPass(userName);
                 mErno = mHelper.fetchErNo(userName);
-                SharedPreferences.setStoredErno(UserLoginActivity.this,mErno);
+                SharedPreferences.setStoredErno(UserLoginActivity.this, mErno);
                 //String fullName = mHelper.fetchFullName(userName);
+                BackgroundDbConnector backgroundDbConnector = new
+                        BackgroundDbConnector(UserLoginActivity.this);
 
-                if (pass.equals(password)) {
+                backgroundDbConnector.execute(type,userName,password);
+
+                String status = SharedPreferences.getStoredResultOfLogin(UserLoginActivity.this);
+                if (!status.equals("success")) {
                     //Intent i = UserProfileActivity.newIntent(UserLoginActivity.this, userName, fullName, erNo);
                     Intent i = new Intent(UserLoginActivity.this, UserProfileHomeActivity.class);
                     startActivity(i);
-                }
-                else{
-                    Toast.makeText(UserLoginActivity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
 
             }
