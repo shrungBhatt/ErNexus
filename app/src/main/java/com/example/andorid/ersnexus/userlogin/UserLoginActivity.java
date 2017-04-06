@@ -9,7 +9,6 @@ import android.widget.EditText;
 
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.database.userdata.UserBaseHelper;
-import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
 import com.example.andorid.ersnexus.usersignup.UserSignUpActivity;
 import com.example.andorid.ersnexus.util.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.SharedPreferences;
@@ -73,15 +72,8 @@ public class UserLoginActivity extends AppCompatActivity {
                 BackgroundDbConnector backgroundDbConnector = new
                         BackgroundDbConnector(UserLoginActivity.this);
 
-                backgroundDbConnector.execute(type,userName,password);
-
-                String status = SharedPreferences.getStoredResultOfLogin(UserLoginActivity.this);
-                if (!status.equals("success")) {
-                    //Intent i = UserProfileActivity.newIntent(UserLoginActivity.this, userName, fullName, erNo);
-                    Intent i = new Intent(UserLoginActivity.this, UserProfileHomeActivity.class);
-                    startActivity(i);
-                    finish();
-                }
+                backgroundDbConnector.execute(type,userName,pass);
+                SharedPreferences.setStoredUsername(UserLoginActivity.this,userName);
 
             }
         });

@@ -4,6 +4,8 @@ import android.content.*;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -20,6 +22,7 @@ import java.net.URLEncoder;
 public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
 
     private Context mContext;
+    public  String mType;
 
 
     //Constructor to initialise this class.
@@ -34,6 +37,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
 
         //The first parameter of the background task method.
         String type = params[0];
+        mType = type;
 
         //Url for login page php file.
         String loginUrl = "http://192.168.2.3/ersnexus/login.php";
@@ -83,7 +87,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                         inputStream, "iso-8859-1"));
 
                 //Getting the results
-                String result = " ";
+                String result = "";
                 String line = "";
                 while ((line = bufferedReader.readLine()) != null) {
                     result += line;
@@ -92,7 +96,6 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                 inputStream.close();
                 httpURLConnection.disconnect();
                 //Returning the results
-                SharedPreferences.setStoredResultOfLogin(mContext,result);
                 return result;
 
             } catch (IOException e) {
@@ -147,7 +150,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
                         inputStream, "iso-8859-1"));
 
-                String result = " ";
+                String result = "";
                 String line = "";
                 while ((line = bufferedReader.readLine()) != null) {
                     result += line;
@@ -167,7 +170,17 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute (String result) {
-        Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+        if(mType.equals("login")) {
+            if(result.equals("success")){
+                String username = SharedPreferences.getStoredUsername(mContext);
+                mContext.startActivity(new Intent(mContext, UserProfileHomeActivity.class));
+                Toast.makeText(mContext,"Welcome "+username,Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(mContext, "Wrong Username or Password!", Toast.LENGTH_SHORT).show();
+            }
+        }else if(mType.equals("register")){
+            Toast.makeText(mContext, "Registered!", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

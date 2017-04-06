@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 
 public class SharedPreferences {
     private static final String PREF_ERNO = "enrollmentNumber";
-    private static final String PREF_LOGIN_RESULT = "login result";
+    private static final String PREF_USERNAME = "login result";
 
     public static String getStoredErno(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context)
@@ -21,15 +21,15 @@ public class SharedPreferences {
                 .apply();
     }
 
-    public static String getStoredResultOfLogin(Context context){
+    public static String getStoredUsername (Context context){
         return PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(PREF_LOGIN_RESULT,null);
+                .getString(PREF_USERNAME,null);
     }
 
-    public static void setStoredResultOfLogin(Context context,String status){
+    public static void setStoredUsername (Context context, String status){
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
-                .putString(PREF_LOGIN_RESULT,status)
+                .putString(PREF_USERNAME,status)
                 .apply();
     }
 
