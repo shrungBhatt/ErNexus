@@ -41,7 +41,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
         String type = params[0];
         mType = type;
 
-        String URL = "http://192.168.2.3/ersnexus/";
+        String URL = "http://192.168.2.7/ersnexus/";
         //Url for login page php file.
         String loginUrl = URL + "login.php";
 

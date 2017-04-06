@@ -11,6 +11,9 @@ public class AttendanceData {
     private String mEnrollmentNumber;
 
 
+    public AttendanceData(){
+
+    }
     //Constructor method used to set the values for the getters.
     public AttendanceData (String subjectCode, String facultyCode, String date,
                            String enrollmentNumber) {

@@ -81,8 +81,6 @@ public class UserScanAttendanceFragment extends Fragment {
             public void onClick (View v) {
 
                 String type = "attendance";
-                Date date = new Date();
-                date.getDate();
 
                 BackgroundDbConnector backgroundDbConnector = new
                         BackgroundDbConnector(getActivity());
@@ -91,7 +89,7 @@ public class UserScanAttendanceFragment extends Fragment {
 
 
                 /*AttendanceData attendanceData = new AttendanceData(subjectCode, facultyCode,
-                        date, erNo);
+                        date.toString(), erNo);
 
                 attendanceData.setEnrollmentNumber(SharedPreferences.getStoredErno(getActivity()));
                 attendanceData.getEnrollmentNumber();

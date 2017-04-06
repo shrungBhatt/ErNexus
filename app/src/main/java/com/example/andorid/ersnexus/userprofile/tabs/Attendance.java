@@ -1,6 +1,7 @@
 package com.example.andorid.ersnexus.userprofile.tabs;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,17 @@ import com.example.andorid.ersnexus.models.AttendanceData;
 import com.example.andorid.ersnexus.userscanattendance.UserScanAttendanceActivity;
 import com.example.andorid.ersnexus.util.SharedPreferences;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 //This class is the attendance tab in userProfileHomeActivity screen.
@@ -46,6 +58,9 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                               @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_attendance, container, false);
 
+
+        new FetchAttendanceTask().execute();
+
         mErno = SharedPreferences.getStoredErno(getActivity());
         mAttendanceLab = AttendanceLab.get(getActivity());
 
@@ -64,7 +79,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             @Override
             public void onClick (View v) {
                 mSortAttendanceEditText.getText().clear();
-                updateUI();
+                //updateUI();
             }
         });
 
@@ -83,7 +98,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         mSortAttendanceEditText = (EditText) v.findViewById(R.id.sort_attendance_by_editText);
 
         mSortAttendanceButton = (ImageButton) v.findViewById(R.id.sort_attendance_by_button);
-        mSortAttendanceButton.setOnClickListener(new View.OnClickListener() {
+        /*mSortAttendanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
                 switch (mPosition) {
@@ -107,12 +122,12 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                 }
 
             }
-        });
+        });*/
 
         //RecyclerView that displays the attendances after fetching it from the database.
         mAttendanceRecyclerView = (RecyclerView) v.findViewById(R.id.attendance_recyvlerView);
         mAttendanceRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        updateUI();
+        //updateUI();
 
         return v;
     }
@@ -120,7 +135,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     @Override
     public void onResume () {
         super.onResume();
-        updateUI();// To update the data in recyclerView after editing the data in attendance tab.
+        //updateUI();// To update the data in recyclerView after editing the data in attendance tab.
     }
 
     @Override
@@ -179,13 +194,13 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
     //method used to initialise the adpater of the recyclerView.
     private void updateUI () {
-        AttendanceLab attendanceLab = AttendanceLab.get(getActivity());
-        List<AttendanceData> attendances = attendanceLab.getAttendances(mErno);
+        //AttendanceLab attendanceLab = AttendanceLab.get(getActivity());
+        //List<AttendanceData> attendances = attendanceLab.getAttendances(mErno);
         if (mAdapter == null) {
-            mAdapter = new AttendanceAdapter(attendances);
+            mAdapter = new AttendanceAdapter(mAttendanceDatas);
             mAttendanceRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.setAttendances(attendances);
+            mAdapter.setAttendances(mAttendanceDatas);
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -219,6 +234,82 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
         public void setAttendances (List<AttendanceData> attendances) {
             mAttendanceDatas = attendances;
+        }
+    }
+
+    public class FetchAttendanceTask extends AsyncTask<Void,Void,List<AttendanceData>>{
+
+        public FetchAttendanceTask(){
+        }
+
+        @Override
+        protected List<AttendanceData> doInBackground (Void... params) {
+            try {
+                //Fetch the username and password from the background method call.
+
+                List<AttendanceData> attendanceDatas = new ArrayList<>();
+
+                //Creating a URL.
+                URL url = new URL("http://192.168.2.7/ersnexus/fetchattendance.php");
+                //Connecting to the URL.
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                //Setting request method POST.
+                httpURLConnection.setRequestMethod("POST");
+                //This connection include Input and output interaction.
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+
+                //Creating an inputStream to fetch the results.
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+                        inputStream, "iso-8859-1"));
+
+                //Getting the results
+                String result = "";
+                String line = "";
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                try {
+                    JSONArray jsonArray = new JSONArray(result);
+
+                    for(int i = 0; i<jsonArray.length();i++){
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                        AttendanceData attendanceData = new AttendanceData();
+                        attendanceData.setEnrollmentNumber(jsonObject.getString("enrollmentnumber"));
+                        attendanceData.setSubjectCode(jsonObject.getString("subjectcode"));
+                        attendanceData.setFacultyCode(jsonObject.getString("facultycode"));
+                        attendanceData.setDate(jsonObject.getString("date"));
+
+
+                        attendanceDatas.add(attendanceData);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                //Returning the results
+                return attendanceDatas;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(List<AttendanceData> items){
+
+            mAttendanceDatas = items;
+            mAttendanceRecyclerView.setAdapter(new AttendanceAdapter(mAttendanceDatas));
+
+
+
         }
     }
 
