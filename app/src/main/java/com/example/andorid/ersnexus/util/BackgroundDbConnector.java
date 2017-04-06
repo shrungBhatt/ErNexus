@@ -45,6 +45,8 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
         //Url for register page php file.
         String registerUrl = "http://192.168.2.3/ersnexus/register.php";
 
+        String enrollmentNumberUrl = "http://192.168.2.3/ersnexus/enrollmentnumber.php";
+
         //It is an login call.
         if (type.equals("login")) {
             try {
@@ -163,6 +165,60 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if(type.equals("enrollmentnumber")){
+            try {
+                //Fetch the username from the background method call.
+                String username = params[1];
+
+                //Creating a URL.
+                URL url = new URL(enrollmentNumberUrl);
+                //Connecting to the URL.
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                //Setting request method POST.
+                httpURLConnection.setRequestMethod("POST");
+                //This connection include Input and output interaction.
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                //Creating the outputStream
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                //Writing in the outputStream.
+                BufferedWriter bufferedWriter = new BufferedWriter(new
+                        OutputStreamWriter(outputStream, "UTF-8"));
+
+                //This is for connecting the variables in the app and in the php file.
+                String postData = URLEncoder.encode("username", "UTF-8") + "=" +//$_POST["username"]
+                        URLEncoder.encode(username, "UTF-8");
+
+                //Feeding the data.
+                bufferedWriter.write(postData);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+
+                //Creating an inputStream to fetch the results.
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+                        inputStream, "iso-8859-1"));
+
+                //Getting the results
+                String result = "";
+                String line = "";
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                //Returning the results
+                SharedPreferences.setStoredErno(mContext,result);
+                return result;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
         return null;
     }

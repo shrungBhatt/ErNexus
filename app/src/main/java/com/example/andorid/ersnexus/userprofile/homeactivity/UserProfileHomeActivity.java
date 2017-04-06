@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.andorid.ersnexus.R;
+import com.example.andorid.ersnexus.util.BackgroundDbConnector;
+import com.example.andorid.ersnexus.util.SharedPreferences;
 
 //This is the activity where all the tabs are showed where user interacts with everything.
 
@@ -32,6 +34,14 @@ public class UserProfileHomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_user_profile_home_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        String type = "enrollmentnumber";
+        String username = SharedPreferences.getStoredUsername(UserProfileHomeActivity.this);
+
+        BackgroundDbConnector backgroundDbConnector = new
+                BackgroundDbConnector(UserProfileHomeActivity.this);
+
+        backgroundDbConnector.execute(type,username);
 
         //Initializing the tablayout
         mTabLayout = (TabLayout) findViewById(R.id.home_activity_tabLayout);

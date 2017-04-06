@@ -67,7 +67,6 @@ public class UserLoginActivity extends AppCompatActivity {
                 pass = mUserPassword.getText().toString();
                 password = mHelper.fetchUserPass(userName);
                 mErno = mHelper.fetchErNo(userName);
-                SharedPreferences.setStoredErno(UserLoginActivity.this, mErno);
                 //String fullName = mHelper.fetchFullName(userName);
                 BackgroundDbConnector backgroundDbConnector = new
                         BackgroundDbConnector(UserLoginActivity.this);
