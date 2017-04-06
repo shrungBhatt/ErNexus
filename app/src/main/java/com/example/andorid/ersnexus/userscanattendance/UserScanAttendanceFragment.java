@@ -11,15 +11,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.andorid.ersnexus.R;
-import com.example.andorid.ersnexus.database.attendance.AttendanceLab;
-import com.example.andorid.ersnexus.models.AttendanceData;
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
+import com.example.andorid.ersnexus.util.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.SharedPreferences;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 //This class is used for scanning the Qr code and submitting the attendance to the database.
 
@@ -30,7 +31,8 @@ public class UserScanAttendanceFragment extends Fragment {
     private static final String KEY_DATE = "date";
     private Button mScanButton, mSubmitButton;
     private TextView mErno, mSubjectCode, mFacultyCode, mDate;
-    private String erNo, subjectCode, facultyCode, date;
+    private String erNo, subjectCode, facultyCode;
+    private Date date;
     //qr code scanner object
     private IntentIntegrator qrScan;
 
@@ -46,8 +48,7 @@ public class UserScanAttendanceFragment extends Fragment {
             facultyCode = savedInstanceState.getString(KEY_FACULTY_CODE,null);
             mFacultyCode.setText(facultyCode);
 
-            date = savedInstanceState.getString(date,null);
-            mDate.setText(date);
+            mDate.setText(date.getDate());
         }
     }
 
@@ -58,33 +59,47 @@ public class UserScanAttendanceFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_user_scan_attendance, container, false);
 
 
+        date = new Date();
+        date.getDate();
 
 
         mErno = (TextView) v.findViewById(R.id.enrollment_number_textView);
         mErno.setText(SharedPreferences.getStoredErno(getActivity()));
         erNo = mErno.getText().toString();
 
+
         mSubjectCode = (TextView) v.findViewById(R.id.subject_code_textView);
 
         mFacultyCode = (TextView) v.findViewById(R.id.faculty_code_textView);
 
         mDate = (TextView) v.findViewById(R.id.date_textView);
+        mDate.setText(date.toString());
 
         mSubmitButton = (Button) v.findViewById(R.id.attendance_submit_button);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
 
-                AttendanceData attendanceData = new AttendanceData(subjectCode, facultyCode,
+                String type = "attendance";
+                Date date = new Date();
+                date.getDate();
+
+                BackgroundDbConnector backgroundDbConnector = new
+                        BackgroundDbConnector(getActivity());
+
+                backgroundDbConnector.execute(type,erNo,subjectCode,facultyCode,date.toString());
+
+
+                /*AttendanceData attendanceData = new AttendanceData(subjectCode, facultyCode,
                         date, erNo);
 
                 attendanceData.setEnrollmentNumber(SharedPreferences.getStoredErno(getActivity()));
                 attendanceData.getEnrollmentNumber();
                 attendanceData.getSubjectCode();
                 attendanceData.getFacultyCode();
-                AttendanceLab.get(getActivity()).addAttendance(attendanceData);
+                AttendanceLab.get(getActivity()).addAttendance(attendanceData);*/
 
-                Toast.makeText(getActivity(),"Submitted",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"Submitted",Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(getActivity(), UserProfileHomeActivity.class);
                 startActivity(intent);
@@ -129,10 +144,6 @@ public class UserScanAttendanceFragment extends Fragment {
                     mFacultyCode.setText(obj.getString("faculty"));
                     facultyCode = mFacultyCode.getText().toString();
 
-
-                    mDate.setText(obj.getString("date"));
-                    date = mDate.getText().toString();
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                     //if control comes here
@@ -152,7 +163,7 @@ public class UserScanAttendanceFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_SUBJECT_CODE,subjectCode);
         outState.putString(KEY_FACULTY_CODE,facultyCode);
-        outState.putString(KEY_DATE,date);
+        outState.putString(KEY_DATE,date.toString());
     }
 }
 

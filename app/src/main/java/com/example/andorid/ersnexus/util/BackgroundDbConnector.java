@@ -35,12 +35,13 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground (String... params) {
 
-        String URL = "http://192.168.2.3/ersnexus/";
+
 
         //The first parameter of the background task method.
         String type = params[0];
         mType = type;
 
+        String URL = "http://192.168.2.3/ersnexus/";
         //Url for login page php file.
         String loginUrl = URL + "login.php";
 
@@ -226,6 +227,62 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     e.printStackTrace();
                 }
                 break;
+            case "attendance":
+                try {
+                    //Fetching the values to be registered.
+                    String enrollmentnumber = params[1];
+                    String subject_code = params[2];
+                    String faculty_code = params[3];
+                    String date = params[4];
+
+
+
+                    URL url = new URL(attendanceUrl);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+
+                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new
+                            OutputStreamWriter(outputStream, "UTF-8"));
+
+                    String postData = URLEncoder.encode("enrollmentnumber", "UTF-8") + "=" +//$_POST["enrollmentnumber"]
+                            URLEncoder.encode(enrollmentnumber, "UTF-8") +
+                            "&" +
+                            URLEncoder.encode("subject_code", "UTF-8") + "=" +//$_POST["sunject_code"]
+                            URLEncoder.encode(subject_code, "UTF-8") +
+                            "&" +
+                            URLEncoder.encode("faculty_code", "UTF-8") + "=" +//$_POST["faculty_code"]
+                            URLEncoder.encode(faculty_code, "UTF-8") +
+                            "&" +
+                            URLEncoder.encode("date", "UTF-8") + "=" +//$_POST["date"]
+                            URLEncoder.encode(date, "UTF-8");
+
+                    bufferedWriter.write(postData);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+
+                    InputStream inputStream = httpURLConnection.getInputStream();
+
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+                            inputStream, "iso-8859-1"));
+
+                    String result = "";
+                    String line = "";
+                    while ((line = bufferedReader.readLine()) != null) {
+                        result += line;
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+                    return result;
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
         }
         return null;
     }
@@ -233,16 +290,23 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute (String result) {
-        if(mType.equals("login")) {
-            if(result.equals("success")){
-                String username = SharedPreferences.getStoredUsername(mContext);
-                mContext.startActivity(new Intent(mContext, UserProfileHomeActivity.class));
-                Toast.makeText(mContext,"Welcome "+username,Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(mContext, "Wrong Username or Password!", Toast.LENGTH_SHORT).show();
-            }
-        }else if(mType.equals("register")){
-            Toast.makeText(mContext, "Registered!", Toast.LENGTH_SHORT).show();
+        switch (mType) {
+            case "login":
+                if (result.equals("success")) {
+                    String username = SharedPreferences.getStoredUsername(mContext);
+                    mContext.startActivity(new Intent(mContext, UserProfileHomeActivity.class));
+                    Toast.makeText(mContext, "Welcome " + username, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "Wrong Username or Password!", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            case "register":
+                Toast.makeText(mContext, "Registered!", Toast.LENGTH_SHORT).show();
+                break;
+            case "attendance":
+                Toast.makeText(mContext, "Submitted!", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
