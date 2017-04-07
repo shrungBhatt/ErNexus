@@ -1,14 +1,17 @@
 package com.example.andorid.ersnexus.userlogin;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.database.userdata.UserBaseHelper;
+import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
 import com.example.andorid.ersnexus.usersignup.UserSignUpActivity;
 import com.example.andorid.ersnexus.util.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.SharedPreferences;
@@ -33,6 +36,12 @@ public class UserLoginActivity extends AppCompatActivity {
     public void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_login);
+
+        Boolean status = SharedPreferences.getStoredLoginStatus(UserLoginActivity.this);
+        if(status){
+            Intent i = new Intent(UserLoginActivity.this, UserProfileHomeActivity.class);
+            startActivity(i);
+        }
 
         mHelper = new UserBaseHelper(this);
 
@@ -62,20 +71,36 @@ public class UserLoginActivity extends AppCompatActivity {
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                String type = "login";
-                userName = mUserName.getText().toString();
-                pass = mUserPassword.getText().toString();
-                password = mHelper.fetchUserPass(userName);
-                mErno = mHelper.fetchErNo(userName);
-                //String fullName = mHelper.fetchFullName(userName);
-                BackgroundDbConnector backgroundDbConnector = new
-                        BackgroundDbConnector(UserLoginActivity.this);
+                if(isNetworkAvailableAndConnected()) {
+                    String type = "login";
+                    userName = mUserName.getText().toString();
+                    pass = mUserPassword.getText().toString();
+                    password = mHelper.fetchUserPass(userName);
+                    mErno = mHelper.fetchErNo(userName);
+                    //String fullName = mHelper.fetchFullName(userName);
+                    BackgroundDbConnector backgroundDbConnector = new
+                            BackgroundDbConnector(UserLoginActivity.this);
 
-                backgroundDbConnector.execute(type,userName,pass);
-                SharedPreferences.setStoredUsername(UserLoginActivity.this,userName);
+                    backgroundDbConnector.execute(type, userName, pass);
+                    SharedPreferences.setStoredUsername(UserLoginActivity.this, userName);
+                }else {
+                    Toast.makeText(UserLoginActivity.this,
+                            "No Internet Connection",Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
+
+    }
+
+    private boolean isNetworkAvailableAndConnected () {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+
+        boolean isNetworkAvailable = cm.getActiveNetworkInfo() != null;
+        boolean isNetworkConnected = isNetworkAvailable &&
+                cm.getActiveNetworkInfo().isConnected();
+
+        return isNetworkConnected;
     }
 
 }

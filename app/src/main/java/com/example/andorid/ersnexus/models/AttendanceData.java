@@ -3,12 +3,15 @@ package com.example.andorid.ersnexus.models;
 //This is a model class which contains getters and setters used for attendances purpose.
 
 
+import java.util.List;
+
 public class AttendanceData {
     private String mSubjectCode;
     private String mFacultyCode;
     private String mDate;
     private String mTime;
     private String mEnrollmentNumber;
+    private List<AttendanceData> mAttendanceDatas;
 
 
     public AttendanceData(){
@@ -56,4 +59,11 @@ public class AttendanceData {
         mDate = date;
     }
 
+    public List<AttendanceData> getAttendanceDatas () {
+        return mAttendanceDatas;
+    }
+
+    public void setAttendanceDatas (List<AttendanceData> attendanceDatas) {
+        mAttendanceDatas = attendanceDatas;
+    }
 }

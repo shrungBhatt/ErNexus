@@ -58,8 +58,8 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                               @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_attendance, container, false);
 
-
         new FetchAttendanceTask().execute();
+
 
         mErno = SharedPreferences.getStoredErno(getActivity());
         mAttendanceLab = AttendanceLab.get(getActivity());
@@ -148,7 +148,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
     }
 
-    private void checkAndSetAdapter () {
+    /*private void checkAndSetAdapter () {
         if (mAdapter == null) {
             mAdapter = new AttendanceAdapter(mAttendanceDatas);
             mAttendanceRecyclerView.setAdapter(mAdapter);
@@ -156,7 +156,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             mAdapter.setAttendances(mAttendanceDatas);
             mAdapter.notifyDataSetChanged();
         }
-    }
+    }*/
 
 
     //ViewHolder class of the recyclerView.
@@ -192,18 +192,19 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     }
 
 
-    //method used to initialise the adpater of the recyclerView.
+    /*//method used to initialise the adpater of the recyclerView.
     private void updateUI () {
         //AttendanceLab attendanceLab = AttendanceLab.get(getActivity());
         //List<AttendanceData> attendances = attendanceLab.getAttendances(mErno);
         if (mAdapter == null) {
-            mAdapter = new AttendanceAdapter(mAttendanceDatas);
+            //mAdapter = new AttendanceAdapter(new BackgroundAttendanceFetcher(getActivity())
+                    //.getAttendanceDatas());
             mAttendanceRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setAttendances(mAttendanceDatas);
             mAdapter.notifyDataSetChanged();
         }
-    }
+    }*/
 
 
     //Adapter class for the recyclerView.
@@ -250,7 +251,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                 List<AttendanceData> attendanceDatas = new ArrayList<>();
 
                 //Creating a URL.
-                URL url = new URL("http://192.168.2.7/ersnexus/fetchattendance.php");
+                URL url = new URL("http://192.168.2.3/ersnexus/fetchattendance.php");
                 //Connecting to the URL.
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 //Setting request method POST.
@@ -283,7 +284,8 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                         AttendanceData attendanceData = new AttendanceData();
-                        attendanceData.setEnrollmentNumber(jsonObject.getString("enrollmentnumber"));
+                        attendanceData.
+                                setEnrollmentNumber(jsonObject.getString("enrollmentnumber"));
                         attendanceData.setSubjectCode(jsonObject.getString("subjectcode"));
                         attendanceData.setFacultyCode(jsonObject.getString("facultycode"));
                         attendanceData.setDate(jsonObject.getString("date"));
@@ -304,12 +306,8 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         }
         @Override
         protected void onPostExecute(List<AttendanceData> items){
-
             mAttendanceDatas = items;
             mAttendanceRecyclerView.setAdapter(new AttendanceAdapter(mAttendanceDatas));
-
-
-
         }
     }
 

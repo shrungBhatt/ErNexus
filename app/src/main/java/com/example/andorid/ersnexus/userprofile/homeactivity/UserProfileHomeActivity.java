@@ -1,5 +1,6 @@
 package com.example.andorid.ersnexus.userprofile.homeactivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -11,8 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.andorid.ersnexus.R;
+import com.example.andorid.ersnexus.userlogin.UserLoginActivity;
 import com.example.andorid.ersnexus.util.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.SharedPreferences;
 
@@ -111,6 +114,11 @@ public class UserProfileHomeActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            SharedPreferences.setStoredLoginStatus(UserProfileHomeActivity.this,false);
+            Intent i = new Intent(UserProfileHomeActivity.this, UserLoginActivity.class);
+            startActivity(i);
+            Toast.makeText(this, "Logged Out", Toast.LENGTH_SHORT).show();
+            finish();
             return true;
         }
 

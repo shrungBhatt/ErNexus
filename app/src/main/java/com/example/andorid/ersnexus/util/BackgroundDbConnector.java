@@ -41,7 +41,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
         String type = params[0];
         mType = type;
 
-        String URL = "http://192.168.2.7/ersnexus/";
+        String URL = "http://192.168.2.3/ersnexus/";
         //Url for login page php file.
         String loginUrl = URL + "login.php";
 
@@ -294,6 +294,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
             case "login":
                 if (result.equals("success")) {
                     String username = SharedPreferences.getStoredUsername(mContext);
+                    SharedPreferences.setStoredLoginStatus(mContext,true);
                     mContext.startActivity(new Intent(mContext, UserProfileHomeActivity.class));
                     Toast.makeText(mContext, "Welcome " + username, Toast.LENGTH_SHORT).show();
                 } else {
