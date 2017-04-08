@@ -30,14 +30,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,11 +66,12 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                               @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_attendance, container, false);
 
-
-        new FetchAttendanceTask().execute();
-
-
         mErno = SharedPreferences.getStoredErno(getActivity());
+        String type = "sort_erno";
+        new FetchAttendanceTask().execute(type,mErno);
+
+
+
         mAttendanceLab = AttendanceLab.get(getActivity());
 
         //Button used to start the scanAttendance activity.
@@ -79,11 +84,13 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             }
         });
 
-        mClearButton = (ImageButton)v.findViewById(R.id.clear_button);
+        mClearButton = (ImageButton) v.findViewById(R.id.clear_button);
         mClearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
                 mSortAttendanceEditText.getText().clear();
+                String type = "sort_erno";
+                new FetchAttendanceTask().execute(type,mErno);
                 //updateUI();
             }
         });
@@ -103,31 +110,33 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         mSortAttendanceEditText = (EditText) v.findViewById(R.id.sort_attendance_by_editText);
 
         mSortAttendanceButton = (ImageButton) v.findViewById(R.id.sort_attendance_by_button);
-        /*mSortAttendanceButton.setOnClickListener(new View.OnClickListener() {
+        mSortAttendanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
                 switch (mPosition) {
                     case 0:
-                        updateUI();
+                        String type = "sort_erno";
+                        new FetchAttendanceTask().execute(type,mErno);
+                        break;
                     case 1:
+                        type = "sort_subject_code";
                         String sortSubject = mSortAttendanceEditText.getText().toString();
-                        mAttendanceDatas = mAttendanceLab.getAttendances(mErno, sortSubject);
-                        checkAndSetAdapter();
+                        new FetchAttendanceTask().execute(type,mErno,sortSubject);
                         break;
                     case 2:
+                        type = "sort_faculty_code";
                         String sortFaculty = mSortAttendanceEditText.getText().toString();
-                        mAttendanceDatas = mAttendanceLab.getAttendances(mErno, null, sortFaculty);
-                        checkAndSetAdapter();
+                        new FetchAttendanceTask().execute(type,mErno,sortFaculty);
                         break;
                     case 3:
+                        type = "sort_date";
                         String sortDate = mSortAttendanceEditText.getText().toString();
-                        mAttendanceDatas = mAttendanceLab.getAttendances(mErno, null, null, sortDate);
-                        checkAndSetAdapter();
+                        new FetchAttendanceTask().execute(type,mErno,sortDate);
                         break;
                 }
 
             }
-        });*/
+        });
 
         //RecyclerView that displays the attendances after fetching it from the database.
         mAttendanceRecyclerView = (RecyclerView) v.findViewById(R.id.attendance_recyvlerView);
@@ -238,98 +247,294 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             return mAttendanceDatas.size();
         }
 
-        public void setAttendances (List<AttendanceData> attendances) {
+        /*public void setAttendances (List<AttendanceData> attendances) {
             mAttendanceDatas = attendances;
-        }
+        }*/
     }
 
-    public class FetchAttendanceTask extends AsyncTask<Void,Void,List<AttendanceData>>{
+    public class FetchAttendanceTask extends AsyncTask<String, Void, List<AttendanceData>> {
 
-        public FetchAttendanceTask(){
+        String mType;
+
+        public FetchAttendanceTask () {
         }
 
         @Override
-        protected List<AttendanceData> doInBackground (Void... params) {
+        protected List<AttendanceData> doInBackground (String... params) {
+            String type = params[0];
+            mType = type;
+
             try {
+                SocketAddress sockaddr = new InetSocketAddress("192.168.2.3", 80);
+                // Create an unbound socket
+                Socket sock = new Socket();
 
-                boolean exists = false;
+                // This method will block no more than timeoutMs.
+                // If the timeout occurs, SocketTimeoutException is thrown.
+                int timeoutMs = 2000;   // 2 seconds
+                sock.connect(sockaddr, timeoutMs);
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), "Server is Down", Toast.LENGTH_SHORT).show();
+            }
+            String URL = "http://192.168.2.3/ersnexus/";
+            //Url for login page php file.
+            String sortErnoUrl = URL + "sort_attendance_erno.php";
 
-                try {
-                    SocketAddress sockaddr = new InetSocketAddress("192.168.2.3", 80);
-                    // Create an unbound socket
-                    Socket sock = new Socket();
+            //Url for register page php file.
+            String sortSubjectCodeUrl = URL + "sort_attendance_subject_code.php";
 
-                    // This method will block no more than timeoutMs.
-                    // If the timeout occurs, SocketTimeoutException is thrown.
-                    int timeoutMs = 2000;   // 2 seconds
-                    sock.connect(sockaddr, timeoutMs);
-                    exists = true;
-                }catch(Exception e){
-                    Toast.makeText(getActivity(), "Server is Down", Toast.LENGTH_SHORT).show();
-                }
-                //Fetch the username and password from the background method call.
+            String sortFacultyCodeUrl = URL + "sort_attendance_faculty_code.php";
 
-                List<AttendanceData> attendanceDatas = new ArrayList<>();
+            String sortDateUrl = URL + "sort_attendance_date.php";
 
-                //Creating a URL.
-                URL url = new URL("http://192.168.2.3/ersnexus/fetchattendance.php");
-                //Connecting to the URL.
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                //Setting request method POST.
-                httpURLConnection.setRequestMethod("POST");
-                //This connection include Input and output interaction.
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.setDoInput(true);
+            //It is an login call.
+            switch (type) {
+                case "sort_erno":
+                    try {
+                        //Fetch the username and password from the background method call.
+                        String enrollmentnumber = params[1];
 
+                        //Creating a URL.
+                        URL url = new URL(sortErnoUrl);
+                        //Connecting to the URL.
+                        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                        //Setting request method POST.
+                        httpURLConnection.setRequestMethod("POST");
+                        //This connection include Input and output interaction.
+                        httpURLConnection.setDoOutput(true);
+                        httpURLConnection.setDoInput(true);
 
-                //Creating an inputStream to fetch the results.
-                InputStream inputStream = httpURLConnection.getInputStream();
+                        //Creating the outputStream
+                        OutputStream outputStream = httpURLConnection.getOutputStream();
+                        //Writing in the outputStream.
+                        BufferedWriter bufferedWriter = new BufferedWriter(new
+                                OutputStreamWriter(outputStream, "UTF-8"));
 
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                        inputStream, "iso-8859-1"));
+                        //This is for connecting the variables in the app and in the php file.
+                        String postData = URLEncoder.encode("enrollmentnumber", "UTF-8") + "=" +//$_POST["enrollmentnumber"]
+                                URLEncoder.encode(enrollmentnumber, "UTF-8");
 
-                //Getting the results
-                String result = "";
-                String line = "";
-                while ((line = bufferedReader.readLine()) != null) {
-                    result += line;
-                }
-                bufferedReader.close();
-                inputStream.close();
-                httpURLConnection.disconnect();
+                        //Feeding the data.
+                        bufferedWriter.write(postData);
+                        bufferedWriter.flush();
+                        bufferedWriter.close();
+                        outputStream.close();
 
-                try {
-                    JSONArray jsonArray = new JSONArray(result);
+                        //Creating an inputStream to fetch the results.
+                        InputStream inputStream = httpURLConnection.getInputStream();
 
-                    for(int i = 0; i<jsonArray.length();i++){
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+                                inputStream, "iso-8859-1"));
 
-                        AttendanceData attendanceData = new AttendanceData();
-                        attendanceData.
-                                setEnrollmentNumber(jsonObject.getString("enrollmentnumber"));
-                        attendanceData.setSubjectCode(jsonObject.getString("subjectcode"));
-                        attendanceData.setFacultyCode(jsonObject.getString("facultycode"));
-                        attendanceData.setDate(jsonObject.getString("date"));
+                        //Getting the results
+                        String result = "";
+                        String line = "";
+                        while ((line = bufferedReader.readLine()) != null) {
+                            result += line;
+                        }
+                        bufferedReader.close();
+                        inputStream.close();
+                        httpURLConnection.disconnect();
 
+                        //Returning the results
+                        return getAttendanceDatas(result);
 
-                        attendanceDatas.add(attendanceData);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                //Returning the results
-                return attendanceDatas;
+                    break;
+                case "sort_subject_code": //It is an register POST call.
+                    try {
+                        //Fetching the values to be registered.
+                        String enrollmentnumber = params[1];
+                        String subjectCode = params[2];
 
-            } catch (IOException e) {
-                e.printStackTrace();
+
+
+                        URL url = new URL(sortSubjectCodeUrl);
+                        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                        httpURLConnection.setRequestMethod("POST");
+                        httpURLConnection.setDoOutput(true);
+                        httpURLConnection.setDoInput(true);
+
+                        OutputStream outputStream = httpURLConnection.getOutputStream();
+                        BufferedWriter bufferedWriter = new BufferedWriter(new
+                                OutputStreamWriter(outputStream, "UTF-8"));
+
+                        String postData = URLEncoder.encode("enrollmentnumber", "UTF-8") + "=" +//$_POST["enrollmentnumber"]
+                                URLEncoder.encode(enrollmentnumber, "UTF-8") +
+                                "&" +
+                                URLEncoder.encode("subject_code", "UTF-8") + "=" +//$_POST["username"]
+                                URLEncoder.encode(subjectCode, "UTF-8");
+
+                        bufferedWriter.write(postData);
+                        bufferedWriter.flush();
+                        bufferedWriter.close();
+                        outputStream.close();
+
+                        InputStream inputStream = httpURLConnection.getInputStream();
+
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+                                inputStream, "iso-8859-1"));
+
+                        String result = "";
+                        String line = "";
+                        while ((line = bufferedReader.readLine()) != null) {
+                            result += line;
+                        }
+                        bufferedReader.close();
+                        inputStream.close();
+                        httpURLConnection.disconnect();
+
+                        //Returning the results
+                        return getAttendanceDatas(result);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "sort_faculty_code":
+                    try {
+                        //Fetch the username from the background method call.
+                        String enrollmentnumber = params[1];
+                        String faculty_code = params[2];
+
+                        //Creating a URL.
+                        URL url = new URL(sortFacultyCodeUrl);
+                        //Connecting to the URL.
+                        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                        //Setting request method POST.
+                        httpURLConnection.setRequestMethod("POST");
+                        //This connection include Input and output interaction.
+                        httpURLConnection.setDoOutput(true);
+                        httpURLConnection.setDoInput(true);
+
+                        //Creating the outputStream
+                        OutputStream outputStream = httpURLConnection.getOutputStream();
+                        //Writing in the outputStream.
+                        BufferedWriter bufferedWriter = new BufferedWriter(new
+                                OutputStreamWriter(outputStream, "UTF-8"));
+
+                        //This is for connecting the variables in the app and in the php file.
+                        String postData = URLEncoder.encode("enrollmentnumber", "UTF-8") + "=" +//$_POST["enrollmentnumber"]
+                                URLEncoder.encode(enrollmentnumber, "UTF-8") +
+                                "&" +
+                                URLEncoder.encode("faculty_code", "UTF-8") + "=" +//$_POST["username"]
+                                URLEncoder.encode(faculty_code, "UTF-8");
+
+                        //Feeding the data.
+                        bufferedWriter.write(postData);
+                        bufferedWriter.flush();
+                        bufferedWriter.close();
+                        outputStream.close();
+
+                        //Creating an inputStream to fetch the results.
+                        InputStream inputStream = httpURLConnection.getInputStream();
+
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+                                inputStream, "iso-8859-1"));
+
+                        //Getting the results
+                        String result = "";
+                        String line = "";
+                        while ((line = bufferedReader.readLine()) != null) {
+                            result += line;
+                        }
+                        bufferedReader.close();
+                        inputStream.close();
+                        httpURLConnection.disconnect();
+                        //Returning the results
+
+                        //Returning the results
+                        return getAttendanceDatas(result);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "sort_date":
+                    try {
+                        //Fetching the values to be registered.
+                        String enrollmentnumber = params[1];
+                        String date = params[2];
+
+                        URL url = new URL(sortDateUrl);
+                        HttpURLConnection httpURLConnection = (HttpURLConnection)
+                                url.openConnection();
+                        httpURLConnection.setRequestMethod("POST");
+                        httpURLConnection.setDoOutput(true);
+                        httpURLConnection.setDoInput(true);
+
+                        OutputStream outputStream = httpURLConnection.getOutputStream();
+                        BufferedWriter bufferedWriter = new BufferedWriter(new
+                                OutputStreamWriter(outputStream, "UTF-8"));
+
+                        String postData = URLEncoder.encode("enrollmentnumber", "UTF-8") + "=" +//$_POST["enrollmentnumber"]
+                                URLEncoder.encode(enrollmentnumber, "UTF-8") +
+                                "&" +
+                                URLEncoder.encode("date", "UTF-8") + "=" +//$_POST["date"]
+                                URLEncoder.encode(date, "UTF-8");
+
+                        bufferedWriter.write(postData);
+                        bufferedWriter.flush();
+                        bufferedWriter.close();
+                        outputStream.close();
+
+                        InputStream inputStream = httpURLConnection.getInputStream();
+
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+                                inputStream, "iso-8859-1"));
+
+                        String result = "";
+                        String line = "";
+                        while ((line = bufferedReader.readLine()) != null) {
+                            result += line;
+                        }
+                        bufferedReader.close();
+                        inputStream.close();
+                        httpURLConnection.disconnect();
+
+                        //Returning the results
+                        return getAttendanceDatas(result);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
             }
             return null;
         }
+
         @Override
-        protected void onPostExecute(List<AttendanceData> items){
+        protected void onPostExecute (List<AttendanceData> items) {
             mAttendanceDatas = items;
             mAttendanceRecyclerView.setAdapter(new AttendanceAdapter(mAttendanceDatas));
         }
+    }
+
+    public List<AttendanceData> getAttendanceDatas(String result){
+        List<AttendanceData> attendanceDatas = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(result);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                AttendanceData attendanceData = new AttendanceData();
+                attendanceData.
+                        setEnrollmentNumber(jsonObject.getString("enrollmentnumber"));
+                attendanceData.setSubjectCode(jsonObject.getString("subjectcode"));
+                attendanceData.setFacultyCode(jsonObject.getString("facultycode"));
+                attendanceData.setDate(jsonObject.getString("date"));
+
+
+                attendanceDatas.add(attendanceData);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        //Returning the results
+        return attendanceDatas;
     }
 
 

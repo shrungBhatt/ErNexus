@@ -20,6 +20,7 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 //This class is used for scanning the Qr code and submitting the attendance to the database.
@@ -36,16 +37,18 @@ public class UserScanAttendanceFragment extends Fragment {
     //qr code scanner object
     private IntentIntegrator qrScan;
 
+    DateFormat formatDate = DateFormat.getDateInstance(3);
+
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated (Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         //If screen is rotated the textViews will still have the values.
         if (savedInstanceState != null) {
-            subjectCode = savedInstanceState.getString(KEY_SUBJECT_CODE,null);
+            subjectCode = savedInstanceState.getString(KEY_SUBJECT_CODE, null);
             mSubjectCode.setText(subjectCode);
 
-            facultyCode = savedInstanceState.getString(KEY_FACULTY_CODE,null);
+            facultyCode = savedInstanceState.getString(KEY_FACULTY_CODE, null);
             mFacultyCode.setText(facultyCode);
 
             mDate.setText(date.getDate());
@@ -60,7 +63,6 @@ public class UserScanAttendanceFragment extends Fragment {
 
 
         date = new Date();
-        date.getDate();
 
 
         mErno = (TextView) v.findViewById(R.id.enrollment_number_textView);
@@ -73,7 +75,7 @@ public class UserScanAttendanceFragment extends Fragment {
         mFacultyCode = (TextView) v.findViewById(R.id.faculty_code_textView);
 
         mDate = (TextView) v.findViewById(R.id.date_textView);
-        mDate.setText(date.toString());
+        mDate.setText(formatDate.format(date));
 
         mSubmitButton = (Button) v.findViewById(R.id.attendance_submit_button);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +87,8 @@ public class UserScanAttendanceFragment extends Fragment {
                 BackgroundDbConnector backgroundDbConnector = new
                         BackgroundDbConnector(getActivity());
 
-                backgroundDbConnector.execute(type,erNo,subjectCode,facultyCode,date.toString());
+                backgroundDbConnector.execute(type, erNo, subjectCode, facultyCode,
+                        mDate.getText().toString());
 
 
                 /*AttendanceData attendanceData = new AttendanceData(subjectCode, facultyCode,
@@ -157,11 +160,11 @@ public class UserScanAttendanceFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState){
+    public void onSaveInstanceState (Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_SUBJECT_CODE,subjectCode);
-        outState.putString(KEY_FACULTY_CODE,facultyCode);
-        outState.putString(KEY_DATE,date.toString());
+        outState.putString(KEY_SUBJECT_CODE, subjectCode);
+        outState.putString(KEY_FACULTY_CODE, facultyCode);
+        outState.putString(KEY_DATE, date.toString());
     }
 }
 
