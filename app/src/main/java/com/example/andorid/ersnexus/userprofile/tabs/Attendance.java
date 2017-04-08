@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.database.attendance.AttendanceLab;
@@ -33,6 +34,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +61,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     public View onCreateView (LayoutInflater inflater, @Nullable ViewGroup container,
                               @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_attendance, container, false);
+
 
         new FetchAttendanceTask().execute();
 
@@ -246,6 +251,22 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         @Override
         protected List<AttendanceData> doInBackground (Void... params) {
             try {
+
+                boolean exists = false;
+
+                try {
+                    SocketAddress sockaddr = new InetSocketAddress("192.168.2.3", 80);
+                    // Create an unbound socket
+                    Socket sock = new Socket();
+
+                    // This method will block no more than timeoutMs.
+                    // If the timeout occurs, SocketTimeoutException is thrown.
+                    int timeoutMs = 2000;   // 2 seconds
+                    sock.connect(sockaddr, timeoutMs);
+                    exists = true;
+                }catch(Exception e){
+                    Toast.makeText(getActivity(), "Server is Down", Toast.LENGTH_SHORT).show();
+                }
                 //Fetch the username and password from the background method call.
 
                 List<AttendanceData> attendanceDatas = new ArrayList<>();
