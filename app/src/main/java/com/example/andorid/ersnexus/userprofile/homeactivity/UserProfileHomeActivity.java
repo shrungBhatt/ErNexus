@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.userlogin.UserLoginActivity;
 import com.example.andorid.ersnexus.util.BackgroundDbConnector;
-import com.example.andorid.ersnexus.util.SharedPreferences;
+import com.example.andorid.ersnexus.util.SharedPreferencesData;
 
 //This is the activity where all the tabs are showed where user interacts with everything.
 
@@ -38,8 +38,19 @@ public class UserProfileHomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent intent = new Intent("finish_activity");
+        sendBroadcast(intent);
+
+        if(SharedPreferencesData.getStoredLoginStatus(UserProfileHomeActivity.this)){
+            String userName = SharedPreferencesData.getStoredUsername(UserProfileHomeActivity.this);
+            Toast.makeText(UserProfileHomeActivity.this,
+                    "Welcome "+userName,Toast.LENGTH_SHORT).show();
+            UserLoginActivity.mActivity.finish();
+            UserLoginActivity.mActivity = null;
+        }
+
         String type = "enrollmentnumber";
-        String username = SharedPreferences.getStoredUsername(UserProfileHomeActivity.this);
+        String username = SharedPreferencesData.getStoredUsername(UserProfileHomeActivity.this);
 
         BackgroundDbConnector backgroundDbConnector = new
                 BackgroundDbConnector(UserProfileHomeActivity.this);
@@ -114,7 +125,7 @@ public class UserProfileHomeActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            SharedPreferences.setStoredLoginStatus(UserProfileHomeActivity.this,false);
+            SharedPreferencesData.setStoredLoginStatus(UserProfileHomeActivity.this,false);
             Intent i = new Intent(UserProfileHomeActivity.this, UserLoginActivity.class);
             startActivity(i);
             Toast.makeText(this, "Logged Out", Toast.LENGTH_SHORT).show();

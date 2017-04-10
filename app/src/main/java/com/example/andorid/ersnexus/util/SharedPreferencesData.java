@@ -5,7 +5,7 @@ import android.preference.PreferenceManager;
 
 
 
-public class SharedPreferences {
+public class SharedPreferencesData {
     private static final String PREF_ERNO = "enrollmentNumber";
     private static final String PREF_USERNAME = "username";
     private static final String PREF_LOGIN_STATE = "login state";

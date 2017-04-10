@@ -23,7 +23,7 @@ import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.database.attendance.AttendanceLab;
 import com.example.andorid.ersnexus.models.AttendanceData;
 import com.example.andorid.ersnexus.userscanattendance.UserScanAttendanceActivity;
-import com.example.andorid.ersnexus.util.SharedPreferences;
+import com.example.andorid.ersnexus.util.SharedPreferencesData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,7 +66,12 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                               @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_attendance, container, false);
 
-        mErno = SharedPreferences.getStoredErno(getActivity());
+
+
+
+
+
+        mErno = SharedPreferencesData.getStoredErno(getActivity());
         String type = "sort_erno";
         new FetchAttendanceTask().execute(type,mErno);
 

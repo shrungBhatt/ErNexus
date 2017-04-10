@@ -220,7 +220,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     inputStream.close();
                     httpURLConnection.disconnect();
                     //Returning the results
-                    SharedPreferences.setStoredErno(mContext, result);
+                    SharedPreferencesData.setStoredErno(mContext, result);
                     return result;
 
                 } catch (IOException e) {
@@ -293,10 +293,8 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
         switch (mType) {
             case "login":
                 if (result.equals("success")) {
-                    String username = SharedPreferences.getStoredUsername(mContext);
-                    SharedPreferences.setStoredLoginStatus(mContext,true);
+                    SharedPreferencesData.setStoredLoginStatus(mContext,true);
                     mContext.startActivity(new Intent(mContext, UserProfileHomeActivity.class));
-                    Toast.makeText(mContext, "Welcome " + username, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(mContext, "Wrong Username or Password!", Toast.LENGTH_SHORT)
                             .show();

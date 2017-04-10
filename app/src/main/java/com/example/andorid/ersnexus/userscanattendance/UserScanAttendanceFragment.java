@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
 import com.example.andorid.ersnexus.util.BackgroundDbConnector;
-import com.example.andorid.ersnexus.util.SharedPreferences;
+import com.example.andorid.ersnexus.util.SharedPreferencesData;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -66,7 +66,7 @@ public class UserScanAttendanceFragment extends Fragment {
 
 
         mErno = (TextView) v.findViewById(R.id.enrollment_number_textView);
-        mErno.setText(SharedPreferences.getStoredErno(getActivity()));
+        mErno.setText(SharedPreferencesData.getStoredErno(getActivity()));
         erNo = mErno.getText().toString();
 
 
@@ -94,7 +94,7 @@ public class UserScanAttendanceFragment extends Fragment {
                 /*AttendanceData attendanceData = new AttendanceData(subjectCode, facultyCode,
                         date.toString(), erNo);
 
-                attendanceData.setEnrollmentNumber(SharedPreferences.getStoredErno(getActivity()));
+                attendanceData.setEnrollmentNumber(SharedPreferencesData.getStoredErno(getActivity()));
                 attendanceData.getEnrollmentNumber();
                 attendanceData.getSubjectCode();
                 attendanceData.getFacultyCode();
@@ -140,7 +140,6 @@ public class UserScanAttendanceFragment extends Fragment {
                     //setting values to textviews
                     mSubjectCode.setText(obj.getString("subject"));
                     subjectCode = mSubjectCode.getText().toString();
-
 
                     mFacultyCode.setText(obj.getString("faculty"));
                     facultyCode = mFacultyCode.getText().toString();

@@ -31,7 +31,7 @@
         </activity>
         <activity
             android:name=".userscanattendance.UserScanAttendanceActivity"
-            android:parentActivityName=".userprofile.homeactivity.UserProfileHomeActivity"
+            android:label="Scan Attendance"
             android:screenOrientation="portrait">
 
         </activity>
