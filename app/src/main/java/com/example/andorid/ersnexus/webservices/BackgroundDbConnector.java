@@ -1,4 +1,4 @@
-package com.example.andorid.ersnexus.util;
+package com.example.andorid.ersnexus.webservices;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
+import com.example.andorid.ersnexus.util.SharedPreferencesData;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,8 +36,6 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
     //Method carried out to perform background tasks.
     @Override
     protected String doInBackground (String... params) {
-
-
 
         //The first parameter of the background task method.
         String type = params[0];
@@ -79,7 +78,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
 
                     //Getting the results
                     String result = "";
-                    String line = "";
+                    String line;
                     while ((line = bufferedReader.readLine()) != null) {
                         result += line;
                     }
@@ -140,7 +139,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                             inputStream, "iso-8859-1"));
 
                     String result = "";
-                    String line = "";
+                    String line;
                     while ((line = bufferedReader.readLine()) != null) {
                         result += line;
                     }
@@ -185,7 +184,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
 
                     //Getting the results
                     String result = "";
-                    String line = "";
+                    String line;
                     while ((line = bufferedReader.readLine()) != null) {
                         result += line;
                     }
@@ -239,7 +238,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                             inputStream, "iso-8859-1"));
 
                     String result = "";
-                    String line = "";
+                    String line;
                     while ((line = bufferedReader.readLine()) != null) {
                         result += line;
                     }

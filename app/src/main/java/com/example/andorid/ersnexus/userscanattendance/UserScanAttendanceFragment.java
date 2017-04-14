@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
-import com.example.andorid.ersnexus.util.BackgroundDbConnector;
+import com.example.andorid.ersnexus.webservices.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;

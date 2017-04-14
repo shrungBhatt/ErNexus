@@ -1,4 +1,4 @@
-package com.example.andorid.ersnexus.util;
+package com.example.andorid.ersnexus.webservices;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

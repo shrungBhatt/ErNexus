@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.userlogin.UserLoginActivity;
-import com.example.andorid.ersnexus.util.BackgroundDbConnector;
+import com.example.andorid.ersnexus.webservices.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
 
 //This is the activity where all the tabs are showed where user interacts with everything.

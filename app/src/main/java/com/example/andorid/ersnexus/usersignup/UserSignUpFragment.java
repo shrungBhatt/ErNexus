@@ -20,7 +20,7 @@ import com.example.andorid.ersnexus.database.userdata.UserBaseHelper;
 import com.example.andorid.ersnexus.models.UserData;
 import com.example.andorid.ersnexus.database.userdata.UserLab;
 import com.example.andorid.ersnexus.userlogin.UserLoginActivity;
-import com.example.andorid.ersnexus.util.BackgroundDbConnector;
+import com.example.andorid.ersnexus.webservices.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.DatePickerFragment;
 
 import java.text.DateFormat;

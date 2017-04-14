@@ -24,7 +24,7 @@ import com.example.andorid.ersnexus.database.attendance.AttendanceLab;
 import com.example.andorid.ersnexus.models.AttendanceData;
 import com.example.andorid.ersnexus.userscanattendance.UserScanAttendanceActivity;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
-import com.example.andorid.ersnexus.util.URLManager;
+import com.example.andorid.ersnexus.webservices.URLManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,12 +66,8 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                               @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_attendance, container, false);
 
-
-
-
-
-
         mErno = SharedPreferencesData.getStoredErno(getActivity());
+
         String type = "sort_erno";
         new FetchAttendanceTask().execute(type,mErno);
 
@@ -259,7 +255,6 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
     public class FetchAttendanceTask extends AsyncTask<String, Void, List<AttendanceData>> {
 
-        private String mType;
         private HttpURLConnection mHttpURLConnection;
 
         public FetchAttendanceTask () {
@@ -268,7 +263,6 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         @Override
         protected List<AttendanceData> doInBackground (String... params) {
             String type = params[0];
-            mType = type;
 
             try {
                 SocketAddress sockaddr = new InetSocketAddress("192.168.2.3", 80);
@@ -317,7 +311,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
                         //Getting the results
                         String result = "";
-                        String line = "";
+                        String line;
                         while ((line = bufferedReader.readLine()) != null) {
                             result += line;
                         }
@@ -364,7 +358,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                                 inputStream, "iso-8859-1"));
 
                         String result = "";
-                        String line = "";
+                        String line;
                         while ((line = bufferedReader.readLine()) != null) {
                             result += line;
                         }
@@ -416,7 +410,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
                         //Getting the results
                         String result = "";
-                        String line = "";
+                        String line;
                         while ((line = bufferedReader.readLine()) != null) {
                             result += line;
                         }
@@ -463,7 +457,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                                 inputStream, "iso-8859-1"));
 
                         String result = "";
-                        String line = "";
+                        String line;
                         while ((line = bufferedReader.readLine()) != null) {
                             result += line;
                         }
