@@ -24,6 +24,7 @@ import com.example.andorid.ersnexus.database.attendance.AttendanceLab;
 import com.example.andorid.ersnexus.models.AttendanceData;
 import com.example.andorid.ersnexus.userscanattendance.UserScanAttendanceActivity;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
+import com.example.andorid.ersnexus.util.URLManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +41,6 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -259,7 +259,8 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
     public class FetchAttendanceTask extends AsyncTask<String, Void, List<AttendanceData>> {
 
-        String mType;
+        private String mType;
+        private HttpURLConnection mHttpURLConnection;
 
         public FetchAttendanceTask () {
         }
@@ -281,16 +282,6 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "Server is Down", Toast.LENGTH_SHORT).show();
             }
-            String URL = "http://192.168.2.3/ersnexus/";
-            //Url for login page php file.
-            String sortErnoUrl = URL + "sort_attendance_erno.php";
-
-            //Url for register page php file.
-            String sortSubjectCodeUrl = URL + "sort_attendance_subject_code.php";
-
-            String sortFacultyCodeUrl = URL + "sort_attendance_faculty_code.php";
-
-            String sortDateUrl = URL + "sort_attendance_date.php";
 
             //It is an login call.
             switch (type) {
@@ -299,18 +290,11 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                         //Fetch the username and password from the background method call.
                         String enrollmentnumber = params[1];
 
-                        //Creating a URL.
-                        URL url = new URL(sortErnoUrl);
-                        //Connecting to the URL.
-                        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                        //Setting request method POST.
-                        httpURLConnection.setRequestMethod("POST");
-                        //This connection include Input and output interaction.
-                        httpURLConnection.setDoOutput(true);
-                        httpURLConnection.setDoInput(true);
+                        mHttpURLConnection = URLManager.
+                                getConnection(URLManager.SORT_ERNO_URL);
 
                         //Creating the outputStream
-                        OutputStream outputStream = httpURLConnection.getOutputStream();
+                        OutputStream outputStream = mHttpURLConnection.getOutputStream();
                         //Writing in the outputStream.
                         BufferedWriter bufferedWriter = new BufferedWriter(new
                                 OutputStreamWriter(outputStream, "UTF-8"));
@@ -326,7 +310,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                         outputStream.close();
 
                         //Creating an inputStream to fetch the results.
-                        InputStream inputStream = httpURLConnection.getInputStream();
+                        InputStream inputStream = mHttpURLConnection.getInputStream();
 
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
                                 inputStream, "iso-8859-1"));
@@ -339,7 +323,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                         }
                         bufferedReader.close();
                         inputStream.close();
-                        httpURLConnection.disconnect();
+                        mHttpURLConnection.disconnect();
 
                         //Returning the results
                         return getAttendanceDatas(result);
@@ -356,13 +340,10 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
 
 
-                        URL url = new URL(sortSubjectCodeUrl);
-                        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                        httpURLConnection.setRequestMethod("POST");
-                        httpURLConnection.setDoOutput(true);
-                        httpURLConnection.setDoInput(true);
+                        mHttpURLConnection = URLManager.
+                                getConnection(URLManager.SORT_SUBJECT_CODE_URL);
 
-                        OutputStream outputStream = httpURLConnection.getOutputStream();
+                        OutputStream outputStream = mHttpURLConnection.getOutputStream();
                         BufferedWriter bufferedWriter = new BufferedWriter(new
                                 OutputStreamWriter(outputStream, "UTF-8"));
 
@@ -377,7 +358,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                         bufferedWriter.close();
                         outputStream.close();
 
-                        InputStream inputStream = httpURLConnection.getInputStream();
+                        InputStream inputStream = mHttpURLConnection.getInputStream();
 
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
                                 inputStream, "iso-8859-1"));
@@ -389,7 +370,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                         }
                         bufferedReader.close();
                         inputStream.close();
-                        httpURLConnection.disconnect();
+                        mHttpURLConnection.disconnect();
 
                         //Returning the results
                         return getAttendanceDatas(result);
@@ -404,18 +385,12 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                         String enrollmentnumber = params[1];
                         String faculty_code = params[2];
 
-                        //Creating a URL.
-                        URL url = new URL(sortFacultyCodeUrl);
-                        //Connecting to the URL.
-                        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                        //Setting request method POST.
-                        httpURLConnection.setRequestMethod("POST");
-                        //This connection include Input and output interaction.
-                        httpURLConnection.setDoOutput(true);
-                        httpURLConnection.setDoInput(true);
+
+                        mHttpURLConnection = URLManager.
+                                getConnection(URLManager.SORT_FACULTY_CODE_URL);
 
                         //Creating the outputStream
-                        OutputStream outputStream = httpURLConnection.getOutputStream();
+                        OutputStream outputStream = mHttpURLConnection.getOutputStream();
                         //Writing in the outputStream.
                         BufferedWriter bufferedWriter = new BufferedWriter(new
                                 OutputStreamWriter(outputStream, "UTF-8"));
@@ -424,7 +399,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                         String postData = URLEncoder.encode("enrollmentnumber", "UTF-8") + "=" +//$_POST["enrollmentnumber"]
                                 URLEncoder.encode(enrollmentnumber, "UTF-8") +
                                 "&" +
-                                URLEncoder.encode("faculty_code", "UTF-8") + "=" +//$_POST["username"]
+                                URLEncoder.encode("faculty_code", "UTF-8") + "=" +//$_POST["faculty_code"]
                                 URLEncoder.encode(faculty_code, "UTF-8");
 
                         //Feeding the data.
@@ -434,7 +409,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                         outputStream.close();
 
                         //Creating an inputStream to fetch the results.
-                        InputStream inputStream = httpURLConnection.getInputStream();
+                        InputStream inputStream = mHttpURLConnection.getInputStream();
 
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
                                 inputStream, "iso-8859-1"));
@@ -447,7 +422,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                         }
                         bufferedReader.close();
                         inputStream.close();
-                        httpURLConnection.disconnect();
+                        mHttpURLConnection.disconnect();
                         //Returning the results
 
                         //Returning the results
@@ -463,14 +438,11 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                         String enrollmentnumber = params[1];
                         String date = params[2];
 
-                        URL url = new URL(sortDateUrl);
-                        HttpURLConnection httpURLConnection = (HttpURLConnection)
-                                url.openConnection();
-                        httpURLConnection.setRequestMethod("POST");
-                        httpURLConnection.setDoOutput(true);
-                        httpURLConnection.setDoInput(true);
 
-                        OutputStream outputStream = httpURLConnection.getOutputStream();
+                        mHttpURLConnection = URLManager.
+                                getConnection(URLManager.SORT_DATE_URL);
+
+                        OutputStream outputStream = mHttpURLConnection.getOutputStream();
                         BufferedWriter bufferedWriter = new BufferedWriter(new
                                 OutputStreamWriter(outputStream, "UTF-8"));
 
@@ -485,7 +457,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                         bufferedWriter.close();
                         outputStream.close();
 
-                        InputStream inputStream = httpURLConnection.getInputStream();
+                        InputStream inputStream = mHttpURLConnection.getInputStream();
 
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
                                 inputStream, "iso-8859-1"));
@@ -497,7 +469,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                         }
                         bufferedReader.close();
                         inputStream.close();
-                        httpURLConnection.disconnect();
+                        mHttpURLConnection.disconnect();
 
                         //Returning the results
                         return getAttendanceDatas(result);
@@ -517,7 +489,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         }
     }
 
-    public List<AttendanceData> getAttendanceDatas(String result){
+    private List<AttendanceData> getAttendanceDatas(String result){
         List<AttendanceData> attendanceDatas = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(result);
@@ -541,6 +513,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         //Returning the results
         return attendanceDatas;
     }
+
 
 
 }

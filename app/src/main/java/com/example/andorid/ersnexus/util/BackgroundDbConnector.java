@@ -1,6 +1,7 @@
 package com.example.andorid.ersnexus.util;
 
-import android.content.*;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -14,7 +15,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 
 //This class is used for performing tasks in the background.
@@ -23,6 +23,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
 
     private Context mContext;
     public  String mType;
+    private HttpURLConnection mHttpURLConnection;
 
 
     //Constructor to initialise this class.
@@ -41,17 +42,6 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
         String type = params[0];
         mType = type;
 
-        String URL = "http://192.168.2.3/ersnexus/";
-        //Url for login page php file.
-        String loginUrl = URL + "login.php";
-
-        //Url for register page php file.
-        String registerUrl = URL + "register.php";
-
-        String enrollmentNumberUrl = URL + "enrollmentnumber.php";
-
-        String attendanceUrl = URL + "attendance.php";
-
         //It is an login call.
         switch (type) {
             case "login":
@@ -60,18 +50,11 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     String username = params[1];
                     String password = params[2];
 
-                    //Creating a URL.
-                    URL url = new URL(loginUrl);
-                    //Connecting to the URL.
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                    //Setting request method POST.
-                    httpURLConnection.setRequestMethod("POST");
-                    //This connection include Input and output interaction.
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setDoInput(true);
+                    mHttpURLConnection = URLManager.
+                            getConnection(URLManager.LOGIN_URL);
 
                     //Creating the outputStream
-                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    OutputStream outputStream = mHttpURLConnection.getOutputStream();
                     //Writing in the outputStream.
                     BufferedWriter bufferedWriter = new BufferedWriter(new
                             OutputStreamWriter(outputStream, "UTF-8"));
@@ -89,7 +72,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     outputStream.close();
 
                     //Creating an inputStream to fetch the results.
-                    InputStream inputStream = httpURLConnection.getInputStream();
+                    InputStream inputStream = mHttpURLConnection.getInputStream();
 
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
                             inputStream, "iso-8859-1"));
@@ -102,7 +85,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     }
                     bufferedReader.close();
                     inputStream.close();
-                    httpURLConnection.disconnect();
+                    mHttpURLConnection.disconnect();
                     //Returning the results
                     return result;
 
@@ -121,13 +104,10 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     String dob = params[6];
 
 
-                    URL url = new URL(registerUrl);
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                    httpURLConnection.setRequestMethod("POST");
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setDoInput(true);
+                    mHttpURLConnection = URLManager.
+                            getConnection(URLManager.REGISTER_STUDENT_URL);
 
-                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    OutputStream outputStream = mHttpURLConnection.getOutputStream();
                     BufferedWriter bufferedWriter = new BufferedWriter(new
                             OutputStreamWriter(outputStream, "UTF-8"));
 
@@ -154,7 +134,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     bufferedWriter.close();
                     outputStream.close();
 
-                    InputStream inputStream = httpURLConnection.getInputStream();
+                    InputStream inputStream = mHttpURLConnection.getInputStream();
 
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
                             inputStream, "iso-8859-1"));
@@ -166,7 +146,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     }
                     bufferedReader.close();
                     inputStream.close();
-                    httpURLConnection.disconnect();
+                    mHttpURLConnection.disconnect();
                     return result;
 
                 } catch (IOException e) {
@@ -178,18 +158,11 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     //Fetch the username from the background method call.
                     String username = params[1];
 
-                    //Creating a URL.
-                    URL url = new URL(enrollmentNumberUrl);
-                    //Connecting to the URL.
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                    //Setting request method POST.
-                    httpURLConnection.setRequestMethod("POST");
-                    //This connection include Input and output interaction.
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setDoInput(true);
+                    mHttpURLConnection = URLManager.
+                            getConnection(URLManager.FETCH_ERNO_URL);
 
                     //Creating the outputStream
-                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    OutputStream outputStream = mHttpURLConnection.getOutputStream();
                     //Writing in the outputStream.
                     BufferedWriter bufferedWriter = new BufferedWriter(new
                             OutputStreamWriter(outputStream, "UTF-8"));
@@ -205,7 +178,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     outputStream.close();
 
                     //Creating an inputStream to fetch the results.
-                    InputStream inputStream = httpURLConnection.getInputStream();
+                    InputStream inputStream = mHttpURLConnection.getInputStream();
 
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
                             inputStream, "iso-8859-1"));
@@ -218,7 +191,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     }
                     bufferedReader.close();
                     inputStream.close();
-                    httpURLConnection.disconnect();
+                    mHttpURLConnection.disconnect();
                     //Returning the results
                     SharedPreferencesData.setStoredErno(mContext, result);
                     return result;
@@ -236,14 +209,10 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     String date = params[4];
 
 
+                    mHttpURLConnection = URLManager.
+                            getConnection(URLManager.REGISTER_ATTENDANCE_URL);
 
-                    URL url = new URL(attendanceUrl);
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                    httpURLConnection.setRequestMethod("POST");
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setDoInput(true);
-
-                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    OutputStream outputStream = mHttpURLConnection.getOutputStream();
                     BufferedWriter bufferedWriter = new BufferedWriter(new
                             OutputStreamWriter(outputStream, "UTF-8"));
 
@@ -264,7 +233,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     bufferedWriter.close();
                     outputStream.close();
 
-                    InputStream inputStream = httpURLConnection.getInputStream();
+                    InputStream inputStream = mHttpURLConnection.getInputStream();
 
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
                             inputStream, "iso-8859-1"));
@@ -276,7 +245,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     }
                     bufferedReader.close();
                     inputStream.close();
-                    httpURLConnection.disconnect();
+                    mHttpURLConnection.disconnect();
                     return result;
 
                 } catch (IOException e) {
