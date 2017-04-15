@@ -38,10 +38,11 @@ public class UserProfileHomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent intent = new Intent("finish_activity");
-        sendBroadcast(intent);
+        //Intent intent = new Intent("finish_activity");
+        //sendBroadcast(intent);
 
-        if(SharedPreferencesData.getStoredLoginStatus(UserProfileHomeActivity.this)){
+        if(SharedPreferencesData.getStoredLoginStatus(UserProfileHomeActivity.this)&&
+                UserLoginActivity.mActive){
             String userName = SharedPreferencesData.getStoredUsername(UserProfileHomeActivity.this);
             Toast.makeText(UserProfileHomeActivity.this,
                     "Welcome "+userName,Toast.LENGTH_SHORT).show();

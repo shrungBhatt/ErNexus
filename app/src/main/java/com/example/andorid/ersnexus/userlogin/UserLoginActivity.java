@@ -36,6 +36,7 @@ public class UserLoginActivity extends AppCompatActivity {
     private String password;
     private String mErno;
     public static Activity mActivity;
+    public static Boolean mActive;
 
     @Override
     public void onCreate (Bundle savedInstanceState) {
@@ -112,6 +113,18 @@ public class UserLoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mActive = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mActive = false;
     }
 
     private boolean isNetworkAvailableAndConnected () {

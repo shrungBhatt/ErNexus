@@ -104,6 +104,7 @@ public class UserScanAttendanceFragment extends Fragment {
 
                 Intent intent = new Intent(getActivity(), UserProfileHomeActivity.class);
                 startActivity(intent);
+                getActivity().finish();
             }
         });
 
