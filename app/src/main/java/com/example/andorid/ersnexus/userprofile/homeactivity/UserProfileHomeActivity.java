@@ -1,5 +1,6 @@
 package com.example.andorid.ersnexus.userprofile.homeactivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -31,6 +32,8 @@ public class UserProfileHomeActivity extends AppCompatActivity
     //This is our mViewPager
     private ViewPager mViewPager;
 
+    public static Activity mActivity;
+
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,7 @@ public class UserProfileHomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mActivity = this;
         //Intent intent = new Intent("finish_activity");
         //sendBroadcast(intent);
 

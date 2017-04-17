@@ -25,6 +25,7 @@
     <string name="scan_attendance">Scan Attendance</string>
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="erNo">Enrollment Number</string>
+    <string name="attendance_cooldown_text">Attendance Button is in cooldown for 1 min</string>
     <string-array name="sort_attendance_by">
         <item>-</item>
         <item>Subject Code</item>

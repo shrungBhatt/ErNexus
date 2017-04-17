@@ -9,6 +9,7 @@ public class SharedPreferencesData {
     private static final String PREF_ERNO = "enrollmentNumber";
     private static final String PREF_USERNAME = "username";
     private static final String PREF_LOGIN_STATE = "login state";
+    private static final String PREF_CURRENT_TIME_STAMP = "current timeStamp";
 
     public static String getStoredErno(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context)
@@ -43,6 +44,18 @@ public class SharedPreferencesData {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putBoolean(PREF_LOGIN_STATE,status)
+                .apply();
+    }
+
+    public static Long getCurrentTimeStamp(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getLong(PREF_CURRENT_TIME_STAMP,0);
+    }
+
+    public static void setCurrntTimeStamp (Context context, Long currentTs){
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putLong(PREF_CURRENT_TIME_STAMP,currentTs)
                 .apply();
     }
 
