@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,7 @@ import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.database.attendance.AttendanceLab;
 import com.example.andorid.ersnexus.models.AttendanceData;
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
+import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivityViewPager;
 import com.example.andorid.ersnexus.userscanattendance.UserScanAttendanceActivity;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
 import com.example.andorid.ersnexus.webservices.URLManager;
@@ -65,6 +67,8 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     private ImageButton mClearButton;
     private PullRefreshLayout mSwipeRefresh;
     private ViewPager mViewPager;
+    private UserProfileHomeActivity mUserProfileHomeActivity;
+    private UserProfileHomeActivityViewPager mViewPagerAdapter;
 
     @Override
     public View onCreateView (LayoutInflater inflater, @Nullable ViewGroup container,
@@ -124,10 +128,9 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         mSwipeRefresh.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh () {
-                Intent i = new Intent(getActivity(),UserProfileHomeActivity.class);
-                UserProfileHomeActivity.mActivity.finish();
-                startActivity(i);
 
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.detach(Attendance.this).attach(Attendance.this).commit();
 
             }
         });
@@ -184,7 +187,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager manager = ((LinearLayoutManager)recyclerView
                         .getLayoutManager());
-                boolean enabled =manager.findFirstCompletelyVisibleItemPosition() == 0;
+                boolean enabled = manager.findFirstCompletelyVisibleItemPosition() == 0;
                 mSwipeRefresh.setEnabled(enabled);
             }
         });

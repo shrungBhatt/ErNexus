@@ -17,8 +17,8 @@ import android.widget.Toast;
 
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.userlogin.UserLoginActivity;
-import com.example.andorid.ersnexus.webservices.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
+import com.example.andorid.ersnexus.webservices.BackgroundDbConnector;
 
 //This is the activity where all the tabs are showed where user interacts with everything.
 
@@ -33,6 +33,8 @@ public class UserProfileHomeActivity extends AppCompatActivity
     private ViewPager mViewPager;
 
     public static Activity mActivity;
+
+
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -181,4 +183,7 @@ public class UserProfileHomeActivity extends AppCompatActivity
     public void onTabReselected (TabLayout.Tab tab) {
 
     }
+
+
+
 }
