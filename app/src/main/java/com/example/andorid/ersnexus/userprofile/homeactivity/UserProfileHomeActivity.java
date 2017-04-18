@@ -44,8 +44,6 @@ public class UserProfileHomeActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         mActivity = this;
-        //Intent intent = new Intent("finish_activity");
-        //sendBroadcast(intent);
 
         if(SharedPreferencesData.getStoredLoginStatus(UserProfileHomeActivity.this)&&
                 UserLoginActivity.mActive){

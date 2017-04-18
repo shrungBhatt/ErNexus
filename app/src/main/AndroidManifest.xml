@@ -23,6 +23,7 @@
             android:name=".usersignup.UserSignUpActivity"
             android:label="Sign Up"
             android:parentActivityName=".userlogin.UserLoginActivity"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
         </activity>
         <activity

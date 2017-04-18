@@ -1,10 +1,7 @@
 package com.example.andorid.ersnexus.userlogin;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +14,8 @@ import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.database.userdata.UserBaseHelper;
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
 import com.example.andorid.ersnexus.usersignup.UserSignUpActivity;
-import com.example.andorid.ersnexus.webservices.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
+import com.example.andorid.ersnexus.webservices.BackgroundDbConnector;
 
 
 //This is the main activity of the app.
@@ -86,19 +83,6 @@ public class UserLoginActivity extends AppCompatActivity {
                     password = mHelper.fetchUserPass(userName);
                     mErno = mHelper.fetchErNo(userName);
                     //String fullName = mHelper.fetchFullName(userName);
-
-                    BroadcastReceiver broadcast_reciever = new BroadcastReceiver() {
-
-                        @Override
-                        public void onReceive(Context arg0, Intent intent) {
-                            String action = intent.getAction();
-                            if (action.equals("finish_activity")) {
-                                finish();
-                                // DO WHATEVER YOU WANT.
-                            }
-                        }
-                    };
-                    registerReceiver(broadcast_reciever, new IntentFilter("finish_activity"));
 
                     BackgroundDbConnector backgroundDbConnector = new
                             BackgroundDbConnector(UserLoginActivity.this);

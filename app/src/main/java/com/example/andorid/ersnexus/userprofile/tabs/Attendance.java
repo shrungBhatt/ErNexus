@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,10 +22,7 @@ import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.example.andorid.ersnexus.R;
-import com.example.andorid.ersnexus.database.attendance.AttendanceLab;
 import com.example.andorid.ersnexus.models.AttendanceData;
-import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
-import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivityViewPager;
 import com.example.andorid.ersnexus.userscanattendance.UserScanAttendanceActivity;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
 import com.example.andorid.ersnexus.webservices.URLManager;
@@ -56,20 +52,16 @@ import java.util.List;
 public class Attendance extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private Button mScanAttendanceButton;
-    private AttendanceAdapter mAdapter;
+    //private AttendanceAdapter mAdapter;
     private RecyclerView mAttendanceRecyclerView;
     private int mPosition;
     private EditText mSortAttendanceEditText;
     private ImageButton mSortAttendanceButton;
     private String mErno;
-    private AttendanceLab mAttendanceLab;
+    //private AttendanceLab mAttendanceLab;
     private List<AttendanceData> mAttendanceDatas;
     private ImageButton mClearButton;
     private PullRefreshLayout mSwipeRefresh;
-    private ViewPager mViewPager;
-    private UserProfileHomeActivity mUserProfileHomeActivity;
-    private UserProfileHomeActivityViewPager mViewPagerAdapter;
-
     @Override
     public View onCreateView (LayoutInflater inflater, @Nullable ViewGroup container,
                               @Nullable Bundle savedInstanceState) {
@@ -80,12 +72,11 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         String type = "sort_erno";
         new FetchAttendanceTask().execute(type,mErno);
 
-        mViewPager = (ViewPager)v. findViewById(R.id.home_activity_viewPager);
 
 
 
 
-        mAttendanceLab = AttendanceLab.get(getActivity());
+        //mAttendanceLab = AttendanceLab.get(getActivity());
 
         //Button used to start the scanAttendance activity.
         mScanAttendanceButton = (Button) v.findViewById(R.id.scan_attendance_button);
