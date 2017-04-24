@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.example.andorid.ersnexus.R;
@@ -39,9 +38,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +58,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     private List<AttendanceData> mAttendanceDatas;
     private ImageButton mClearButton;
     private PullRefreshLayout mSwipeRefresh;
+
     @Override
     public View onCreateView (LayoutInflater inflater, @Nullable ViewGroup container,
                               @Nullable Bundle savedInstanceState) {
@@ -72,14 +69,11 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         String type = "sort_erno";
         new FetchAttendanceTask().execute(type,mErno);
 
-
-
-
-
         //mAttendanceLab = AttendanceLab.get(getActivity());
 
         //Button used to start the scanAttendance activity.
         mScanAttendanceButton = (Button) v.findViewById(R.id.scan_attendance_button);
+
         Long currentTs = System.currentTimeMillis()/1000;
         Long previousTs = SharedPreferencesData.getCurrentTimeStamp(getActivity());
 
@@ -87,15 +81,14 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             mScanAttendanceButton.setEnabled(true);
         }else {
             mScanAttendanceButton.setEnabled(false);
-            mScanAttendanceButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+            mScanAttendanceButton.setBackgroundColor(getResources().
+                    getColor(android.R.color.holo_red_dark));
             mScanAttendanceButton.setText(R.string.attendance_cooldown_text);
         }
 
         mScanAttendanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-
-
                 Long currentTs = System.currentTimeMillis()/1000;
                 SharedPreferencesData.setCurrntTimeStamp(getActivity(),currentTs);
 
@@ -184,15 +177,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         });
         //updateUI();
 
-
-
         return v;
-    }
-
-    @Override
-    public void onResume () {
-        super.onResume();
-        //updateUI();// To update the data in recyclerView after editing the data in attendance tab.
     }
 
     @Override
@@ -203,6 +188,12 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     @Override
     public void onNothingSelected (AdapterView<?> parent) {
 
+    }
+
+    @Override
+    public void onResume () {
+        super.onResume();
+        //updateUI();// To update the data in recyclerView after editing the data in attendance tab.
     }
 
     /*private void checkAndSetAdapter () {
@@ -305,19 +296,6 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         @Override
         protected List<AttendanceData> doInBackground (String... params) {
             String type = params[0];
-
-            try {
-                SocketAddress sockaddr = new InetSocketAddress("192.168.2.3", 80);
-                // Create an unbound socket
-                Socket sock = new Socket();
-
-                // This method will block no more than timeoutMs.
-                // If the timeout occurs, SocketTimeoutException is thrown.
-                int timeoutMs = 2000;   // 2 seconds
-                sock.connect(sockaddr, timeoutMs);
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), "Server is Down", Toast.LENGTH_SHORT).show();
-            }
 
             //It is an login call.
             switch (type) {
@@ -539,7 +517,6 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                 attendanceData.setSubjectCode(jsonObject.getString("subjectcode"));
                 attendanceData.setFacultyCode(jsonObject.getString("facultycode"));
                 attendanceData.setDate(jsonObject.getString("date"));
-
 
                 attendanceDatas.add(attendanceData);
             }

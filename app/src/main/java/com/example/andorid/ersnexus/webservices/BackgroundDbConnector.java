@@ -258,6 +258,9 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute (String result) {
+        if(result == null){
+            return;
+        }
         switch (mType) {
             case "login":
                 if (result.equals("success")) {

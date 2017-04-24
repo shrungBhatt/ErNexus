@@ -77,6 +77,15 @@ public class UserLoginActivity extends AppCompatActivity {
             @Override
             public void onClick (View v) {
                 if(isNetworkAvailableAndConnected()) {
+                    /*try {
+                        if(!InetAddress.getByName("192.168.2.3").isReachable(5000)){
+                            throw new Exception("Host does not exist::");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(UserLoginActivity.this,
+                                "Server Is Down",Toast.LENGTH_SHORT).show();
+                    }*/
                     String type = "login";
                     userName = mUserName.getText().toString();
                     pass = mUserPassword.getText().toString();
@@ -115,10 +124,9 @@ public class UserLoginActivity extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 
         boolean isNetworkAvailable = cm.getActiveNetworkInfo() != null;
-        boolean isNetworkConnected = isNetworkAvailable &&
-                cm.getActiveNetworkInfo().isConnected();
 
-        return isNetworkConnected;
+        return isNetworkAvailable &&
+                cm.getActiveNetworkInfo().isConnected();
     }
 
 }

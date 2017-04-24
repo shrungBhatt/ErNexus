@@ -6,7 +6,7 @@ import java.net.URL;
 
 
 public class URLManager {
-    public static final String URL = "http://192.168.2.3/ersnexus/";
+    public static final String URL = "http://ersnexus.esy.es/";
 
     //These are the URLs used in the BackgroundDBConnector class.
     public static final String LOGIN_URL = URL + "login.php";
