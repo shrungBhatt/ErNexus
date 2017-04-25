@@ -27,7 +27,7 @@
     <string name="erNo">Enrollment Number</string>
     <string name="attendance_cooldown_text">Attendance Button is in cooldown for 1 min</string>
     <string-array name="sort_attendance_by">
-        <item>-</item>
+        <item>Sort By</item>
         <item>Subject Code</item>
         <item>Faculty Code</item>
         <item>Date</item>

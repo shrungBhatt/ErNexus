@@ -1,6 +1,8 @@
 package com.example.andorid.ersnexus.userprofile.tabs;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.example.andorid.ersnexus.R;
@@ -66,8 +69,12 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
         mErno = SharedPreferencesData.getStoredErno(getActivity());
 
-        String type = "sort_erno";
-        new FetchAttendanceTask().execute(type,mErno);
+        if (isNetworkAvailableAndConnected()){
+            String type = "sort_erno";
+            new FetchAttendanceTask().execute(type, mErno);
+        }else{
+            Toast.makeText(getActivity(),"No Internet Connection",Toast.LENGTH_SHORT).show();
+        }
 
         //mAttendanceLab = AttendanceLab.get(getActivity());
 
@@ -499,7 +506,9 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         @Override
         protected void onPostExecute (List<AttendanceData> items) {
             mAttendanceDatas = items;
-            mAttendanceRecyclerView.setAdapter(new AttendanceAdapter(mAttendanceDatas));
+            if(mAttendanceDatas != null) {
+                mAttendanceRecyclerView.setAdapter(new AttendanceAdapter(mAttendanceDatas));
+            }
         }
     }
 
@@ -528,5 +537,14 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     }
 
 
+    private boolean isNetworkAvailableAndConnected () {
+        ConnectivityManager cm = (ConnectivityManager)getActivity().
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        boolean isNetworkAvailable = cm.getActiveNetworkInfo() != null;
+
+        return isNetworkAvailable &&
+                cm.getActiveNetworkInfo().isConnected();
+    }
 
 }

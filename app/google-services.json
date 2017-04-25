@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "835950490743",
+    "firebase_url": "https://ernexus-4ef1c.firebaseio.com",
+    "project_id": "ernexus-4ef1c",
+    "storage_bucket": "ernexus-4ef1c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835950490743:android:b942c5aaa96516c9",
+        "android_client_info": {
+          "package_name": "com.example.andorid.ersnexus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835950490743-sc5q8oia8f2935e17sov36mnfkuhuj4k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUK35448h0HC1Upz0AA-zLNgK25MsSY6o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,6 +2,7 @@ package com.example.andorid.ersnexus.userprofile.homeactivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -130,11 +131,15 @@ public class UserProfileHomeActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            if(isNetworkAvailableAndConnected()){
             SharedPreferencesData.setStoredLoginStatus(UserProfileHomeActivity.this,false);
             Intent i = new Intent(UserProfileHomeActivity.this, UserLoginActivity.class);
             startActivity(i);
             Toast.makeText(this, "Logged Out", Toast.LENGTH_SHORT).show();
             finish();
+            }else {
+                Toast.makeText(this,"No Internet Connection",Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
 
@@ -182,6 +187,14 @@ public class UserProfileHomeActivity extends AppCompatActivity
 
     }
 
+    private boolean isNetworkAvailableAndConnected () {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+
+        boolean isNetworkAvailable = cm.getActiveNetworkInfo() != null;
+
+        return isNetworkAvailable &&
+                cm.getActiveNetworkInfo().isConnected();
+    }
 
 
 }
