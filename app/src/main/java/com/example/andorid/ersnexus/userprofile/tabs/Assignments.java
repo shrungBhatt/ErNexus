@@ -78,7 +78,7 @@ public class Assignments extends Fragment {
 
     private class AssignmentHolder extends RecyclerView.ViewHolder{
 
-        private TextView mAssignmentNameTextView, mSubjectCodeTextView, mFacultyCodeTextView,
+        private TextView mAssignmentNameTextView, mSubjectCodeTextView,
                 mClassTextView,mAssignmentDate;
 
         private AssignmentData mAssignmentData;

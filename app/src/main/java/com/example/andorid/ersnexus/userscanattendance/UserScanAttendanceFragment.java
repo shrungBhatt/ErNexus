@@ -82,13 +82,17 @@ public class UserScanAttendanceFragment extends Fragment {
             @Override
             public void onClick (View v) {
 
-                String type = "attendance";
+                if(mSubjectCode.length() == 0 && mFacultyCode.length() == 0){
+                    Toast.makeText(getActivity(),"Scan Attendance First",Toast.LENGTH_SHORT).show();
+                }else {
 
-                BackgroundDbConnector backgroundDbConnector = new
-                        BackgroundDbConnector(getActivity());
+                    String type = "attendance";
 
-                backgroundDbConnector.execute(type, erNo, subjectCode, facultyCode,
-                        mDate.getText().toString());
+                    BackgroundDbConnector backgroundDbConnector = new
+                            BackgroundDbConnector(getActivity());
+
+                    backgroundDbConnector.execute(type, erNo, subjectCode, facultyCode,
+                            mDate.getText().toString());
 
 
                 /*AttendanceData attendanceData = new AttendanceData(subjectCode, facultyCode,
@@ -100,11 +104,12 @@ public class UserScanAttendanceFragment extends Fragment {
                 attendanceData.getFacultyCode();
                 AttendanceLab.get(getActivity()).addAttendance(attendanceData);*/
 
-                //Toast.makeText(getActivity(),"Submitted",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(),"Submitted",Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(getActivity(), UserProfileHomeActivity.class);
-                startActivity(intent);
-                getActivity().finish();
+                    Intent intent = new Intent(getActivity(), UserProfileHomeActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
             }
         });
 
@@ -166,5 +171,6 @@ public class UserScanAttendanceFragment extends Fragment {
         outState.putString(KEY_FACULTY_CODE, facultyCode);
         outState.putString(KEY_DATE, date.toString());
     }
+
 }
 
