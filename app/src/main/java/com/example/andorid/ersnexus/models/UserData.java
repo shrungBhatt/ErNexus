@@ -39,7 +39,6 @@ public class UserData {
     public UserData(String userName,String password){
         mUserName = userName;
         mPassword = password;
-
     }
 
     public UUID getId () {

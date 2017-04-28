@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.andorid.ersnexus.R;
-import com.example.andorid.ersnexus.database.userdata.UserBaseHelper;
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
 import com.example.andorid.ersnexus.usersignup.UserSignUpActivity;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
@@ -27,11 +26,11 @@ public class UserLoginActivity extends AppCompatActivity {
     private EditText mUserPassword;
     private Button mLoginButton;
     private Button mSignUpButton;
-    private UserBaseHelper mHelper;
+    //private UserBaseHelper mHelper;
     private String userName;
     private String pass;
-    private String password;
-    private String mErno;
+    //private String password;
+    //private String mErno;
     public static Activity mActivity;
     public static Boolean mActive;
 
@@ -48,7 +47,7 @@ public class UserLoginActivity extends AppCompatActivity {
             startActivity(i);
         }
 
-        mHelper = new UserBaseHelper(this);
+        //mHelper = new UserBaseHelper(this);
 
 
         //user UserName editText in activity_user_login
@@ -89,8 +88,8 @@ public class UserLoginActivity extends AppCompatActivity {
                     String type = "login";
                     userName = mUserName.getText().toString();
                     pass = mUserPassword.getText().toString();
-                    password = mHelper.fetchUserPass(userName);
-                    mErno = mHelper.fetchErNo(userName);
+                    //password = mHelper.fetchUserPass(userName);
+                   //mErno = mHelper.fetchErNo(userName);
                     //String fullName = mHelper.fetchFullName(userName);
 
                     BackgroundDbConnector backgroundDbConnector = new

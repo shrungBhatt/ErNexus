@@ -20,6 +20,9 @@ public class URLManager {
     public static final String SORT_FACULTY_CODE_URL = URL + "sort_attendance_faculty_code.php";
     public static final String SORT_DATE_URL = URL + "sort_attendance_date.php";
 
+    //These are the URLs used in the Assignment Tab background task.
+    public static final String FETCH_ASSIGNMENTS = URL + "fetch_assignments.php";
+
     public static HttpURLConnection getConnection(String url) throws IOException {
         URL mUrl = new URL(url);
         HttpURLConnection httpURLConnection = (HttpURLConnection) mUrl.openConnection();
