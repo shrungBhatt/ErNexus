@@ -1,9 +1,12 @@
 package com.example.andorid.ersnexus.userprofile.tabs;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.baoyz.widget.PullRefreshLayout;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.models.AssignmentData;
 import com.example.andorid.ersnexus.webservices.URLManager;
@@ -32,6 +36,7 @@ public class Assignments extends Fragment {
 
     private RecyclerView mAssignmentRecyclerView;
     private List<AssignmentData> mAssignmentData;
+    private PullRefreshLayout mSwipeRefresh;
 
 
     @Override
@@ -39,10 +44,34 @@ public class Assignments extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View v =inflater.inflate(R.layout.tab_assignments,container,false);
 
+        mSwipeRefresh = (PullRefreshLayout)v.findViewById(R.id.swipe_refresh_assignment_tab);
+        mSwipeRefresh.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh () {
+
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.detach(Assignments.this).attach(Assignments.this).commit();
+
+            }
+        });
+
         mAssignmentRecyclerView = (RecyclerView)v.findViewById(R.id.assignment_recyclerView);
         mAssignmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAssignmentRecyclerView.
+                setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager manager = ((LinearLayoutManager)recyclerView
+                        .getLayoutManager());
+                boolean enabled = manager.findFirstCompletelyVisibleItemPosition() == 0;
+                mSwipeRefresh.setEnabled(enabled);
+            }
+        });
 
-        new FetchAssignmentTask().execute();
+        if(isNetworkAvailableAndConnected()) {
+            new FetchAssignmentTask().execute();
+        }
 
         return v;
     }
@@ -180,4 +209,13 @@ public class Assignments extends Fragment {
     }
 
 
+    private boolean isNetworkAvailableAndConnected () {
+        ConnectivityManager cm = (ConnectivityManager)getActivity().
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        boolean isNetworkAvailable = cm.getActiveNetworkInfo() != null;
+
+        return isNetworkAvailable &&
+                cm.getActiveNetworkInfo().isConnected();
+    }
 }
