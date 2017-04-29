@@ -1,4 +1,4 @@
-package com.example.andorid.ersnexus.userprofile.tabs.Assignment;
+package com.example.andorid.ersnexus.userprofile.tabs.assignment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -161,7 +161,7 @@ public class Assignments extends Fragment {
             try {
 
                 mHttpURLConnection = URLManager.
-                        getConnection(URLManager.FETCH_ASSIGNMENTS);
+                        getConnection(URLManager.FETCH_ASSIGNMENTS_URL);
 
                 //Creating an inputStream to fetch the results.
                 InputStream inputStream = mHttpURLConnection.getInputStream();

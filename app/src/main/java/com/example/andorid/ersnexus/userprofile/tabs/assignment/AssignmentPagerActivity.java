@@ -1,4 +1,4 @@
-package com.example.andorid.ersnexus.userprofile.tabs.Assignment;
+package com.example.andorid.ersnexus.userprofile.tabs.assignment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -60,10 +60,5 @@ public class AssignmentPagerActivity extends AppCompatActivity {
                 break;
             }
         }
-
-
-
-
-
     }
 }

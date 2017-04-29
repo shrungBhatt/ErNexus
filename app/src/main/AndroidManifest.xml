@@ -39,7 +39,7 @@
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
-            android:name=".userprofile.tabs.Assignment.AssignmentPagerActivity"
+            android:name=".userprofile.tabs.assignment.AssignmentPagerActivity"
             android:label="Assignments"
             android:parentActivityName=".userprofile.homeactivity.UserProfileHomeActivity"
             android:screenOrientation="portrait">
