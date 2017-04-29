@@ -1,6 +1,7 @@
-package com.example.andorid.ersnexus.userprofile.tabs;
+package com.example.andorid.ersnexus.userprofile.tabs.Assignment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.example.andorid.ersnexus.R;
@@ -40,11 +42,11 @@ public class Assignments extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View v =inflater.inflate(R.layout.tab_assignments,container,false);
+    public View onCreateView (LayoutInflater inflater, @Nullable ViewGroup container,
+                              @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.tab_assignments, container, false);
 
-        mSwipeRefresh = (PullRefreshLayout)v.findViewById(R.id.swipe_refresh_assignment_tab);
+        mSwipeRefresh = (PullRefreshLayout) v.findViewById(R.id.swipe_refresh_assignment_tab);
         mSwipeRefresh.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh () {
@@ -55,73 +57,87 @@ public class Assignments extends Fragment {
             }
         });
 
-        mAssignmentRecyclerView = (RecyclerView)v.findViewById(R.id.assignment_recyclerView);
+        mAssignmentRecyclerView = (RecyclerView) v.findViewById(R.id.assignment_recyclerView);
         mAssignmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAssignmentRecyclerView.
                 setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager manager = ((LinearLayoutManager)recyclerView
-                        .getLayoutManager());
-                boolean enabled = manager.findFirstCompletelyVisibleItemPosition() == 0;
-                mSwipeRefresh.setEnabled(enabled);
-            }
-        });
+                    @Override
+                    public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        LinearLayoutManager manager = ((LinearLayoutManager) recyclerView
+                                .getLayoutManager());
+                        boolean enabled = manager.findFirstCompletelyVisibleItemPosition() == 0;
+                        mSwipeRefresh.setEnabled(enabled);
+                    }
+                });
 
-        if(isNetworkAvailableAndConnected()) {
+        if (isNetworkAvailableAndConnected()) {
             new FetchAssignmentTask().execute();
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.no_internet_connection),
+                    Toast.LENGTH_SHORT).show();
         }
 
         return v;
     }
 
-    private class AssignmentHolder extends RecyclerView.ViewHolder{
+    private class AssignmentHolder extends RecyclerView.ViewHolder implements
+            View.OnClickListener {
 
         private TextView mAssignmentNameTextView, mSubjectCodeTextView,
-                mClassTextView,mAssignmentDate;
+                mClassTextView, mAssignmentDate;
 
         private AssignmentData mAssignmentData;
 
-        public AssignmentHolder(LayoutInflater layoutInflater,ViewGroup container){
-            super(layoutInflater.inflate(R.layout.list_item_assignment_recycler_view,container,
+        public AssignmentHolder (LayoutInflater layoutInflater, ViewGroup container) {
+            super(layoutInflater.inflate(R.layout.list_item_assignment_recycler_view, container,
                     false));
 
-            mAssignmentNameTextView = (TextView)itemView.
+            itemView.setOnClickListener(this);
+
+            mAssignmentNameTextView = (TextView) itemView.
                     findViewById(R.id.list_item_assignment_name_textView);
 
-            mSubjectCodeTextView = (TextView)itemView.
+            mSubjectCodeTextView = (TextView) itemView.
                     findViewById(R.id.list_item_subject_code_textView);
 
-            mClassTextView = (TextView)itemView.
+            mClassTextView = (TextView) itemView.
                     findViewById(R.id.list_item_class_textView);
 
-            mAssignmentDate = (TextView)itemView.
+            mAssignmentDate = (TextView) itemView.
                     findViewById(R.id.list_item_date_textView);
         }
 
-        public void bindAssignments(AssignmentData assignmentData){
+        public void bindAssignments (AssignmentData assignmentData) {
             mAssignmentData = assignmentData;
             mAssignmentNameTextView.setText(mAssignmentData.getAssignmentName());
             mSubjectCodeTextView.setText(mAssignmentData.getSubjectCode());
             mClassTextView.setText(mAssignmentData.getAssignmentClass());
             mAssignmentDate.setText(mAssignmentData.getDate());
+        }
+
+        @Override
+        public void onClick (View v) {
+            Intent intent = AssignmentPagerActivity.newIntent(getActivity(),
+                    mAssignmentData.getId());
+            startActivity(intent);
+
 
         }
     }
 
 
-    private class AssignmentAdapter extends RecyclerView.Adapter<AssignmentHolder>{
+    private class AssignmentAdapter extends RecyclerView.Adapter<AssignmentHolder> {
         private List<AssignmentData> mAssignmentDatas;
 
-        public AssignmentAdapter(List<AssignmentData> assignmentDatas){
+        public AssignmentAdapter (List<AssignmentData> assignmentDatas) {
             mAssignmentDatas = assignmentDatas;
         }
 
         @Override
         public AssignmentHolder onCreateViewHolder (ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            return new AssignmentHolder(inflater,parent);
+            return new AssignmentHolder(inflater, parent);
         }
 
         @Override
@@ -137,13 +153,12 @@ public class Assignments extends Fragment {
         }
     }
 
-    private class FetchAssignmentTask extends AsyncTask<Void,Void,List<AssignmentData>>{
+    private class FetchAssignmentTask extends AsyncTask<Void, Void, List<AssignmentData>> {
         private HttpURLConnection mHttpURLConnection;
 
         @Override
         protected List<AssignmentData> doInBackground (Void... params) {
             try {
-                //Fetch the username and password from the background method call.
 
                 mHttpURLConnection = URLManager.
                         getConnection(URLManager.FETCH_ASSIGNMENTS);
@@ -174,9 +189,10 @@ public class Assignments extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<AssignmentData> items){
+        protected void onPostExecute (List<AssignmentData> items) {
             mAssignmentData = items;
-            if(mAssignmentData != null){
+            if (mAssignmentData != null) {
+                AssignmentData.setAssignments(mAssignmentData);
                 mAssignmentRecyclerView.setAdapter(new AssignmentAdapter(mAssignmentData));
             }
         }
@@ -197,6 +213,7 @@ public class Assignments extends Fragment {
                 assignmentData.setSubjectCode(jsonObject.getString("subjectcode"));
                 assignmentData.setFacultyCode(jsonObject.getString("facultycode"));
                 assignmentData.setAssignmentClass(jsonObject.getString("class"));
+                assignmentData.setId(jsonObject.getInt("id"));
                 assignmentData.setDate(jsonObject.getString("date"));
 
                 assignmentDatas.add(assignmentData);
@@ -204,13 +221,12 @@ public class Assignments extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return assignmentDatas;
     }
 
 
     private boolean isNetworkAvailableAndConnected () {
-        ConnectivityManager cm = (ConnectivityManager)getActivity().
+        ConnectivityManager cm = (ConnectivityManager) getActivity().
                 getSystemService(Context.CONNECTIVITY_SERVICE);
 
         boolean isNetworkAvailable = cm.getActiveNetworkInfo() != null;

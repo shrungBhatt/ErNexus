@@ -1,8 +1,7 @@
 package com.example.andorid.ersnexus.models;
 
-/**
- * Created by Bhatt on 28-04-2017.
- */
+
+import java.util.List;
 
 public class AssignmentData {
     private String mAssignmentName;
@@ -10,6 +9,16 @@ public class AssignmentData {
     private String mFacultyCode;
     private String mDate;
     private String mClass;
+    private int mId;
+    private static List<AssignmentData> mAssignments;
+
+    public int getId () {
+        return mId;
+    }
+
+    public void setId (int id) {
+        mId = id;
+    }
 
     public String getAssignmentName () {
         return mAssignmentName;
@@ -50,5 +59,13 @@ public class AssignmentData {
 
     public void setAssignmentClass (String aClass) {
         mClass = aClass;
+    }
+
+    public static List<AssignmentData> getAssignments () {
+        return mAssignments;
+    }
+
+    public static void setAssignments (List<AssignmentData> assignments) {
+        mAssignments = assignments;
     }
 }
