@@ -45,8 +45,10 @@ public class UserProfileHomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //This variable is used to call the finish for this activity in other activities.
         mActivity = this;
 
+        //This is to close the login activity if the user is already logged in.
         if(SharedPreferencesData.getStoredLoginStatus(UserProfileHomeActivity.this)&&
                 UserLoginActivity.mActive){
             String userName = SharedPreferencesData.getStoredUsername(UserProfileHomeActivity.this);
@@ -59,9 +61,10 @@ public class UserProfileHomeActivity extends AppCompatActivity
         String type = "enrollmentnumber";
         String username = SharedPreferencesData.getStoredUsername(UserProfileHomeActivity.this);
 
+        //This background task is used to fetch the enrollment number of the user using the
+        //username from the database.
         BackgroundDbConnector backgroundDbConnector = new
                 BackgroundDbConnector(UserProfileHomeActivity.this);
-
         backgroundDbConnector.execute(type,username);
 
         //Initializing the tablayout

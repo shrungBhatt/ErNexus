@@ -24,9 +24,10 @@ public class URLManager {
     public static final String FETCH_ASSIGNMENTS_URL = URL + "fetch_assignments.php";
 
     //This URL is used in the AssignmentFragment.
-    public static final String FETCH_ASSIGNMENTS_DETAILS_URL = URL + "fetch_assignments_details.php";
+    public static final String FETCH_ASSIGNMENTS_DETAILS_URL =
+            URL + "fetch_assignments_details.php";
 
-    public static HttpURLConnection getConnection(String url) throws IOException {
+    public static HttpURLConnection getConnection (String url) throws IOException {
         URL mUrl = new URL(url);
         HttpURLConnection httpURLConnection = (HttpURLConnection) mUrl.openConnection();
         httpURLConnection.setRequestMethod("POST");

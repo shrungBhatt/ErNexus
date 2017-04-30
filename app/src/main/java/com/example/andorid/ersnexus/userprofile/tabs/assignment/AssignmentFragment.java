@@ -22,14 +22,22 @@ import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 
 
+//This class is the Fragment which the AssignmentPagerActivity will hold
+//All the modification regarding the assignment screen cen be done here.
+
 public class AssignmentFragment extends Fragment {
 
+    //String key for bundle arguments to pass information between the AssignmentPagerActivity and
+    //This class.
     private static final String ARG_ASSIGNMENT_ID = "Assignment_id";
 
 
+    //To store the value of the id we got from the user after he pressed a particular assignment
+    //From the assignment fragment screen.
     private int mAssignmentId;
     private TextView mAssignmentDetails;
 
+    //Method called in Assignment tab when the user clicks any assignment(viewHolder).
     public static AssignmentFragment newInstance (int crimeId) {
         Bundle args = new Bundle();
         args.putInt(ARG_ASSIGNMENT_ID, crimeId);
@@ -43,6 +51,9 @@ public class AssignmentFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mAssignmentId = getArguments().getInt(ARG_ASSIGNMENT_ID);
+
+        //This is used to start the background task to fetch the assignment from the database using
+        //the assignmentId.
         new FetchAssignmentDetailsTask().execute(mAssignmentId);
     }
 
@@ -58,6 +69,8 @@ public class AssignmentFragment extends Fragment {
         return v;
     }
 
+
+    //Background task to fetch the details of the assignment by the provided assignment id.
     private class FetchAssignmentDetailsTask extends AsyncTask<Integer,Void,String>{
 
         HttpURLConnection mHttpURLConnection;

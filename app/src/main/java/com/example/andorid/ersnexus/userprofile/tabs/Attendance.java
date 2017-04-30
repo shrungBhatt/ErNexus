@@ -81,9 +81,9 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         //Button used to start the scanAttendance activity.
         mScanAttendanceButton = (Button) v.findViewById(R.id.scan_attendance_button);
 
+        //Giving the timer functionality to the scanAttendance Button
         Long currentTs = System.currentTimeMillis()/1000;
         Long previousTs = SharedPreferencesData.getCurrentTimeStamp(getActivity());
-
         if(currentTs - previousTs >= 20){
             mScanAttendanceButton.setEnabled(true);
         }else {
@@ -92,7 +92,6 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                     getColor(android.R.color.holo_red_dark));
             mScanAttendanceButton.setText(R.string.attendance_cooldown_text);
         }
-
         mScanAttendanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
@@ -104,6 +103,8 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             }
         });
 
+        mSortAttendanceEditText = (EditText) v.findViewById(R.id.sort_attendance_by_editText);
+        //Button used to clear the sortBy editText filed and repopulate the recyclerView.
         mClearButton = (ImageButton) v.findViewById(R.id.clear_button);
         mClearButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +116,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             }
         });
 
+        //The Swipe and refresh functionality.
         mSwipeRefresh = (PullRefreshLayout)v.findViewById(R.id.swipe_refresh_attendance_tab);
         mSwipeRefresh.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
@@ -135,11 +137,9 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
-
         spinner.setOnItemSelectedListener(this);
 
-        mSortAttendanceEditText = (EditText) v.findViewById(R.id.sort_attendance_by_editText);
-
+        //To search the database using the sort type and the string value.
         mSortAttendanceButton = (ImageButton) v.findViewById(R.id.sort_attendance_by_button);
         mSortAttendanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +172,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         //RecyclerView that displays the attendances after fetching it from the database.
         mAttendanceRecyclerView = (RecyclerView) v.findViewById(R.id.attendance_recyvlerView);
         mAttendanceRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //This to seprate the the recyclerView and swipeToRefresh the scroll up function.
         mAttendanceRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
@@ -187,6 +188,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         return v;
     }
 
+    //This method is used for the spinner to get the position of the item selected.
     @Override
     public void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
         mPosition = position;
@@ -293,6 +295,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         }*/
     }
 
+    //Background task to fetch attendances from the database.
     public class FetchAttendanceTask extends AsyncTask<String, Void, List<AttendanceData>> {
 
         private HttpURLConnection mHttpURLConnection;
@@ -512,6 +515,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         }
     }
 
+    //This method is used to seprate the JSONArray we got in the result of background task.
     private List<AttendanceData> getAttendanceDatas(String result){
         List<AttendanceData> attendanceDatas = new ArrayList<>();
         try {

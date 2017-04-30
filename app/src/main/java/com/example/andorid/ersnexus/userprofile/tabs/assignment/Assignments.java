@@ -33,6 +33,9 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+//This class is the Assignment Tab.
+//It consits of a recyclerView in which assignments are stored.
+//Assignments are fetched from the database using a background task.
 
 public class Assignments extends Fragment {
 
@@ -46,6 +49,7 @@ public class Assignments extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_assignments, container, false);
 
+        //Adding the swipeAndRefresh functionality
         mSwipeRefresh = (PullRefreshLayout) v.findViewById(R.id.swipe_refresh_assignment_tab);
         mSwipeRefresh.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
@@ -57,8 +61,11 @@ public class Assignments extends Fragment {
             }
         });
 
+        //Setting the recylcerView.
         mAssignmentRecyclerView = (RecyclerView) v.findViewById(R.id.assignment_recyclerView);
         mAssignmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //This method is used so that the swipeRefresh does not work when the recyclerView is
+        //scrolled up.
         mAssignmentRecyclerView.
                 setOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
@@ -72,6 +79,7 @@ public class Assignments extends Fragment {
                 });
 
         if (isNetworkAvailableAndConnected()) {
+            //Start the background task if the connection is availabel.
             new FetchAssignmentTask().execute();
         } else {
             Toast.makeText(getActivity(), getString(R.string.no_internet_connection),
@@ -81,6 +89,8 @@ public class Assignments extends Fragment {
         return v;
     }
 
+
+    //Viewholder class of recyclerView.
     private class AssignmentHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
@@ -121,12 +131,11 @@ public class Assignments extends Fragment {
             Intent intent = AssignmentPagerActivity.newIntent(getActivity(),
                     mAssignmentData.getId());
             startActivity(intent);
-
-
         }
     }
 
 
+    //Adapter class of recyclerView.
     private class AssignmentAdapter extends RecyclerView.Adapter<AssignmentHolder> {
         private List<AssignmentData> mAssignmentDatas;
 
@@ -153,6 +162,8 @@ public class Assignments extends Fragment {
         }
     }
 
+
+    //Background AsyncTask to fetch the assignments from the database.
     private class FetchAssignmentTask extends AsyncTask<Void, Void, List<AssignmentData>> {
         private HttpURLConnection mHttpURLConnection;
 
@@ -198,6 +209,7 @@ public class Assignments extends Fragment {
         }
     }
 
+    //This method converts the fetched result of array of assignments into an arrayList();
     private List<AssignmentData> getAssignmentDatas (String result) {
         List<AssignmentData> assignmentDatas = new ArrayList<>();
 
