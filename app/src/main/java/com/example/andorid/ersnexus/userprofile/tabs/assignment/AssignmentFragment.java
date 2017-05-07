@@ -38,9 +38,9 @@ public class AssignmentFragment extends Fragment {
     private TextView mAssignmentDetails;
 
     //Method called in Assignment tab when the user clicks any assignment(viewHolder).
-    public static AssignmentFragment newInstance (int crimeId) {
+    public static AssignmentFragment newInstance (int assignmentId) {
         Bundle args = new Bundle();
-        args.putInt(ARG_ASSIGNMENT_ID, crimeId);
+        args.putInt(ARG_ASSIGNMENT_ID, assignmentId);
         AssignmentFragment fragment = new AssignmentFragment();
         fragment.setArguments(args);
         return fragment;

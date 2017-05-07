@@ -77,14 +77,88 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/layout_marginLeft"
+            android:layout_marginRight="@dimen/layout_marginRight">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="@dimen/layout_marginTop"
+                    android:gravity="center"
+                    android:text="Date"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="@dimen/layout_marginTop"
+
+                    android:gravity="center"
+                    android:text="Subject"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="@dimen/layout_marginTop"
+                    android:gravity="center"
+                    android:text="Faculty"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
-            android:layout_weight="1"
             android:id="@+id/attendance_recyvlerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/layout_marginBottom"
             android:layout_marginLeft="@dimen/layout_marginLeft"
             android:layout_marginRight="@dimen/layout_marginRight"
-            android:layout_marginBottom="@dimen/layout_marginBottom"
-            android:layout_marginTop="@dimen/layout_marginTop"/>
+            android:layout_weight="1"/>
     </LinearLayout>
 </com.baoyz.widget.PullRefreshLayout>

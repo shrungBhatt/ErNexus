@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.baoyz.widget.PullRefreshLayout;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.models.AssignmentData;
+import com.example.andorid.ersnexus.util.SimpleDividerItemDecoration;
 import com.example.andorid.ersnexus.webservices.URLManager;
 
 import org.json.JSONArray;
@@ -77,6 +78,7 @@ public class Assignments extends Fragment {
                         mSwipeRefresh.setEnabled(enabled);
                     }
                 });
+        mAssignmentRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
         if (isNetworkAvailableAndConnected()) {
             //Start the background task if the connection is availabel.

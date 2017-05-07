@@ -5,25 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:layout_marginBottom="12dp">
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/layout_marginBottom"
-            android:layout_marginTop="@dimen/layout_marginTop"
-            android:text="Date"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/date_list_item_textView"
@@ -31,8 +20,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="14sp"/>
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:textSize="12sp"/>
+
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="0dp"
@@ -40,47 +33,6 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_marginBottom="@dimen/layout_marginBottom"
-
-            android:layout_marginTop="@dimen/layout_marginTop"
-            android:text="Er.No"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/erNo_code_list_item_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="14sp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_marginBottom="@dimen/layout_marginBottom"
-
-            android:layout_marginTop="@dimen/layout_marginTop"
-            android:text="Subject"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/subject_code_list_item_textView"
@@ -88,7 +40,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="14sp"/>
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:textSize="12sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -97,26 +51,16 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_marginBottom="@dimen/layout_marginBottom"
-            android:layout_marginTop="@dimen/layout_marginTop"
-            android:text="Faculty"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
-
 
         <TextView
             android:id="@+id/faculty_code_list_item_textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
             android:gravity="center"
-            android:textSize="14sp"/>
+            android:textSize="12sp"/>
     </LinearLayout>
 
 </LinearLayout>

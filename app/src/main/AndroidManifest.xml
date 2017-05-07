@@ -41,7 +41,6 @@
         <activity
             android:name=".userprofile.tabs.assignment.AssignmentPagerActivity"
             android:label="Assignments"
-            android:parentActivityName=".userprofile.homeactivity.UserProfileHomeActivity"
             android:screenOrientation="portrait">
         </activity>
     </application>

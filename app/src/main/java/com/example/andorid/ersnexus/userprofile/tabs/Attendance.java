@@ -27,6 +27,7 @@ import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.models.AttendanceData;
 import com.example.andorid.ersnexus.userscanattendance.UserScanAttendanceActivity;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
+import com.example.andorid.ersnexus.util.SimpleDividerItemDecoration;
 import com.example.andorid.ersnexus.webservices.URLManager;
 
 import org.json.JSONArray;
@@ -183,6 +184,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                 mSwipeRefresh.setEnabled(enabled);
             }
         });
+        mAttendanceRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
         //updateUI();
 
         return v;
@@ -219,7 +221,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     //ViewHolder class of the recyclerView.
     private class AttendanceHolder extends RecyclerView.ViewHolder {
 
-        private TextView mDateTextView, mErnoTextView, mFacultyTextView, mSubjectTextView;
+        private TextView mDateTextView, mFacultyTextView, mSubjectTextView;
         private AttendanceData mAttendanceData;
 
         public AttendanceHolder (LayoutInflater layoutInflater, ViewGroup container) {
@@ -228,7 +230,6 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
             mDateTextView = (TextView) itemView.findViewById(R.id.date_list_item_textView);
 
-            mErnoTextView = (TextView) itemView.findViewById(R.id.erNo_code_list_item_textView);
 
             mFacultyTextView = (TextView) itemView.
                     findViewById(R.id.faculty_code_list_item_textView);
@@ -243,7 +244,6 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             mDateTextView.setText(mAttendanceData.getDate());
             mFacultyTextView.setText(mAttendanceData.getFacultyCode());
             mSubjectTextView.setText(mAttendanceData.getSubjectCode());
-            mErnoTextView.setText(mAttendanceData.getEnrollmentNumber());
 
         }
     }
@@ -550,5 +550,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         return isNetworkAvailable &&
                 cm.getActiveNetworkInfo().isConnected();
     }
+
+
 
 }
