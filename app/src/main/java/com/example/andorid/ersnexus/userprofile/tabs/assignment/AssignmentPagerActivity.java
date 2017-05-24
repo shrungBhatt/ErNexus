@@ -47,13 +47,13 @@ public class AssignmentPagerActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         //Setting the viewPager's adapter.
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
-            //Method used to start the AssignmentFragment
+            //Method used to start the AssignmentPagerFragment
             //One value is fetched from the mAssignmentData array and that values are passed to
-            //the fragment to set the values of the views in the AssignmentFragment.
+            //the fragment to set the values of the views in the AssignmentPagerFragment.
             @Override
             public Fragment getItem (int position) {
                 AssignmentData assignmentData = mAssignmentData.get(position);
-                return AssignmentFragment.newInstance(assignmentData.getId());
+                return AssignmentPagerFragment.newInstance(assignmentData.getId(),position);
             }
 
             @Override

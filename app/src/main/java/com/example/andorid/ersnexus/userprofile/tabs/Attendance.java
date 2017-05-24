@@ -324,6 +324,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                                 OutputStreamWriter(outputStream, "UTF-8"));
 
                         //This is for connecting the variables in the app and in the php file.
+
                         String postData = URLEncoder.encode("enrollmentnumber", "UTF-8") + "=" +//$_POST["enrollmentnumber"]
                                 URLEncoder.encode(enrollmentnumber, "UTF-8");
 

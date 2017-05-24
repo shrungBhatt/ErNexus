@@ -23,7 +23,7 @@ import java.net.URLEncoder;
 public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
 
     private Context mContext;
-    public  String mType;
+    public String mType;
     private HttpURLConnection mHttpURLConnection;
 
 
@@ -152,53 +152,6 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
                     e.printStackTrace();
                 }
                 break;
-            case "enrollmentnumber":
-                try {
-                    //Fetch the username from the background method call.
-                    String username = params[1];
-
-                    mHttpURLConnection = URLManager.
-                            getConnection(URLManager.FETCH_ERNO_URL);
-
-                    //Creating the outputStream
-                    OutputStream outputStream = mHttpURLConnection.getOutputStream();
-                    //Writing in the outputStream.
-                    BufferedWriter bufferedWriter = new BufferedWriter(new
-                            OutputStreamWriter(outputStream, "UTF-8"));
-
-                    //This is for connecting the variables in the app and in the php file.
-                    String postData = URLEncoder.encode("username", "UTF-8") + "=" +//$_POST["username"]
-                            URLEncoder.encode(username, "UTF-8");
-
-                    //Feeding the data.
-                    bufferedWriter.write(postData);
-                    bufferedWriter.flush();
-                    bufferedWriter.close();
-                    outputStream.close();
-
-                    //Creating an inputStream to fetch the results.
-                    InputStream inputStream = mHttpURLConnection.getInputStream();
-
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                            inputStream, "iso-8859-1"));
-
-                    //Getting the results
-                    String result = "";
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        result += line;
-                    }
-                    bufferedReader.close();
-                    inputStream.close();
-                    mHttpURLConnection.disconnect();
-                    //Returning the results
-                    SharedPreferencesData.setStoredErno(mContext, result);
-                    return result;
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
             case "attendance":
                 try {
                     //Fetching the values to be registered.
@@ -258,13 +211,14 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute (String result) {
-        if(result == null){
+        if (result == null) {
             return;
         }
         switch (mType) {
             case "login":
-                if (result.equals("success")) {
-                    SharedPreferencesData.setStoredLoginStatus(mContext,true);
+                if (result != null) {
+                    SharedPreferencesData.setStoredLoginStatus(mContext, true);
+                    SharedPreferencesData.setStoredErno(mContext,result);
                     mContext.startActivity(new Intent(mContext, UserProfileHomeActivity.class));
                 } else {
                     Toast.makeText(mContext, "Wrong Username or Password!", Toast.LENGTH_SHORT)

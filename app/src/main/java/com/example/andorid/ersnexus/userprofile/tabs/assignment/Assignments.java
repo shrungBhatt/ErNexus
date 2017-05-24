@@ -228,6 +228,7 @@ public class Assignments extends Fragment {
                 assignmentData.setFacultyCode(jsonObject.getString("facultycode"));
                 assignmentData.setAssignmentClass(jsonObject.getString("class"));
                 assignmentData.setId(jsonObject.getInt("id"));
+                assignmentData.setDetails(jsonObject.getString("details"));
                 assignmentData.setDate(jsonObject.getString("date"));
 
                 assignmentDatas.add(assignmentData);

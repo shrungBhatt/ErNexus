@@ -96,6 +96,7 @@ public class UserLoginActivity extends AppCompatActivity {
                             BackgroundDbConnector(UserLoginActivity.this);
 
                     backgroundDbConnector.execute(type, userName, pass);
+
                     SharedPreferencesData.setStoredUsername(UserLoginActivity.this, userName);
                 }else {
                     Toast.makeText(UserLoginActivity.this,

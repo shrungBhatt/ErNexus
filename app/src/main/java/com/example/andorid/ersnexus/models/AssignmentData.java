@@ -9,6 +9,7 @@ public class AssignmentData {
     private String mFacultyCode;
     private String mDate;
     private String mClass;
+    private String mDetails;
     private int mId;
     private static List<AssignmentData> mAssignments;
 
@@ -59,6 +60,14 @@ public class AssignmentData {
 
     public void setAssignmentClass (String aClass) {
         mClass = aClass;
+    }
+
+    public String getDetails () {
+        return mDetails;
+    }
+
+    public void setDetails (String details) {
+        mDetails = details;
     }
 
     public static List<AssignmentData> getAssignments () {

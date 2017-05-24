@@ -23,7 +23,7 @@ public class URLManager {
     //These are the URLs used in the Assignment Tab background task.
     public static final String FETCH_ASSIGNMENTS_URL = URL + "fetch_assignments.php";
 
-    //This URL is used in the AssignmentFragment.
+    //This URL is used in the AssignmentPagerFragment.
     public static final String FETCH_ASSIGNMENTS_DETAILS_URL =
             URL + "fetch_assignments_details.php";
 
