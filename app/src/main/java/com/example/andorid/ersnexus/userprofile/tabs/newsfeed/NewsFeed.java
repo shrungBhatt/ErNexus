@@ -1,5 +1,7 @@
 package com.example.andorid.ersnexus.userprofile.tabs.newsfeed;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.example.andorid.ersnexus.R;
@@ -72,7 +75,15 @@ public class NewsFeed extends Fragment {
         mNewsfeedRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
 
-        new FetchNewsTask().execute();
+        if (isNetworkAvailableAndConnected()) {
+            //Start the background task if the connection is availabel.
+            new FetchNewsTask().execute();
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.no_internet_connection),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+
 
         return v;
     }
@@ -200,6 +211,17 @@ public class NewsFeed extends Fragment {
         }
 
         return newsDatas;
+    }
+
+
+    private boolean isNetworkAvailableAndConnected () {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        boolean isNetworkAvailable = cm.getActiveNetworkInfo() != null;
+
+        return isNetworkAvailable &&
+                cm.getActiveNetworkInfo().isConnected();
     }
 }
 

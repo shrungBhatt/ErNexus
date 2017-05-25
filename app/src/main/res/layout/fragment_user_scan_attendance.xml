@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <LinearLayout
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
+            android:layout_weight="1"
+            android:layout_height="0dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/layout_marginBottom"
             android:layout_marginLeft="@dimen/layout_marginLeft"
+            android:gravity="center_vertical"
             android:layout_marginRight="@dimen/layout_marginRight"
-            android:layout_marginTop="@dimen/layout_marginTop"
             android:text="@string/erNo"
             android:freezesText="true"
             android:textColor="@android:color/black"
@@ -25,8 +20,8 @@
 
         <TextView
             android:id="@+id/enrollment_number_textView"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:layout_marginBottom="@dimen/layout_marginBottom"
             android:layout_marginLeft="@dimen/layout_marginLeft"
             android:layout_marginRight="@dimen/layout_marginRight"
@@ -34,11 +29,11 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/layout_marginBottom"
+            android:layout_weight="1"
+            android:layout_height="0dp"
             android:layout_marginLeft="@dimen/layout_marginLeft"
             android:layout_marginRight="@dimen/layout_marginRight"
-            android:layout_marginTop="@dimen/layout_marginTop"
+            android:gravity="center_vertical"
             android:text="Subject"
             android:freezesText="true"
             android:textColor="@android:color/black"
@@ -56,11 +51,12 @@
         <TextView
             android:id="@+id/textView3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/layout_marginBottom"
+            android:layout_weight="1"
+            android:layout_height="0dp"
             android:layout_marginLeft="@dimen/layout_marginLeft"
+            android:gravity="center_vertical"
             android:layout_marginRight="@dimen/layout_marginRight"
-            android:layout_marginTop="@dimen/layout_marginTop"
+
             android:text="Faculty"
             android:freezesText="true"
             android:textColor="@android:color/black"
@@ -77,11 +73,11 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/layout_marginBottom"
+            android:layout_weight="1"
+            android:layout_height="0dp"
             android:layout_marginLeft="@dimen/layout_marginLeft"
             android:layout_marginRight="@dimen/layout_marginRight"
-            android:layout_marginTop="@dimen/layout_marginTop"
+            android:gravity="center_vertical"
             android:text="Date"
             android:freezesText="true"
             android:textColor="@android:color/black"
@@ -110,7 +106,8 @@
         <Button
             android:id="@+id/attendance_submit_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/layout_marginBottom"
             android:layout_marginLeft="@dimen/layout_marginLeft"
@@ -124,4 +121,3 @@
 
     </LinearLayout>
 
-</ScrollView>
