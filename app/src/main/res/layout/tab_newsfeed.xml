@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<com.baoyz.widget.PullRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_refresh_newsfeed_tab"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:refreshColor="@color/colorPrimary"
+    app:refreshType="smartisan">
 
-</LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/newsfeed_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+</com.baoyz.widget.PullRefreshLayout>

@@ -81,9 +81,6 @@ public class AssignmentPagerFragment extends Fragment {
         mSubjectCode = (TextView)v.findViewById(R.id.assignment_subject_code);
         mSubjectCode.setText(mAssignmentDatas.get(mPosition).getSubjectCode());
 
-
-
-
         return v;
     }
 

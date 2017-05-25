@@ -89,6 +89,8 @@ public class UserProfileHomeActivity extends AppCompatActivity
         //Adding adapter to pager
         mViewPager.setAdapter(adapter);
 
+        mViewPager.setOffscreenPageLimit(3);
+
         //Connecting the viewPager and the tabLayout.
         mTabLayout.setupWithViewPager(mViewPager);
 

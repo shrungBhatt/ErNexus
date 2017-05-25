@@ -14,26 +14,9 @@
         android:textSize="20sp"
         android:textStyle="bold"/>
 
-    <TextView
-        android:id="@+id/list_item_subject_code_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/list_item_newsfeed_name_textView"
-        android:padding="4dp"/>
 
     <TextView
-        android:id="@+id/list_item_class_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_below="@id/list_item_newsfeed_name_textView"
-        android:layout_toRightOf="@id/list_item_subject_code_textView"
-        android:padding="4dp"/>
-
-
-    <TextView
-        android:id="@+id/list_item_date_textView"
+        android:id="@+id/list_item_news_date_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

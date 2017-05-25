@@ -108,7 +108,7 @@ public class Assignments extends Fragment {
             itemView.setOnClickListener(this);
 
             mAssignmentNameTextView = (TextView) itemView.
-                    findViewById(R.id.list_item_assignment_name_textView);
+                    findViewById(R.id.list_item_newsfeed_name_textView);
 
             mSubjectCodeTextView = (TextView) itemView.
                     findViewById(R.id.list_item_subject_code_textView);
