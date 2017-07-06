@@ -209,7 +209,6 @@ public class NewsFeed extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return newsDatas;
     }
 

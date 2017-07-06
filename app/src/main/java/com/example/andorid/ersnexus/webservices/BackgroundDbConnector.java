@@ -216,7 +216,7 @@ public class BackgroundDbConnector extends AsyncTask<String, Void, String> {
         }
         switch (mType) {
             case "login":
-                if (result != null) {
+                if (result != null && !result.equals("Wrong Username or Password")) {
                     SharedPreferencesData.setStoredLoginStatus(mContext, true);
                     SharedPreferencesData.setStoredErno(mContext,result);
                     mContext.startActivity(new Intent(mContext, UserProfileHomeActivity.class));
