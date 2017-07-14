@@ -63,7 +63,7 @@ public class AssignmentPagerFragment extends Fragment {
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container,
                              Bundle savedInstanceState){
 
-        View v = layoutInflater.inflate(R.layout.fragment_assignment,container,false);
+        View v = layoutInflater.inflate(R.layout.fragment_pager_assignment,container,false);
 
 
         mAssignmentDetails = (TextView)v.findViewById(R.id.assignment_details_textview);

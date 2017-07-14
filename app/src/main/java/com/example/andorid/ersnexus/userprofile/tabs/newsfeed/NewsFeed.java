@@ -1,6 +1,7 @@
 package com.example.andorid.ersnexus.userprofile.tabs.newsfeed;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -59,7 +60,7 @@ public class NewsFeed extends Fragment {
         //Setting the recylcerView.
         mNewsfeedRecyclerView = (RecyclerView) v.findViewById(R.id.newsfeed_recyclerView);
         mNewsfeedRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        //This method is used so that the swipeRefresh does not work when the recyclerView is
+        //This method is used so that the swipeRefresh will not work when the recyclerView is
         //scrolled up.
         mNewsfeedRecyclerView.
                 setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -84,7 +85,6 @@ public class NewsFeed extends Fragment {
         }
 
 
-
         return v;
     }
 
@@ -103,6 +103,14 @@ public class NewsFeed extends Fragment {
                     findViewById(R.id.list_item_newsfeed_name_textView);
 
             mNewsDateTextView = (TextView) itemView.findViewById(R.id.list_item_news_date_textView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick (View v) {
+                    Intent i = NewsPagerActivity.newIntent(getActivity(),mNewsData.getId());
+                    startActivity(i);
+                }
+            });
         }
 
 
@@ -111,19 +119,21 @@ public class NewsFeed extends Fragment {
             mNewsTopicTextView.setText(mNewsData.getNewsTopic());
             mNewsDateTextView.setText(mNewsData.getNewsDate());
         }
+
+
     }
 
-    private class NewsAdapter extends RecyclerView.Adapter<NewsHolder>{
+    private class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
         private List<NewsData> mNewsDatas;
 
-        public NewsAdapter(List<NewsData> newsDatas){
+        public NewsAdapter (List<NewsData> newsDatas) {
             mNewsDatas = newsDatas;
         }
 
         @Override
         public NewsHolder onCreateViewHolder (ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            return new NewsHolder(inflater,parent);
+            return new NewsHolder(inflater, parent);
         }
 
         @Override
@@ -140,12 +150,11 @@ public class NewsFeed extends Fragment {
     }
 
 
-
-    private class FetchNewsTask extends AsyncTask<Void,Void,List<NewsData>>{
+    private class FetchNewsTask extends AsyncTask<Void, Void, List<NewsData>> {
         private HttpURLConnection mHttpURLConnection;
 
         @Override
-        protected List<NewsData> doInBackground(Void... Params){
+        protected List<NewsData> doInBackground (Void... Params) {
             try {
 
                 mHttpURLConnection = URLManager.
@@ -177,9 +186,9 @@ public class NewsFeed extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<NewsData> items){
+        protected void onPostExecute (List<NewsData> items) {
             mNewsData = items;
-            if(mNewsData != null) {
+            if (mNewsData != null) {
                 mNewsfeedRecyclerView.setAdapter(new NewsAdapter(mNewsData));
                 NewsData.setmNewsData(mNewsData);
             }
@@ -191,10 +200,10 @@ public class NewsFeed extends Fragment {
     private List<NewsData> getNewsDatas (String result) {
         List<NewsData> newsDatas = new ArrayList<>();
 
-        try{
+        try {
             JSONArray jsonArray = new JSONArray(result);
 
-            for(int i = 0; i < jsonArray.length();i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                 NewsData newsData = new NewsData();
