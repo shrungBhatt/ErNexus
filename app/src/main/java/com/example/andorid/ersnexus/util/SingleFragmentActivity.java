@@ -14,11 +14,11 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fragment);
+        setContentView(R.layout.activity_single_fragment);
 
 
         FragmentManager fm = getSupportFragmentManager(); //calling fragmentManager to transact the fragments
-        Fragment fragment = fm.findFragmentById(R.id.fragment_container);//giving UUID of the fragment to the manager to put it in the container of activity_fragment.xml
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);//giving UUID of the fragment to the manager to put it in the container of activity_single_fragmentragment.xml
 
         if (fragment == null) ;
         {
