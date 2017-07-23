@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import static com.example.andorid.ersnexus.database.attendance.AttendanceDbSchema.AttendanceTable;
-
+//Just testing
 //This class is used to create the database table and upgrade it if there is some alteration.
 
 public class AttendanceBaseHelper extends SQLiteOpenHelper{

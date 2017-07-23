@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Er.Nexus.iml" filepath="$PROJECT_DIR$/Er.Nexus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ErNexus.iml" filepath="$PROJECT_DIR$/ErNexus.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
