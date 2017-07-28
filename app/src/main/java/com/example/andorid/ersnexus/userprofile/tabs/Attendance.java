@@ -3,7 +3,6 @@ package com.example.andorid.ersnexus.userprofile.tabs;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +21,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.baoyz.widget.PullRefreshLayout;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.models.AttendanceData;
@@ -34,17 +39,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //This class is the attendance tab in userProfileHomeActivity screen.
 
@@ -64,17 +62,16 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     private PullRefreshLayout mSwipeRefresh;
 
     @Override
-    public View onCreateView (LayoutInflater inflater, @Nullable ViewGroup container,
-                              @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_attendance, container, false);
 
         mErno = SharedPreferencesData.getStoredErno(getActivity());
 
-        if (isNetworkAvailableAndConnected()){
-            String type = "sort_erno";
-            new FetchAttendanceTask().execute(type, mErno);
-        }else{
-            Toast.makeText(getActivity(),"No Internet Connection",Toast.LENGTH_SHORT).show();
+        if (isNetworkAvailableAndConnected()) {
+            sortAttendance(URLManager.SORT_ERNO_URL,null,null);
+        } else {
+            Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
         }
 
         //mAttendanceLab = AttendanceLab.get(getActivity());
@@ -83,11 +80,11 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         mScanAttendanceButton = (Button) v.findViewById(R.id.scan_attendance_button);
 
         //Giving the timer functionality to the scanAttendance Button
-        Long currentTs = System.currentTimeMillis()/1000;
+        Long currentTs = System.currentTimeMillis() / 1000;
         Long previousTs = SharedPreferencesData.getCurrentTimeStamp(getActivity());
-        if(currentTs - previousTs >= 20){
+        if (currentTs - previousTs >= 20) {
             mScanAttendanceButton.setEnabled(true);
-        }else {
+        } else {
             mScanAttendanceButton.setEnabled(false);
             mScanAttendanceButton.setBackgroundColor(getResources().
                     getColor(android.R.color.holo_red_dark));
@@ -95,9 +92,9 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         }
         mScanAttendanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick (View v) {
-                Long currentTs = System.currentTimeMillis()/1000;
-                SharedPreferencesData.setCurrntTimeStamp(getActivity(),currentTs);
+            public void onClick(View v) {
+                Long currentTs = System.currentTimeMillis() / 1000;
+                SharedPreferencesData.setCurrntTimeStamp(getActivity(), currentTs);
 
                 Intent i = new Intent(getActivity(), UserScanAttendanceActivity.class);
                 startActivityForResult(i, 1);
@@ -109,19 +106,18 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         mClearButton = (ImageButton) v.findViewById(R.id.clear_button);
         mClearButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick (View v) {
+            public void onClick(View v) {
                 mSortAttendanceEditText.getText().clear();
-                String type = "sort_erno";
-                new FetchAttendanceTask().execute(type,mErno);
+                sortAttendance(URLManager.SORT_ERNO_URL,null,null);
                 //updateUI();
             }
         });
 
         //The Swipe and refresh functionality.
-        mSwipeRefresh = (PullRefreshLayout)v.findViewById(R.id.swipe_refresh_attendance_tab);
+        mSwipeRefresh = (PullRefreshLayout) v.findViewById(R.id.swipe_refresh_attendance_tab);
         mSwipeRefresh.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh () {
+            public void onRefresh() {
 
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.detach(Attendance.this).attach(Attendance.this).commit();
@@ -144,26 +140,22 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         mSortAttendanceButton = (ImageButton) v.findViewById(R.id.sort_attendance_by_button);
         mSortAttendanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick (View v) {
+            public void onClick(View v) {
                 switch (mPosition) {
                     case 0:
-                        String type = "sort_erno";
-                        new FetchAttendanceTask().execute(type,mErno);
+                        sortAttendance(URLManager.SORT_ERNO_URL,null,null);
                         break;
                     case 1:
-                        type = "sort_subject_code";
                         String sortSubject = mSortAttendanceEditText.getText().toString();
-                        new FetchAttendanceTask().execute(type,mErno,sortSubject);
+                        sortAttendance(URLManager.SORT_SUBJECT_CODE_URL,"subject_code",sortSubject);
                         break;
                     case 2:
-                        type = "sort_faculty_code";
                         String sortFaculty = mSortAttendanceEditText.getText().toString();
-                        new FetchAttendanceTask().execute(type,mErno,sortFaculty);
+                        sortAttendance(URLManager.SORT_FACULTY_CODE_URL,"faculty_code",sortFaculty);
                         break;
                     case 3:
-                        type = "sort_date";
                         String sortDate = mSortAttendanceEditText.getText().toString();
-                        new FetchAttendanceTask().execute(type,mErno,sortDate);
+                        sortAttendance(URLManager.SORT_DATE_URL,"date",sortDate);
                         break;
                 }
 
@@ -176,9 +168,9 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         //This to seprate the the recyclerView and swipeToRefresh the scroll up function.
         mAttendanceRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager manager = ((LinearLayoutManager)recyclerView
+                LinearLayoutManager manager = ((LinearLayoutManager) recyclerView
                         .getLayoutManager());
                 boolean enabled = manager.findFirstCompletelyVisibleItemPosition() == 0;
                 mSwipeRefresh.setEnabled(enabled);
@@ -192,17 +184,17 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
     //This method is used for the spinner to get the position of the item selected.
     @Override
-    public void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         mPosition = position;
     }
 
     @Override
-    public void onNothingSelected (AdapterView<?> parent) {
+    public void onNothingSelected(AdapterView<?> parent) {
 
     }
 
     @Override
-    public void onResume () {
+    public void onResume() {
         super.onResume();
         //updateUI();// To update the data in recyclerView after editing the data in attendance tab.
     }
@@ -224,7 +216,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         private TextView mDateTextView, mFacultyTextView, mSubjectTextView;
         private AttendanceData mAttendanceData;
 
-        public AttendanceHolder (LayoutInflater layoutInflater, ViewGroup container) {
+        public AttendanceHolder(LayoutInflater layoutInflater, ViewGroup container) {
             super(layoutInflater.inflate(R.layout.list_item_attendance_recycler_view, container,
                     false));
 
@@ -239,7 +231,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
         }
 
-        public void bindAttendance (AttendanceData attendancedata) {
+        public void bindAttendance(AttendanceData attendancedata) {
             mAttendanceData = attendancedata;
             mDateTextView.setText(mAttendanceData.getDate());
             mFacultyTextView.setText(mAttendanceData.getFacultyCode());
@@ -268,25 +260,25 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     private class AttendanceAdapter extends RecyclerView.Adapter<AttendanceHolder> {
         private List<AttendanceData> mAttendanceDatas;
 
-        public AttendanceAdapter (List<AttendanceData> attendanceDatas) {
+        public AttendanceAdapter(List<AttendanceData> attendanceDatas) {
             mAttendanceDatas = attendanceDatas;
         }
 
         @Override
-        public AttendanceHolder onCreateViewHolder (ViewGroup parent, int viewType) {
+        public AttendanceHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             return new AttendanceHolder(inflater, parent);
         }
 
         @Override
-        public void onBindViewHolder (AttendanceHolder holder, int position) {
+        public void onBindViewHolder(AttendanceHolder holder, int position) {
             AttendanceData attendanceData = mAttendanceDatas.get(position);
             holder.bindAttendance(attendanceData);
 
         }
 
         @Override
-        public int getItemCount () {
+        public int getItemCount() {
             return mAttendanceDatas.size();
         }
 
@@ -295,229 +287,43 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         }*/
     }
 
-    //Background task to fetch attendances from the database.
-    public class FetchAttendanceTask extends AsyncTask<String, Void, List<AttendanceData>> {
 
-        private HttpURLConnection mHttpURLConnection;
-
-        public FetchAttendanceTask () {
-        }
-
-        @Override
-        protected List<AttendanceData> doInBackground (String... params) {
-            String type = params[0];
-
-            //It is an login call.
-            switch (type) {
-                case "sort_erno":
-                    try {
-                        //Fetch the username and password from the background method call.
-                        String enrollmentnumber = params[1];
-
-                        mHttpURLConnection = URLManager.
-                                getConnection(URLManager.SORT_ERNO_URL);
-
-                        //Creating the outputStream
-                        OutputStream outputStream = mHttpURLConnection.getOutputStream();
-                        //Writing in the outputStream.
-                        BufferedWriter bufferedWriter = new BufferedWriter(new
-                                OutputStreamWriter(outputStream, "UTF-8"));
-
-                        //This is for connecting the variables in the app and in the php file.
-
-                        String postData = URLEncoder.encode("enrollmentnumber", "UTF-8") + "=" +//$_POST["enrollmentnumber"]
-                                URLEncoder.encode(enrollmentnumber, "UTF-8");
-
-                        //Feeding the data.
-                        bufferedWriter.write(postData);
-                        bufferedWriter.flush();
-                        bufferedWriter.close();
-                        outputStream.close();
-
-                        //Creating an inputStream to fetch the results.
-                        InputStream inputStream = mHttpURLConnection.getInputStream();
-
-                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                                inputStream, "iso-8859-1"));
-
-                        //Getting the results
-                        String result = "";
-                        String line;
-                        while ((line = bufferedReader.readLine()) != null) {
-                            result += line;
-                        }
-                        bufferedReader.close();
-                        inputStream.close();
-                        mHttpURLConnection.disconnect();
-
-                        //Returning the results
-                        return getAttendanceDatas(result);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
+    private void sortAttendance(String url, final String key, final String searchText){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        mAttendanceDatas = getAttendanceDatas(response);
+                        setUpRecyclerViewAdapter();
                     }
-                    break;
-                case "sort_subject_code": //It is an register POST call.
-                    try {
-                        //Fetching the values to be registered.
-                        String enrollmentnumber = params[1];
-                        String subjectCode = params[2];
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
 
-
-
-                        mHttpURLConnection = URLManager.
-                                getConnection(URLManager.SORT_SUBJECT_CODE_URL);
-
-                        OutputStream outputStream = mHttpURLConnection.getOutputStream();
-                        BufferedWriter bufferedWriter = new BufferedWriter(new
-                                OutputStreamWriter(outputStream, "UTF-8"));
-
-                        String postData = URLEncoder.encode("enrollmentnumber", "UTF-8") + "=" +//$_POST["enrollmentnumber"]
-                                URLEncoder.encode(enrollmentnumber, "UTF-8") +
-                                "&" +
-                                URLEncoder.encode("subject_code", "UTF-8") + "=" +//$_POST["username"]
-                                URLEncoder.encode(subjectCode, "UTF-8");
-
-                        bufferedWriter.write(postData);
-                        bufferedWriter.flush();
-                        bufferedWriter.close();
-                        outputStream.close();
-
-                        InputStream inputStream = mHttpURLConnection.getInputStream();
-
-                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                                inputStream, "iso-8859-1"));
-
-                        String result = "";
-                        String line;
-                        while ((line = bufferedReader.readLine()) != null) {
-                            result += line;
-                        }
-                        bufferedReader.close();
-                        inputStream.close();
-                        mHttpURLConnection.disconnect();
-
-                        //Returning the results
-                        return getAttendanceDatas(result);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
-                    break;
-                case "sort_faculty_code":
-                    try {
-                        //Fetch the username from the background method call.
-                        String enrollmentnumber = params[1];
-                        String faculty_code = params[2];
-
-
-                        mHttpURLConnection = URLManager.
-                                getConnection(URLManager.SORT_FACULTY_CODE_URL);
-
-                        //Creating the outputStream
-                        OutputStream outputStream = mHttpURLConnection.getOutputStream();
-                        //Writing in the outputStream.
-                        BufferedWriter bufferedWriter = new BufferedWriter(new
-                                OutputStreamWriter(outputStream, "UTF-8"));
-
-                        //This is for connecting the variables in the app and in the php file.
-                        String postData = URLEncoder.encode("enrollmentnumber", "UTF-8") + "=" +//$_POST["enrollmentnumber"]
-                                URLEncoder.encode(enrollmentnumber, "UTF-8") +
-                                "&" +
-                                URLEncoder.encode("faculty_code", "UTF-8") + "=" +//$_POST["faculty_code"]
-                                URLEncoder.encode(faculty_code, "UTF-8");
-
-                        //Feeding the data.
-                        bufferedWriter.write(postData);
-                        bufferedWriter.flush();
-                        bufferedWriter.close();
-                        outputStream.close();
-
-                        //Creating an inputStream to fetch the results.
-                        InputStream inputStream = mHttpURLConnection.getInputStream();
-
-                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                                inputStream, "iso-8859-1"));
-
-                        //Getting the results
-                        String result = "";
-                        String line;
-                        while ((line = bufferedReader.readLine()) != null) {
-                            result += line;
-                        }
-                        bufferedReader.close();
-                        inputStream.close();
-                        mHttpURLConnection.disconnect();
-                        //Returning the results
-
-                        //Returning the results
-                        return getAttendanceDatas(result);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                case "sort_date":
-                    try {
-                        //Fetching the values to be registered.
-                        String enrollmentnumber = params[1];
-                        String date = params[2];
-
-
-                        mHttpURLConnection = URLManager.
-                                getConnection(URLManager.SORT_DATE_URL);
-
-                        OutputStream outputStream = mHttpURLConnection.getOutputStream();
-                        BufferedWriter bufferedWriter = new BufferedWriter(new
-                                OutputStreamWriter(outputStream, "UTF-8"));
-
-                        String postData = URLEncoder.encode("enrollmentnumber", "UTF-8") + "=" +//$_POST["enrollmentnumber"]
-                                URLEncoder.encode(enrollmentnumber, "UTF-8") +
-                                "&" +
-                                URLEncoder.encode("date", "UTF-8") + "=" +//$_POST["date"]
-                                URLEncoder.encode(date, "UTF-8");
-
-                        bufferedWriter.write(postData);
-                        bufferedWriter.flush();
-                        bufferedWriter.close();
-                        outputStream.close();
-
-                        InputStream inputStream = mHttpURLConnection.getInputStream();
-
-                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                                inputStream, "iso-8859-1"));
-
-                        String result = "";
-                        String line;
-                        while ((line = bufferedReader.readLine()) != null) {
-                            result += line;
-                        }
-                        bufferedReader.close();
-                        inputStream.close();
-                        mHttpURLConnection.disconnect();
-
-                        //Returning the results
-                        return getAttendanceDatas(result);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                }){
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+//                String subjectCode = mSortAttendanceEditText.getText().toString();
+                params.put("enrollmentnumber", mErno);
+                if(key != null && searchText != null) {
+                    params.put(key, searchText);
+                }
+                return params;
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute (List<AttendanceData> items) {
-            mAttendanceDatas = items;
-            if(mAttendanceDatas != null) {
-                mAttendanceRecyclerView.setAdapter(new AttendanceAdapter(mAttendanceDatas));
-            }
-        }
+
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(stringRequest);
+
     }
 
     //This method is used to seprate the JSONArray we got in the result of background task.
-    private List<AttendanceData> getAttendanceDatas(String result){
+    private List<AttendanceData> getAttendanceDatas(String result) {
         List<AttendanceData> attendanceDatas = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(result);
@@ -542,8 +348,8 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     }
 
 
-    private boolean isNetworkAvailableAndConnected () {
-        ConnectivityManager cm = (ConnectivityManager)getActivity().
+    private boolean isNetworkAvailableAndConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().
                 getSystemService(Context.CONNECTIVITY_SERVICE);
 
         boolean isNetworkAvailable = cm.getActiveNetworkInfo() != null;
@@ -552,6 +358,12 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                 cm.getActiveNetworkInfo().isConnected();
     }
 
+    private void setUpRecyclerViewAdapter(){
+        if (mAttendanceDatas != null) {
+            mAttendanceRecyclerView.
+                    setAdapter(new AttendanceAdapter(mAttendanceDatas));
+        }
+    }
 
 
 }
