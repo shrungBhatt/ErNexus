@@ -10,10 +10,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
 import com.example.andorid.ersnexus.webservices.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
+import com.example.andorid.ersnexus.webservices.URLManager;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -22,6 +29,8 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 //This class is used for scanning the Qr code and submitting the attendance to the database.
 
@@ -40,7 +49,7 @@ public class UserScanAttendanceFragment extends Fragment {
     DateFormat formatDate = DateFormat.getDateInstance(3);
 
     @Override
-    public void onActivityCreated (Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         //If screen is rotated the textViews will still have the values.
@@ -57,8 +66,8 @@ public class UserScanAttendanceFragment extends Fragment {
 
 
     @Override
-    public View onCreateView (LayoutInflater inflater, ViewGroup container,
-                              Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_user_scan_attendance, container, false);
 
 
@@ -80,35 +89,52 @@ public class UserScanAttendanceFragment extends Fragment {
         mSubmitButton = (Button) v.findViewById(R.id.attendance_submit_button);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick (View v) {
+            public void onClick(View v) {
 
-                if(mSubjectCode.length() == 0 && mFacultyCode.length() == 0){
-                    Toast.makeText(getActivity(),"Scan Attendance First",Toast.LENGTH_SHORT).show();
-                }else {
+                if (mSubjectCode.length() == 0 && mFacultyCode.length() == 0) {
+                    Toast.makeText(getActivity(), "Scan Attendance First", Toast.LENGTH_SHORT).
+                            show();
+                } else {
 
-                    String type = "attendance";
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                            URLManager.REGISTER_ATTENDANCE_URL,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
 
-                    BackgroundDbConnector backgroundDbConnector = new
-                            BackgroundDbConnector(getActivity());
+                                    if (response.equals("Insert Successful")) {
+                                        Toast.makeText(getActivity(),
+                                                "Submitted", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(getActivity(),
+                                                UserProfileHomeActivity.class);
+                                        startActivity(intent);
+                                        getActivity().finish();
+                                    }
 
-                    backgroundDbConnector.execute(type, erNo, subjectCode, facultyCode,
-                            mDate.getText().toString());
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+
+                                }
+                            }) {
+                        @Override
+                        protected Map<String, String> getParams() {
+                            Map<String, String> params = new HashMap<>();
+                            params.put("enrollmentnumber", erNo);
+                            params.put("subject_code", subjectCode);
+                            params.put("faculty_code", facultyCode);
+                            params.put("date", mDate.getText().toString());
+
+                            return params;
+                        }
 
 
-                /*AttendanceData attendanceData = new AttendanceData(subjectCode, facultyCode,
-                        date.toString(), erNo);
+                    };
 
-                attendanceData.setEnrollmentNumber(SharedPreferencesData.getStoredErno(getActivity()));
-                attendanceData.getEnrollmentNumber();
-                attendanceData.getSubjectCode();
-                attendanceData.getFacultyCode();
-                AttendanceLab.get(getActivity()).addAttendance(attendanceData);*/
-
-                    //Toast.makeText(getActivity(),"Submitted",Toast.LENGTH_SHORT).show();
-
-                    Intent intent = new Intent(getActivity(), UserProfileHomeActivity.class);
-                    startActivity(intent);
-                    getActivity().finish();
+                    RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+                    requestQueue.add(stringRequest);
                 }
             }
         });
@@ -116,7 +142,7 @@ public class UserScanAttendanceFragment extends Fragment {
         mScanButton = (Button) v.findViewById(R.id.buttonScan);
         mScanButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick (View v) {
+            public void onClick(View v) {
 
                 qrScan.setBeepEnabled(false);
                 qrScan.initiateScan();
@@ -130,7 +156,7 @@ public class UserScanAttendanceFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult (int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -165,7 +191,7 @@ public class UserScanAttendanceFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState (Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_SUBJECT_CODE, subjectCode);
         outState.putString(KEY_FACULTY_CODE, facultyCode);

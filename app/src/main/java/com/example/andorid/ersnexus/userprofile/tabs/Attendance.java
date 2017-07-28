@@ -41,6 +41,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,12 +151,14 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                     case 1:
                         //sort using subject_code
                         String sortSubject = mSortAttendanceEditText.getText().toString();
-                        sortAttendance(URLManager.SORT_SUBJECT_CODE_URL, "subject_code", sortSubject);
+                        sortAttendance(URLManager.SORT_SUBJECT_CODE_URL,
+                                "subject_code", sortSubject);
                         break;
                     case 2:
                         //sort using faculty_code
                         String sortFaculty = mSortAttendanceEditText.getText().toString();
-                        sortAttendance(URLManager.SORT_FACULTY_CODE_URL, "faculty_code", sortFaculty);
+                        sortAttendance(URLManager.SORT_FACULTY_CODE_URL,
+                                "faculty_code", sortFaculty);
                         break;
                     case 3:
                         //sort using date.
@@ -271,6 +275,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                     @Override
                     public void onResponse(String response) {
                         mAttendanceDatas = getAttendanceDatas(response);
+                        Collections.reverse(mAttendanceDatas);
                         setUpRecyclerViewAdapter();
                     }
                 },
