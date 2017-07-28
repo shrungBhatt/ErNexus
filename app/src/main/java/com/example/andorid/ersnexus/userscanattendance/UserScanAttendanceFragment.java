@@ -18,7 +18,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
-import com.example.andorid.ersnexus.webservices.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
 import com.example.andorid.ersnexus.webservices.URLManager;
 import com.google.zxing.integration.android.IntentIntegrator;

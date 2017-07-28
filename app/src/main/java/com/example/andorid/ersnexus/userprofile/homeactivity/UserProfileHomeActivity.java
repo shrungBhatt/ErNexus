@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.userlogin.UserLoginActivity;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
-import com.example.andorid.ersnexus.webservices.BackgroundDbConnector;
 
 //This is the activity where all the tabs are showed where user interacts with everything.
 
@@ -57,15 +56,6 @@ public class UserProfileHomeActivity extends AppCompatActivity
             UserLoginActivity.mActivity.finish();
             UserLoginActivity.mActivity = null;
         }
-
-        String type = "enrollmentnumber";
-        String username = SharedPreferencesData.getStoredUsername(UserProfileHomeActivity.this);
-
-        //This background task is used to fetch the enrollment number of the user using the
-        //username from the database.
-        BackgroundDbConnector backgroundDbConnector = new
-                BackgroundDbConnector(UserProfileHomeActivity.this);
-        backgroundDbConnector.execute(type,username);
 
         //Initializing the tablayout
         mTabLayout = (TabLayout) findViewById(R.id.home_activity_tabLayout);

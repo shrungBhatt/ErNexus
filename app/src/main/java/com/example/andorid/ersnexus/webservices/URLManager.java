@@ -11,7 +11,7 @@ public class URLManager {
     //These are the URLs used in the BackgroundDBConnector class.
     public static final String LOGIN_URL = URL + "login.php";
     public static final String REGISTER_STUDENT_URL = URL + "register.php";
-    public static final String FETCH_ERNO_URL = URL + "enrollmentnumber.php";
+//    public static final String FETCH_ERNO_URL = URL + "enrollmentnumber.php";
     public static final String REGISTER_ATTENDANCE_URL = URL + "attendance.php";
 
     //These are the URLs used in the Attendance Tabs bacground task.
@@ -27,8 +27,8 @@ public class URLManager {
     public static final String FETCH_NEWS_URL = URL + "fetch_news.php";
 
     //This URL is used in the AssignmentPagerFragment.
-    public static final String FETCH_ASSIGNMENTS_DETAILS_URL =
-            URL + "fetch_assignments_details.php";
+//    public static final String FETCH_ASSIGNMENTS_DETAILS_URL =
+//            URL + "fetch_assignments_details.php";
 
     public static HttpURLConnection getConnection (String url) throws IOException {
         URL mUrl = new URL(url);

@@ -2,7 +2,6 @@ package com.example.andorid.ersnexus.usersignup;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.SQLException;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -14,18 +13,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.database.userdata.UserBaseHelper;
 import com.example.andorid.ersnexus.models.UserData;
-import com.example.andorid.ersnexus.database.userdata.UserLab;
 import com.example.andorid.ersnexus.userlogin.UserLoginActivity;
-import com.example.andorid.ersnexus.webservices.BackgroundDbConnector;
 import com.example.andorid.ersnexus.util.DatePickerFragment;
+import com.example.andorid.ersnexus.webservices.URLManager;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class UserSignUpFragment extends Fragment {
@@ -509,26 +516,7 @@ public class UserSignUpFragment extends Fragment {
                         mErNo12.length() == 0) {
                     createSnack("Enter Enrollment Number");
                 } else {
-                    try {
-                        createNewUser();
-                        String type = "register";
-                        BackgroundDbConnector backgroundDbConnector = new
-                                BackgroundDbConnector(getActivity());
-                        backgroundDbConnector.execute(type,
-                                mUserData.getEnrollmentNumber(),
-                                mUserData.getUserName(),
-                                mUserData.getFullName(),
-                                mUserData.getPassword(),
-                                mUserData.getEmail(),
-                                mUserData.getDob().toString());
-                    } catch (SQLException e) {
-                        Snackbar.make(getView(),
-                                "DATABASE NOT SAVED", Snackbar.LENGTH_SHORT).show();
-                    }
-                    Intent i = new Intent(getActivity(), UserLoginActivity.class);
-                    startActivity(i);
-
-
+                    registerUser();
                 }
 
 
@@ -565,15 +553,50 @@ public class UserSignUpFragment extends Fragment {
 
     }
 
-    public void createNewUser () {
-        mUserData.getId();
-        mUserData.getFullName();
-        mUserData.getUserName();
-        mUserData.getPassword();
-        mUserData.getEnrollmentNumber();
-        mUserData.getEmail();
-        mUserData.getDob();
-        UserLab.get(getActivity()).addUser(mUserData);
+
+    private void registerUser(){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URLManager.
+                REGISTER_STUDENT_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                if(response.equals("Insert SuccessFul")){
+                    Toast.makeText(getActivity(), "Registered", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(getActivity(), UserLoginActivity.class);
+                    startActivity(i);
+                    getActivity().finish();
+
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(), error.toString(),
+                        Toast.LENGTH_SHORT).show();
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("enrollmentnumber", mUserData.getEnrollmentNumber());
+                params.put("username",mUserData.getUserName());
+                params.put("fullname",mUserData.getFullName());
+                params.put("password",mUserData.getPassword());
+                params.put("emailid",mUserData.getEmail());
+                params.put("dob",mUserData.getDob().toString());
+                return params;
+            }
+        };
+
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(stringRequest);
+
+
     }
 
 
