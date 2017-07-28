@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         mErno = SharedPreferencesData.getStoredErno(getActivity());
 
         if (isNetworkAvailableAndConnected()) {
-            sortAttendance(URLManager.SORT_ERNO_URL,null,null);
+            sortAttendance(URLManager.SORT_ERNO_URL, null, null);
         } else {
             Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
         }
@@ -108,7 +109,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             @Override
             public void onClick(View v) {
                 mSortAttendanceEditText.getText().clear();
-                sortAttendance(URLManager.SORT_ERNO_URL,null,null);
+                sortAttendance(URLManager.SORT_ERNO_URL, null, null);
                 //updateUI();
             }
         });
@@ -126,7 +127,6 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         });
 
         Spinner spinner = (Spinner) v.findViewById(R.id.sort_attendance_by_spinner);
-
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.sort_attendance_by, android.R.layout.simple_spinner_item);
@@ -143,19 +143,23 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             public void onClick(View v) {
                 switch (mPosition) {
                     case 0:
-                        sortAttendance(URLManager.SORT_ERNO_URL,null,null);
+                        //sort using erno
+                        sortAttendance(URLManager.SORT_ERNO_URL, null, null);
                         break;
                     case 1:
+                        //sort using subject_code
                         String sortSubject = mSortAttendanceEditText.getText().toString();
-                        sortAttendance(URLManager.SORT_SUBJECT_CODE_URL,"subject_code",sortSubject);
+                        sortAttendance(URLManager.SORT_SUBJECT_CODE_URL, "subject_code", sortSubject);
                         break;
                     case 2:
+                        //sort using faculty_code
                         String sortFaculty = mSortAttendanceEditText.getText().toString();
-                        sortAttendance(URLManager.SORT_FACULTY_CODE_URL,"faculty_code",sortFaculty);
+                        sortAttendance(URLManager.SORT_FACULTY_CODE_URL, "faculty_code", sortFaculty);
                         break;
                     case 3:
+                        //sort using date.
                         String sortDate = mSortAttendanceEditText.getText().toString();
-                        sortAttendance(URLManager.SORT_DATE_URL,"date",sortDate);
+                        sortAttendance(URLManager.SORT_DATE_URL, "date", sortDate);
                         break;
                 }
 
@@ -177,7 +181,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             }
         });
         mAttendanceRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-        //updateUI();
+
 
         return v;
     }
@@ -196,18 +200,8 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     @Override
     public void onResume() {
         super.onResume();
-        //updateUI();// To update the data in recyclerView after editing the data in attendance tab.
-    }
 
-    /*private void checkAndSetAdapter () {
-        if (mAdapter == null) {
-            mAdapter = new AttendanceAdapter(mAttendanceDatas);
-            mAttendanceRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.setAttendances(mAttendanceDatas);
-            mAdapter.notifyDataSetChanged();
-        }
-    }*/
+    }
 
 
     //ViewHolder class of the recyclerView.
@@ -241,21 +235,6 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     }
 
 
-    /*//method used to initialise the adpater of the recyclerView.
-    private void updateUI () {
-        //AttendanceLab attendanceLab = AttendanceLab.get(getActivity());
-        //List<AttendanceData> attendances = attendanceLab.getAttendances(mErno);
-        if (mAdapter == null) {
-            //mAdapter = new AttendanceAdapter(new BackgroundAttendanceFetcher(getActivity())
-                    //.getAttendanceDatas());
-            mAttendanceRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.setAttendances(mAttendanceDatas);
-            mAdapter.notifyDataSetChanged();
-        }
-    }*/
-
-
     //Adapter class for the recyclerView.
     private class AttendanceAdapter extends RecyclerView.Adapter<AttendanceHolder> {
         private List<AttendanceData> mAttendanceDatas;
@@ -281,14 +260,11 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         public int getItemCount() {
             return mAttendanceDatas.size();
         }
-
-        /*public void setAttendances (List<AttendanceData> attendances) {
-            mAttendanceDatas = attendances;
-        }*/
     }
 
 
-    private void sortAttendance(String url, final String key, final String searchText){
+    //Connecting to the server database using volley.
+    private void sortAttendance(String url, final String key, final String searchText) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 url,
                 new Response.Listener<String>() {
@@ -301,21 +277,18 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Log.e("Attendance", error.toString());
                     }
-                }){
+                }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-//                String subjectCode = mSortAttendanceEditText.getText().toString();
                 params.put("enrollmentnumber", mErno);
-                if(key != null && searchText != null) {
+                if (key != null && searchText != null) {
                     params.put(key, searchText);
                 }
                 return params;
             }
-
-
         };
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(stringRequest);
@@ -348,6 +321,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     }
 
 
+    //Method used to check that whether phone is connected to the internet or not
     private boolean isNetworkAvailableAndConnected() {
         ConnectivityManager cm = (ConnectivityManager) getActivity().
                 getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -358,7 +332,8 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                 cm.getActiveNetworkInfo().isConnected();
     }
 
-    private void setUpRecyclerViewAdapter(){
+    //Method used to set the RecyclerView's adapter
+    private void setUpRecyclerViewAdapter() {
         if (mAttendanceDatas != null) {
             mAttendanceRecyclerView.
                     setAdapter(new AttendanceAdapter(mAttendanceDatas));
