@@ -10,12 +10,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.baoyz.widget.PullRefreshLayout;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.models.AssignmentData;
@@ -41,21 +48,23 @@ import java.util.List;
 
 public class Assignments extends Fragment {
 
+    private static final String TAG = "Assignments";
+
     private RecyclerView mAssignmentRecyclerView;
     private List<AssignmentData> mAssignmentData;
     private PullRefreshLayout mSwipeRefresh;
 
 
     @Override
-    public View onCreateView (LayoutInflater inflater, @Nullable ViewGroup container,
-                              @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_assignments, container, false);
 
         //Adding the swipeAndRefresh functionality
         mSwipeRefresh = (PullRefreshLayout) v.findViewById(R.id.swipe_refresh_assignment_tab);
         mSwipeRefresh.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh () {
+            public void onRefresh() {
 
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.detach(Assignments.this).attach(Assignments.this).commit();
@@ -71,7 +80,7 @@ public class Assignments extends Fragment {
         mAssignmentRecyclerView.
                 setOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
-                    public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                         super.onScrolled(recyclerView, dx, dy);
                         LinearLayoutManager manager = ((LinearLayoutManager) recyclerView
                                 .getLayoutManager());
@@ -83,7 +92,8 @@ public class Assignments extends Fragment {
 
         if (isNetworkAvailableAndConnected()) {
             //Start the background task if the connection is availabel.
-            new FetchAssignmentTask().execute();
+//            new FetchAssignmentTask().execute();
+            fetchAssignments();
         } else {
             Toast.makeText(getActivity(), getString(R.string.no_internet_connection),
                     Toast.LENGTH_SHORT).show();
@@ -93,7 +103,7 @@ public class Assignments extends Fragment {
     }
 
 
-    //asdasd
+
     //Viewholder class of recyclerView.
     private class AssignmentHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
@@ -103,7 +113,8 @@ public class Assignments extends Fragment {
 
         private AssignmentData mAssignmentData;
 
-        public AssignmentHolder (LayoutInflater layoutInflater, ViewGroup container) {
+        //Constructor used to inflate the viewHolder in adapter class.
+        public AssignmentHolder(LayoutInflater layoutInflater, ViewGroup container) {
             super(layoutInflater.inflate(R.layout.list_item_assignment_recycler_view, container,
                     false));
 
@@ -122,7 +133,8 @@ public class Assignments extends Fragment {
                     findViewById(R.id.list_item_date_textView);
         }
 
-        public void bindAssignments (AssignmentData assignmentData) {
+        //Method to bind the data of viewholder called in the adapter class.
+        public void bindAssignments(AssignmentData assignmentData) {
             mAssignmentData = assignmentData;
             mAssignmentNameTextView.setText(mAssignmentData.getAssignmentName());
             mSubjectCodeTextView.setText(mAssignmentData.getSubjectCode());
@@ -131,7 +143,7 @@ public class Assignments extends Fragment {
         }
 
         @Override
-        public void onClick (View v) {
+        public void onClick(View v) {
             Intent intent = AssignmentPagerActivity.newIntent(getActivity(),
                     mAssignmentData.getId());
             startActivity(intent);
@@ -143,25 +155,25 @@ public class Assignments extends Fragment {
     private class AssignmentAdapter extends RecyclerView.Adapter<AssignmentHolder> {
         private List<AssignmentData> mAssignmentDatas;
 
-        public AssignmentAdapter (List<AssignmentData> assignmentDatas) {
+        public AssignmentAdapter(List<AssignmentData> assignmentDatas) {
             mAssignmentDatas = assignmentDatas;
         }
 
         @Override
-        public AssignmentHolder onCreateViewHolder (ViewGroup parent, int viewType) {
+        public AssignmentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             return new AssignmentHolder(inflater, parent);
         }
 
         @Override
-        public void onBindViewHolder (AssignmentHolder holder, int position) {
+        public void onBindViewHolder(AssignmentHolder holder, int position) {
             AssignmentData assignmentData = mAssignmentDatas.get(position);
             holder.bindAssignments(assignmentData);
 
         }
 
         @Override
-        public int getItemCount () {
+        public int getItemCount() {
             return mAssignmentDatas.size();
         }
     }
@@ -172,7 +184,7 @@ public class Assignments extends Fragment {
         private HttpURLConnection mHttpURLConnection;
 
         @Override
-        protected List<AssignmentData> doInBackground (Void... params) {
+        protected List<AssignmentData> doInBackground(Void... params) {
             try {
 
                 mHttpURLConnection = URLManager.
@@ -204,7 +216,7 @@ public class Assignments extends Fragment {
         }
 
         @Override
-        protected void onPostExecute (List<AssignmentData> items) {
+        protected void onPostExecute(List<AssignmentData> items) {
             mAssignmentData = items;
             if (mAssignmentData != null) {
                 AssignmentData.setAssignments(mAssignmentData);
@@ -214,8 +226,36 @@ public class Assignments extends Fragment {
         }
     }
 
+    private void fetchAssignments() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                URLManager.FETCH_ASSIGNMENTS_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        mAssignmentData = getAssignmentDatas(response);
+                        Collections.reverse(mAssignmentData);
+                        if(mAssignmentData != null){
+                            AssignmentData.setAssignments(mAssignmentData);
+                            mAssignmentRecyclerView.setAdapter(new AssignmentAdapter(mAssignmentData));
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG,"Error: " + error.toString());
+                    }
+                }) {
+        };
+
+
+        //This is to start the request to the database server.
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(stringRequest);
+    }
+
     //This method converts the fetched result of array of assignments into an arrayList();
-    private List<AssignmentData> getAssignmentDatas (String result) {
+    public static List<AssignmentData> getAssignmentDatas(String result) {
         List<AssignmentData> assignmentDatas = new ArrayList<>();
 
         try {
@@ -243,7 +283,8 @@ public class Assignments extends Fragment {
     }
 
 
-    private boolean isNetworkAvailableAndConnected () {
+    //Method used to check that whether internet connection is available or not.
+    private boolean isNetworkAvailableAndConnected() {
         ConnectivityManager cm = (ConnectivityManager) getActivity().
                 getSystemService(Context.CONNECTIVITY_SERVICE);
 

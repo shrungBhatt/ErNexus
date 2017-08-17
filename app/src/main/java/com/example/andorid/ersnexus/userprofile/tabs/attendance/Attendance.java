@@ -1,4 +1,4 @@
-package com.example.andorid.ersnexus.userprofile.tabs;
+package com.example.andorid.ersnexus.userprofile.tabs.attendance;
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +31,7 @@ import com.android.volley.toolbox.Volley;
 import com.baoyz.widget.PullRefreshLayout;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.models.AttendanceData;
-import com.example.andorid.ersnexus.userscanattendance.UserScanAttendanceActivity;
+import com.example.andorid.ersnexus.userprofile.tabs.attendance.userscanattendance.UserScanAttendanceActivity;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
 import com.example.andorid.ersnexus.util.SimpleDividerItemDecoration;
 import com.example.andorid.ersnexus.webservices.URLManager;
@@ -41,7 +41,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -55,12 +54,12 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     private Button mScanAttendanceButton;
     //private AttendanceAdapter mAdapter;
     private RecyclerView mAttendanceRecyclerView;
-    private int mPosition;
+    private int mPosition;//variable used to get the position of the spinner.
     private EditText mSortAttendanceEditText;
     private ImageButton mSortAttendanceButton;
-    private String mErno;
+    private String mErno;//var to store the erno fetched from the database.
     //private AttendanceLab mAttendanceLab;
-    private List<AttendanceData> mAttendanceDatas;
+    public static List<AttendanceData> mAttendanceDatas;
     private ImageButton mClearButton;
     private PullRefreshLayout mSwipeRefresh;
 
@@ -93,6 +92,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                     getColor(android.R.color.holo_red_dark));
             mScanAttendanceButton.setText(R.string.attendance_cooldown_text);
         }
+        //giving life to the attendance button.
         mScanAttendanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,6 +104,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             }
         });
 
+        //giving life to the sort attendance button.
         mSortAttendanceEditText = (EditText) v.findViewById(R.id.sort_attendance_by_editText);
         //Button used to clear the sortBy editText filed and repopulate the recyclerView.
         mClearButton = (ImageButton) v.findViewById(R.id.clear_button);
@@ -128,6 +129,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
             }
         });
 
+        //Is used give id to the spinner.
         Spinner spinner = (Spinner) v.findViewById(R.id.sort_attendance_by_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
@@ -136,6 +138,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
+        //Is used to set the adapter of spinner with the names.
         spinner.setOnItemSelectedListener(this);
 
         //To search the database using the sort type and the string value.
@@ -184,6 +187,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                 mSwipeRefresh.setEnabled(enabled);
             }
         });
+        //Adding lines in the recyclerView.
         mAttendanceRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
 
@@ -229,6 +233,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
 
         }
 
+        //Method to bind the holder to the adapter, called in the adapter class.
         public void bindAttendance(AttendanceData attendancedata) {
             mAttendanceData = attendancedata;
             mDateTextView.setText(mAttendanceData.getDate());
@@ -273,7 +278,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
                 url,
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(String response) {//The response will be the echo message we get from the php file
                         mAttendanceDatas = getAttendanceDatas(response);
                         Collections.reverse(mAttendanceDatas);
                         setUpRecyclerViewAdapter();
@@ -299,8 +304,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         requestQueue.add(stringRequest);
 
     }
-
-    //This method is used to seprate the JSONArray we got in the result of background task.
+    //This method is used to decode the JSONArray we got in the result of background task.
     private List<AttendanceData> getAttendanceDatas(String result) {
         List<AttendanceData> attendanceDatas = new ArrayList<>();
         try {

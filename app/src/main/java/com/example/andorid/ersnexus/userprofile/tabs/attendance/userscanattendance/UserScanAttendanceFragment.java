@@ -1,4 +1,4 @@
-package com.example.andorid.ersnexus.userscanattendance;
+package com.example.andorid.ersnexus.userprofile.tabs.attendance.userscanattendance;
 
 import android.content.Intent;
 import android.os.Bundle;

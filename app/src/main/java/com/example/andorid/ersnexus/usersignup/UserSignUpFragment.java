@@ -565,17 +565,13 @@ public class UserSignUpFragment extends Fragment {
                     Intent i = new Intent(getActivity(), UserLoginActivity.class);
                     startActivity(i);
                     getActivity().finish();
-
                 }
-
-
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getActivity(), error.toString(),
                         Toast.LENGTH_SHORT).show();
-
             }
         }) {
             @Override
@@ -590,13 +586,8 @@ public class UserSignUpFragment extends Fragment {
                 return params;
             }
         };
-
-
-
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(stringRequest);
-
-
     }
 
 

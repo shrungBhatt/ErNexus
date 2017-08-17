@@ -30,7 +30,7 @@
         </activity>
 
         <activity
-            android:name=".userscanattendance.UserScanAttendanceActivity"
+            android:name=".userprofile.tabs.attendance.userscanattendance.UserScanAttendanceActivity"
             android:label="Scan Attendance"
             android:screenOrientation="portrait">
 

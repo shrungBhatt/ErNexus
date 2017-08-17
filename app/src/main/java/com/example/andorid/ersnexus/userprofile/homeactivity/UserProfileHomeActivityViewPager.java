@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.example.andorid.ersnexus.userprofile.tabs.Achievements;
 import com.example.andorid.ersnexus.userprofile.tabs.assignment.Assignments;
-import com.example.andorid.ersnexus.userprofile.tabs.Attendance;
+import com.example.andorid.ersnexus.userprofile.tabs.attendance.Attendance;
 import com.example.andorid.ersnexus.userprofile.tabs.newsfeed.NewsFeed;
 
 //This class is used for viewPager used in the TabLayout in UserProfileHomeActivity.
