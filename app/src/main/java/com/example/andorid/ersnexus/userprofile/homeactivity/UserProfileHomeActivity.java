@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.userlogin.UserLoginActivity;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
+import com.example.andorid.ersnexus.util.SingleFragmentActivity;
 
 //This is the activity where all the tabs are showed where user interacts with everything.
 
@@ -34,7 +36,6 @@ public class UserProfileHomeActivity extends AppCompatActivity
     private ViewPager mViewPager;
 
     public static Activity mActivity;
-
 
 
     @Override

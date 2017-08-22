@@ -54,6 +54,11 @@
             android:label="News Feed"
             android:screenOrientation="portrait">
         </activity>
+
+        <activity android:name=".userprofile.tabs.achievements.AddAchievementActivity"
+                  android:screenOrientation="portrait"/>
+
+
     </application>
 
 </manifest>

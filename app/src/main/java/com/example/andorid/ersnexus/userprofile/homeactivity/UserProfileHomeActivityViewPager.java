@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.example.andorid.ersnexus.userprofile.tabs.Achievements;
+import com.example.andorid.ersnexus.userprofile.tabs.achievements.Achievements;
 import com.example.andorid.ersnexus.userprofile.tabs.assignment.Assignments;
 import com.example.andorid.ersnexus.userprofile.tabs.attendance.Attendance;
 import com.example.andorid.ersnexus.userprofile.tabs.newsfeed.NewsFeed;

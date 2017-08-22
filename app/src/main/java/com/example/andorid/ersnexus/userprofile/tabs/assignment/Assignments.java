@@ -38,7 +38,7 @@ import java.util.Collections;
 import java.util.List;
 
 //This class is the Assignment Tab.
-//It consits of a recyclerView in which assignments are stored.
+//It consists of a recyclerView in which assignments are stored.
 //Assignments are fetched from the database using a background task.
 
 public class Assignments extends Fragment {

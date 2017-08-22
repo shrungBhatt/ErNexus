@@ -26,11 +26,11 @@ public class URLManager {
     //These are the URLs used in the NewsFeed Tab background task.
     public static final String FETCH_NEWS_URL = URL + "fetch_news.php";
 
-    //This URL is used in the AssignmentPagerFragment.
-//    public static final String FETCH_ASSIGNMENTS_DETAILS_URL =
-//            URL + "fetch_assignments_details.php";
+ /*   This URL is used in the AssignmentPagerFragment.
+    public static final String FETCH_ASSIGNMENTS_DETAILS_URL =
+            URL + "fetch_assignments_details.php";*/
 
-    public static HttpURLConnection getConnection (String url) throws IOException {
+    /*public static HttpURLConnection getConnection (String url) throws IOException {
         URL mUrl = new URL(url);
         HttpURLConnection httpURLConnection = (HttpURLConnection) mUrl.openConnection();
         httpURLConnection.setRequestMethod("POST");
@@ -38,5 +38,5 @@ public class URLManager {
         httpURLConnection.setDoInput(true);
 
         return httpURLConnection;
-    }
+    }*/
 }
