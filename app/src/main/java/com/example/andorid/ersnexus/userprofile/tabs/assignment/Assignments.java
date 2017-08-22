@@ -33,11 +33,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -178,54 +173,7 @@ public class Assignments extends Fragment {
         }
     }
 
-
-    //Background AsyncTask to fetch the assignments from the database.
-    private class FetchAssignmentTask extends AsyncTask<Void, Void, List<AssignmentData>> {
-        private HttpURLConnection mHttpURLConnection;
-
-        @Override
-        protected List<AssignmentData> doInBackground(Void... params) {
-            try {
-
-                mHttpURLConnection = URLManager.
-                        getConnection(URLManager.FETCH_ASSIGNMENTS_URL);
-
-                //Creating an inputStream to fetch the results.
-                InputStream inputStream = mHttpURLConnection.getInputStream();
-
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                        inputStream, "iso-8859-1"));
-
-                //Getting the results
-                String result = "";
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    result += line;
-                }
-                bufferedReader.close();
-                inputStream.close();
-                mHttpURLConnection.disconnect();
-
-                //Returning the results
-                return getAssignmentDatas(result);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<AssignmentData> items) {
-            mAssignmentData = items;
-            if (mAssignmentData != null) {
-                AssignmentData.setAssignments(mAssignmentData);
-                Collections.reverse(mAssignmentData);
-                mAssignmentRecyclerView.setAdapter(new AssignmentAdapter(mAssignmentData));
-            }
-        }
-    }
-
+    //Method using volley to fetch assignments from online database.
     private void fetchAssignments() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 URLManager.FETCH_ASSIGNMENTS_URL,

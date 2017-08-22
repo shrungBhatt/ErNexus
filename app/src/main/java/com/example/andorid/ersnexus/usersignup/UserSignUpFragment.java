@@ -554,6 +554,10 @@ public class UserSignUpFragment extends Fragment {
     }
 
 
+/*
+    method using volley api to register user in the database. Called when the submit button  is
+    pressed.
+*/
     private void registerUser(){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URLManager.
                 REGISTER_STUDENT_URL, new Response.Listener<String>() {

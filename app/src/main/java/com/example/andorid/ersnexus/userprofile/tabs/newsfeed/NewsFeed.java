@@ -10,12 +10,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.baoyz.widget.PullRefreshLayout;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.models.NewsData;
@@ -32,10 +39,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
 public class NewsFeed extends Fragment {
+
+    private static final String TAG = "Newsfeed";
 
     private RecyclerView mNewsfeedRecyclerView;
     private List<NewsData> mNewsData;
@@ -78,7 +89,7 @@ public class NewsFeed extends Fragment {
 
         if (isNetworkAvailableAndConnected()) {
             //Start the background task if the connection is availabel.
-            new FetchNewsTask().execute();
+            fetchNews();
         } else {
             Toast.makeText(getActivity(), getString(R.string.no_internet_connection),
                     Toast.LENGTH_SHORT).show();
@@ -150,53 +161,36 @@ public class NewsFeed extends Fragment {
     }
 
 
-    private class FetchNewsTask extends AsyncTask<Void, Void, List<NewsData>> {
-        private HttpURLConnection mHttpURLConnection;
+    //Method using volley to fetch database from the database.
+    private void fetchNews(){
 
-        @Override
-        protected List<NewsData> doInBackground (Void... Params) {
-            try {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                URLManager.FETCH_NEWS_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        mNewsData = getNewsDatas(response);
+                        if (mNewsData != null) {
+                            Collections.reverse(mNewsData);
+                            mNewsfeedRecyclerView.setAdapter(new NewsAdapter(mNewsData));
+                            NewsData.setmNewsData(mNewsData);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG,error.toString());
+                    }
+                }){
+        };
 
-                mHttpURLConnection = URLManager.
-                        getConnection(URLManager.FETCH_NEWS_URL);
-
-                //Creating an inputStream to fetch the results.
-                InputStream inputStream = mHttpURLConnection.getInputStream();
-
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                        inputStream, "iso-8859-1"));
-
-                //Getting the results
-                String result = "";
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    result += line;
-                }
-                bufferedReader.close();
-                inputStream.close();
-                mHttpURLConnection.disconnect();
-
-                //Returning the results
-                return getNewsDatas(result);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute (List<NewsData> items) {
-            mNewsData = items;
-            if (mNewsData != null) {
-                mNewsfeedRecyclerView.setAdapter(new NewsAdapter(mNewsData));
-                NewsData.setmNewsData(mNewsData);
-            }
-
-        }
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(stringRequest);
 
     }
 
+    //Method used to parse the json response from the database.
     private List<NewsData> getNewsDatas (String result) {
         List<NewsData> newsDatas = new ArrayList<>();
 
