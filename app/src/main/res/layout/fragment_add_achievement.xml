@@ -1,96 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
-    android:orientation="vertical">
-
-    <Spinner
-        android:id="@+id/type_of_activity_spinner"
-        style="@style/Widget.AppCompat.Spinner.Underlined"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/layout_marginBottom">
-
-    </Spinner>
-
-    <Spinner
-        android:id="@+id/competition_level_spinner"
-        style="@style/Widget.AppCompat.Spinner.Underlined"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/layout_marginBottom">
-
-    </Spinner>
-
-    <EditText
-        android:id="@+id/achievement_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/layout_marginBottom"
-        android:hint="Description"
-        android:inputType="textAutoComplete"/>
+    android:layout_margin="16dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/layout_marginBottom"
-        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/activity_date"
-            android:layout_width="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <Spinner
+            android:id="@+id/type_of_activity_spinner"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"/>
+            android:layout_marginBottom="16dp">
+
+        </Spinner>
 
         <Spinner
             android:id="@+id/sub_activity_spinner"
             style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"/>
-    </LinearLayout>
+            android:layout_marginBottom="16dp"
+            android:spinnerMode="dialog">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        </Spinner>
 
-        <TextView
-            android:layout_width="0dp"
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/achievement_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="@string/achievements_description_editText"
+                android:inputType="textAutoComplete"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:text="Are you a winner?"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
 
-        <RadioButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            <Button
+                android:id="@+id/activity_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"/>
+
+            <Spinner
+
+                android:id="@+id/competition_level_spinner"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="38dp"
+                android:layout_marginEnd="38dp"
+                android:text="@string/are_you_a_winner"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+
+        </LinearLayout>
 
 
     </LinearLayout>
 
     <Button
         android:id="@+id/register_achievement_button"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
+        android:layout_gravity="bottom|center_horizontal"
         android:background="@color/colorPrimary"
-        android:text="submit"
+        android:text="@string/submit"
         android:textColor="@android:color/white"
         android:textStyle="bold"/>
-
-</LinearLayout>
+</FrameLayout>
