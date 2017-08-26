@@ -91,26 +91,10 @@ public class UserLoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isNetworkAvailableAndConnected()) {
-                    /*try {
-                        if(!InetAddress.getByName("192.168.2.3").isReachable(5000)){
-                            throw new Exception("Host does not exist::");
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(UserLoginActivity.this,
-                                "Server Is Down",Toast.LENGTH_SHORT).show();
-                    }*/
-                    String type = "login";
+
                     userName = mUserName.getText().toString();
                     pass = mUserPassword.getText().toString();
-                    //password = mHelper.fetchUserPass(userName);
-                    //mErno = mHelper.fetchErNo(userName);
-                    //String fullName = mHelper.fetchFullName(userName);
 
-//                    BackgroundDbConnector backgroundDbConnector = new
-//                            BackgroundDbConnector(UserLoginActivity.this);
-//
-//                    backgroundDbConnector.execute(type, userName, pass);
 
                     StringRequest stringRequest = new StringRequest(Request.Method.POST, URLManager.
                             LOGIN_URL, new Response.Listener<String>() {

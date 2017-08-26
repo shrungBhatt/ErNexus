@@ -55,7 +55,6 @@ public class UserProfileHomeActivity extends AppCompatActivity
             Toast.makeText(UserProfileHomeActivity.this,
                     "Welcome "+userName,Toast.LENGTH_SHORT).show();
             UserLoginActivity.mActivity.finish();
-            UserLoginActivity.mActivity = null;
         }
 
         //Initializing the tablayout
