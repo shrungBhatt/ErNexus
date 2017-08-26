@@ -38,7 +38,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         mActivitySubTpyeSpinner = (Spinner) v.findViewById(R.id.sub_activity_spinner);
 
         mActivityLevelSpinner = (Spinner)v.findViewById(R.id.competition_level_spinner);
-        setAdapter(R.array.competition_level,mActivityLevelSpinner);
+
 
 
         return v;
@@ -55,6 +55,11 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 //                mActivityDescriptionEditText.setText(text);
                 mActivitySelectedPosition = i;
                 setSubActivityAdapter(mActivitySelectedPosition);
+                if(mActivitySelectedPosition == 5){
+                    setAdapter(R.array.participation_level,mActivityLevelSpinner);
+                }else {
+                    setAdapter(R.array.competition_level, mActivityLevelSpinner);
+                }
                 break;
 
         }
@@ -67,7 +72,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
     private void setAdapter(int id, Spinner spinner) {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                id, android.R.layout.simple_spinner_item);
+                id, R.layout.simple_spinner_layout);
         adapter.setDropDownViewResource(R.layout.spinner_layout);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);

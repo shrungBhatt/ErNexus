@@ -66,7 +66,7 @@
         <item>Paper Presentation</item>
         <item>Poster</item>
         <item>Training/Internship/Professional Certification</item>
-        <item>Project (Non-Curricular</item>
+        <item>Project (Non-Curricular)</item>
         <item>Industrial/Exhibition Visit</item>
         <item>Consultancy Projects</item>
     </string-array>
@@ -111,6 +111,12 @@
         <item>Special Initiatives</item>
         <item>GTU Innovation Club / S4 Extension Centre</item>
         <item>GIC Associates</item>
+    </string-array>
+
+    <string-array name="participation_level">
+        <item>Volunteer</item>
+        <item>Sub-Coordinator</item>
+        <item>Core-Coordinator</item>
     </string-array>
 
     <string-array name="competition_level">
