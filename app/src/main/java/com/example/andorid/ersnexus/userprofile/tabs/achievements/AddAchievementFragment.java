@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +15,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.andorid.ersnexus.R;
+import com.example.andorid.ersnexus.models.ActivityData;
 import com.example.andorid.ersnexus.util.ActivitiesHashMap;
 import com.example.andorid.ersnexus.util.DatePickerFragment;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
 public class AddAchievementFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
+    private static final String TAG = "AddAchievementFragment";
     private static final int REQUEST_DATE = 0;
     private static final String DIALOG_DATE = "dialog_date";
 
@@ -40,6 +57,8 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
     private ConcurrentHashMap<String,Integer> mConcurrentHashMap;
     private String mSubActivityString;
     private String mActivityLevelString;
+    private List<ActivityData> mActivityDatas;
+    private int mPoints;
 
     DateFormat formatDate = DateFormat.getDateInstance();
 
@@ -125,10 +144,73 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         }
     }
 
+    private List<ActivityData> parseActivityDataResponse(String url){
+
+        List<ActivityData> activityDatas = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(url);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                ActivityData activityData = new ActivityData();
+                activityData.setId(jsonObject.getInt("id"));
+                activityData.setActivityName(jsonObject.getString("activity"));
+                activityData.setCollegeLevel(jsonObject.getInt("college"));
+                activityData.setZonalLevel(jsonObject.getInt("zonal"));
+                activityData.setStateLevel(jsonObject.getInt("state"));
+                activityData.setNationalLevel(jsonObject.getInt("national"));
+                activityData.setInternationaLevel(jsonObject.getInt("international"));
+
+                activityDatas.add(activityData);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        //Returning the results
+        return activityDatas;
+
+    }
+
     //Method called when none of the spinner is selected.
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    private void sendRequest(){
+        final String activityId = ActivitiesHashMap.
+                mConcurrentHashMap.get(mSubActivityString).toString();
+        final String activityLevel = ActivitiesHashMap.mActivityLevelMap.
+                get(mActivityLevelString);
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                "url",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        mActivityDatas = parseActivityDataResponse(response);
+                        mPoints = Integer.parseInt(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG,"Error: "+ error.toString());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("activityId",activityId);
+                params.put("activityLevelId",activityLevel);
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(stringRequest);
     }
 
 

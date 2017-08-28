@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 //send request to the database.
 public class ActivitiesHashMap {
     public static ConcurrentHashMap<String,Integer> mConcurrentHashMap;
+    public static ConcurrentHashMap<String,String> mActivityLevelMap;
 
     public static void generateActivityHashMap(){
 
@@ -58,6 +59,13 @@ public class ActivitiesHashMap {
         mConcurrentHashMap.put("Special Initiatives",4);
         mConcurrentHashMap.put("GTU Innovation Club / S4 Extension Centre",5);
         mConcurrentHashMap.put("GIC Associates",6);
+
+        mActivityLevelMap = new ConcurrentHashMap<>();
+        mActivityLevelMap.put("College","college");
+        mActivityLevelMap.put("Zonal","zonal");
+        mActivityLevelMap.put("State","state");
+        mActivityLevelMap.put("National","national");
+        mActivityLevelMap.put("International","international");
     }
 
 }
