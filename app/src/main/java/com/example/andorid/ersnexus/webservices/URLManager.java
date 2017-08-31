@@ -26,6 +26,10 @@ public class URLManager {
     //These are the URLs used in the NewsFeed Tab background task.
     public static final String FETCH_NEWS_URL = URL + "fetch_news.php";
 
+    //These are the URLs to submit and fetch the activity points from the database.
+    public static final String FETCH_ACTIVITY_POINTS = URL + "fetch_activity_points";
+    public static final String SUBMIT_ACTIVITY = URL + "submit_activity";
+
  /*   This URL is used in the AssignmentPagerFragment.
     public static final String FETCH_ASSIGNMENTS_DETAILS_URL =
             URL + "fetch_assignments_details.php";*/

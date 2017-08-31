@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -25,6 +26,8 @@ import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.models.ActivityData;
 import com.example.andorid.ersnexus.util.ActivitiesHashMap;
 import com.example.andorid.ersnexus.util.DatePickerFragment;
+import com.example.andorid.ersnexus.util.SharedPreferencesData;
+import com.example.andorid.ersnexus.webservices.URLManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,16 +57,19 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
     private Button mActivitySubmitButton;
     private int mActivitySelectedPosition;
     private Date mDate;
-    private ConcurrentHashMap<String,Integer> mConcurrentHashMap;
+    private String mActivityString;
     private String mSubActivityString;
     private String mActivityLevelString;
     private List<ActivityData> mActivityDatas;
     private int mPoints;
+    private int mTotalPoints;
+    private CheckBox mWinnerCheckbox;
+    private boolean mWinnerFlag;
 
     DateFormat formatDate = DateFormat.getDateInstance();
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mDate = new Date();
@@ -91,10 +97,10 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         mActivitySubTpyeSpinner = (Spinner) v.findViewById(R.id.sub_activity_spinner);
 
         //Level of the activity (College,zonal, etc.)
-        mActivityLevelSpinner = (Spinner)v.findViewById(R.id.competition_level_spinner);
+        mActivityLevelSpinner = (Spinner) v.findViewById(R.id.competition_level_spinner);
 
         //To select the data of the activity performed.
-        mActivityDateButton = (Button)v.findViewById(R.id.activity_date);
+        mActivityDateButton = (Button) v.findViewById(R.id.activity_date);
         updateDate();
         mActivityDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,11 +112,25 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
             }
         });
 
+        mActivitySubmitButton = (Button) v.findViewById(R.id.register_achievement_button);
+        mActivitySubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fetchActivityPointsRequest();
+
+                mTotalPoints = calcTotalPoints();
+
+
+            }
+        });
+
+
+        mWinnerCheckbox = (CheckBox) v.findViewById(R.id.are_you_a_winner_checkbox);
+        mWinnerFlag = mWinnerCheckbox.isChecked();
 
 
         return v;
     }
-
 
 
     //Method called when particular spinner is selected by the user.
@@ -122,10 +142,11 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
             //If main activity spinner is selected.
             case R.id.type_of_activity_spinner:
                 mActivitySelectedPosition = i;
+                mActivityString = mActivityTypeSpinner.getSelectedItem().toString();
                 setSubActivityAdapter(mActivitySelectedPosition);
-                if(mActivitySelectedPosition == 5){
-                    setAdapter(R.array.participation_level,mActivityLevelSpinner);
-                }else {
+                if (mActivitySelectedPosition == 5) {
+                    setAdapter(R.array.participation_level, mActivityLevelSpinner);
+                } else {
                     setAdapter(R.array.competition_level, mActivityLevelSpinner);
                 }
                 break;
@@ -144,7 +165,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         }
     }
 
-    private List<ActivityData> parseActivityDataResponse(String url){
+    /*private List<ActivityData> parseActivityDataResponse(String url){
 
         List<ActivityData> activityDatas = new ArrayList<>();
         try {
@@ -170,7 +191,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         //Returning the results
         return activityDatas;
 
-    }
+    }*/
 
     //Method called when none of the spinner is selected.
     @Override
@@ -178,39 +199,81 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
     }
 
-    private void sendRequest(){
+    private void fetchActivityPointsRequest() {
         final String activityId = ActivitiesHashMap.
                 mConcurrentHashMap.get(mSubActivityString).toString();
         final String activityLevel = ActivitiesHashMap.mActivityLevelMap.
                 get(mActivityLevelString);
 
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                "url",
+                URLManager.FETCH_ACTIVITY_POINTS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        mActivityDatas = parseActivityDataResponse(response);
+//                        mActivityDatas = parseActivityDataResponse(response);
                         mPoints = Integer.parseInt(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG,"Error: "+ error.toString());
+                Log.e(TAG, "Error: " + error.toString());
             }
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("activityId",activityId);
-                params.put("activityLevelId",activityLevel);
+                params.put("activityId", activityId);
+                params.put("activityLevel", activityLevel);
                 return params;
             }
+
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(stringRequest);
+    }
+
+    private void sendSubmitRequest() {
+
+        final String erno = SharedPreferencesData.getStoredErno(getActivity());
+        final String date = mActivityDateButton.getText().toString();
+        final String description = mActivityDescriptionEditText.getText().toString();
+        final String totalPoints = Integer.toString(mTotalPoints);
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                URLManager.SUBMIT_ACTIVITY,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG,error.toString());
+
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("enrollment_number",erno);
+                params.put("activity",mActivityString);
+                params.put("sub_activity",mSubActivityString);
+                params.put("description",description);
+                params.put("date",date);
+                params.put("activity_level",mActivityLevelString);
+                params.put("points",totalPoints);
+                return params;
+            }
+
 
         };
 
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(stringRequest);
+
     }
 
 
@@ -248,14 +311,14 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                 arrayId = R.array.leadership_management_sub_activities;
                 break;
         }
-        setAdapter(arrayId,mActivitySubTpyeSpinner);
+        setAdapter(arrayId, mActivitySubTpyeSpinner);
 
     }
 
 
     //On activity result used fot the date dialog fragment.
     @Override
-    public void onActivityResult (int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
@@ -270,16 +333,24 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
     }
 
     //Method used to set the simple style of selected data.
-    private void updateDate () {
+    private void updateDate() {
         mActivityDateButton.setText(formatDate.format(getDate()));
 
     }
 
-    public Date getDate() {
+    //method used to calculate the total points.
+    private int calcTotalPoints(){
+        if(mWinnerFlag){
+            return mPoints + 3;
+        }else{
+            return mPoints;
+        }
+    }
+    private Date getDate() {
         return mDate;
     }
 
-    public void setDate(Date date) {
+    private void setDate(Date date) {
         mDate = date;
     }
 
