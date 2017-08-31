@@ -34,13 +34,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
 
 
 public class AddAchievementFragment extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -120,7 +119,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
                 mTotalPoints = calcTotalPoints();
 
-
+                sendSubmitRequest();
             }
         });
 
@@ -181,7 +180,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                 activityData.setZonalLevel(jsonObject.getInt("zonal"));
                 activityData.setStateLevel(jsonObject.getInt("state"));
                 activityData.setNationalLevel(jsonObject.getInt("national"));
-                activityData.setInternationaLevel(jsonObject.getInt("international"));
+                activityData.setInternationalLevel(jsonObject.getInt("international"));
 
                 activityDatas.add(activityData);
             }
@@ -199,6 +198,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
     }
 
+    //method used to fetch the activity points from the database.
     private void fetchActivityPointsRequest() {
         final String activityId = ActivitiesHashMap.
                 mConcurrentHashMap.get(mSubActivityString).toString();
@@ -232,6 +232,8 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         requestQueue.add(stringRequest);
     }
 
+
+    //method used to submit the activity details in the database.
     private void sendSubmitRequest() {
 
         final String erno = SharedPreferencesData.getStoredErno(getActivity());
@@ -341,7 +343,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
     //method used to calculate the total points.
     private int calcTotalPoints(){
         if(mWinnerFlag){
-            return mPoints + 3;
+            return (mPoints + 3);
         }else{
             return mPoints;
         }

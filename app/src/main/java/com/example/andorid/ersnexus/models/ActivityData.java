@@ -10,7 +10,7 @@ public class ActivityData {
     private int mZonalLevel;
     private int mStateLevel;
     private int mNationalLevel;
-    private int mInternationaLevel;
+    private int mInternationalLevel;
 
 
     public int getId() {
@@ -61,11 +61,11 @@ public class ActivityData {
         mNationalLevel = nationalLevel;
     }
 
-    public int getInternationaLevel() {
-        return mInternationaLevel;
+    public int getInternationalLevel() {
+        return mInternationalLevel;
     }
 
-    public void setInternationaLevel(int internationaLevel) {
-        mInternationaLevel = internationaLevel;
+    public void setInternationalLevel(int internationalLevel) {
+        mInternationalLevel = internationalLevel;
     }
 }
