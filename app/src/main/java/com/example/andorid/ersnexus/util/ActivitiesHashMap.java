@@ -13,9 +13,13 @@ public class ActivitiesHashMap {
     public static ConcurrentHashMap<String,Integer> mConcurrentHashMap;
     public static ConcurrentHashMap<String,String> mActivityLevelMap;
 
-    public static void generateActivityHashMap(){
+    public ActivitiesHashMap(){
 
-         mConcurrentHashMap = new ConcurrentHashMap<>();
+    }
+
+    public static ConcurrentHashMap<String,Integer> generateActivityHashMap(){
+
+        mConcurrentHashMap = new ConcurrentHashMap<>();
         mConcurrentHashMap.put("Village Visit",1);
         mConcurrentHashMap.put("Learning Engineering",2);
         mConcurrentHashMap.put("History of Science and Technology",3);
@@ -60,12 +64,20 @@ public class ActivitiesHashMap {
         mConcurrentHashMap.put("GTU Innovation Club / S4 Extension Centre",5);
         mConcurrentHashMap.put("GIC Associates",6);
 
+
+
+        return mConcurrentHashMap;
+    }
+
+    public static ConcurrentHashMap<String,String> getActivityLevelMap(){
         mActivityLevelMap = new ConcurrentHashMap<>();
         mActivityLevelMap.put("College","college");
         mActivityLevelMap.put("Zonal","zonal");
         mActivityLevelMap.put("State","state");
         mActivityLevelMap.put("National","national");
         mActivityLevelMap.put("International","international");
+
+        return mActivityLevelMap;
     }
 
 }

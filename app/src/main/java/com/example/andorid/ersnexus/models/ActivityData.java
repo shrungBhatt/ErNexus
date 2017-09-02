@@ -1,17 +1,17 @@
 package com.example.andorid.ersnexus.models;
 
 
-
+//Model class of ActivityData.
 public class ActivityData {
 
     private int mId;
-    private String mActivityName;
-    private int mCollegeLevel;
-    private int mZonalLevel;
-    private int mStateLevel;
-    private int mNationalLevel;
-    private int mInternationalLevel;
-
+    private String mErno;
+    private String mActivityString;
+    private String mSubActivityString;
+    private String mActivityLevelString;
+    private int mTotalPoints;
+    private String mActivityDescription;
+    private String mActivityDate;
 
     public int getId() {
         return mId;
@@ -21,51 +21,59 @@ public class ActivityData {
         mId = id;
     }
 
-    public String getActivityName() {
-        return mActivityName;
+    public String getErno() {
+        return mErno;
     }
 
-    public void setActivityName(String activityName) {
-        mActivityName = activityName;
+    public void setErno(String erno) {
+        mErno = erno;
     }
 
-    public int getCollegeLevel() {
-        return mCollegeLevel;
+    public String getActivityString() {
+        return mActivityString;
     }
 
-    public void setCollegeLevel(int collegeLevel) {
-        mCollegeLevel = collegeLevel;
+    public void setActivityString(String activityString) {
+        mActivityString = activityString;
     }
 
-    public int getZonalLevel() {
-        return mZonalLevel;
+    public String getSubActivityString() {
+        return mSubActivityString;
     }
 
-    public void setZonalLevel(int zonalLevel) {
-        mZonalLevel = zonalLevel;
+    public void setSubActivityString(String subActivityString) {
+        mSubActivityString = subActivityString;
     }
 
-    public int getStateLevel() {
-        return mStateLevel;
+    public String getActivityLevelString() {
+        return mActivityLevelString;
     }
 
-    public void setStateLevel(int stateLevel) {
-        mStateLevel = stateLevel;
+    public void setActivityLevelString(String activityLevelString) {
+        mActivityLevelString = activityLevelString;
     }
 
-    public int getNationalLevel() {
-        return mNationalLevel;
+    public int getTotalPoints() {
+        return mTotalPoints;
     }
 
-    public void setNationalLevel(int nationalLevel) {
-        mNationalLevel = nationalLevel;
+    public void setTotalPoints(int totalPoints) {
+        mTotalPoints = totalPoints;
     }
 
-    public int getInternationalLevel() {
-        return mInternationalLevel;
+    public String getActivityDescription() {
+        return mActivityDescription;
     }
 
-    public void setInternationalLevel(int internationalLevel) {
-        mInternationalLevel = internationalLevel;
+    public void setActivityDescription(String activityDescription) {
+        mActivityDescription = activityDescription;
+    }
+
+    public String getActivityDate() {
+        return mActivityDate;
+    }
+
+    public void setActivityDate(String activityDate) {
+        mActivityDate = activityDate;
     }
 }

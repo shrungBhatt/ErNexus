@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,17 +30,13 @@ import com.example.andorid.ersnexus.util.DatePickerFragment;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
 import com.example.andorid.ersnexus.webservices.URLManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class AddAchievementFragment extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -49,7 +46,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
     private static final String DIALOG_DATE = "dialog_date";
 
     private Spinner mActivityTypeSpinner;
-    private Spinner mActivitySubTpyeSpinner;
+    private Spinner mActivitySubTypeSpinner;
     private Spinner mActivityLevelSpinner;
     private EditText mActivityDescriptionEditText;
     private Button mActivityDateButton;
@@ -59,12 +56,15 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
     private String mActivityString;
     private String mSubActivityString;
     private String mActivityLevelString;
-    private List<ActivityData> mActivityDatas;
     private int mPoints;
     private int mTotalPoints;
     private CheckBox mWinnerCheckbox;
     private boolean mWinnerFlag;
+    private ActivitiesHashMap mActivitiesHashMap;
+    private Button mCalculatePointsButton;
+    private TextView mTotalPointsTextView;
 
+    //variable used to change the dateFormat.
     DateFormat formatDate = DateFormat.getDateInstance();
 
     @Override
@@ -75,7 +75,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
         //Method used to generate the key pair of activities and what code does it represent
         //in the online database.
-        ActivitiesHashMap.generateActivityHashMap();
+        mActivitiesHashMap = new ActivitiesHashMap();
     }
 
     @Override
@@ -83,6 +83,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_add_achievement, container, false);
 
+        mWinnerCheckbox = (CheckBox) v.findViewById(R.id.are_you_a_winner_checkbox);
 
         //Main activity category spinner.
         mActivityTypeSpinner = (Spinner) v.findViewById(R.id.type_of_activity_spinner);
@@ -93,7 +94,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         mActivityDescriptionEditText = (EditText) v.findViewById(R.id.achievement_description);
 
         //Spinner for selecting the sub activity.
-        mActivitySubTpyeSpinner = (Spinner) v.findViewById(R.id.sub_activity_spinner);
+        mActivitySubTypeSpinner = (Spinner) v.findViewById(R.id.sub_activity_spinner);
 
         //Level of the activity (College,zonal, etc.)
         mActivityLevelSpinner = (Spinner) v.findViewById(R.id.competition_level_spinner);
@@ -111,21 +112,24 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
             }
         });
 
+        //button to submit the data of the activity into the database.
         mActivitySubmitButton = (Button) v.findViewById(R.id.register_achievement_button);
         mActivitySubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fetchActivityPointsRequest();
-
-                mTotalPoints = calcTotalPoints();
-
                 sendSubmitRequest();
             }
         });
 
+        mCalculatePointsButton = (Button)v.findViewById(R.id.calculate_points);
+        mCalculatePointsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fetchActivityPointsRequest();
+            }
+        });
 
-        mWinnerCheckbox = (CheckBox) v.findViewById(R.id.are_you_a_winner_checkbox);
-        mWinnerFlag = mWinnerCheckbox.isChecked();
+        mTotalPointsTextView = (TextView)v.findViewById(R.id.total_points_textView);
 
 
         return v;
@@ -143,7 +147,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                 mActivitySelectedPosition = i;
                 mActivityString = mActivityTypeSpinner.getSelectedItem().toString();
                 setSubActivityAdapter(mActivitySelectedPosition);
-                if (mActivitySelectedPosition == 5) {
+                if (mActivitySelectedPosition == 5) {//condition used to switch the mActivityLevelSpinner's array adapter.
                     setAdapter(R.array.participation_level, mActivityLevelSpinner);
                 } else {
                     setAdapter(R.array.competition_level, mActivityLevelSpinner);
@@ -152,7 +156,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
             //If sub activity spinner is selected.
             case R.id.sub_activity_spinner:
-                mSubActivityString = mActivitySubTpyeSpinner.getSelectedItem().toString();
+                mSubActivityString = mActivitySubTypeSpinner.getSelectedItem().toString();
                 break;
 
             //If the competition level spinner is selected.
@@ -164,33 +168,6 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         }
     }
 
-    /*private List<ActivityData> parseActivityDataResponse(String url){
-
-        List<ActivityData> activityDatas = new ArrayList<>();
-        try {
-            JSONArray jsonArray = new JSONArray(url);
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                ActivityData activityData = new ActivityData();
-                activityData.setId(jsonObject.getInt("id"));
-                activityData.setActivityName(jsonObject.getString("activity"));
-                activityData.setCollegeLevel(jsonObject.getInt("college"));
-                activityData.setZonalLevel(jsonObject.getInt("zonal"));
-                activityData.setStateLevel(jsonObject.getInt("state"));
-                activityData.setNationalLevel(jsonObject.getInt("national"));
-                activityData.setInternationalLevel(jsonObject.getInt("international"));
-
-                activityDatas.add(activityData);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //Returning the results
-        return activityDatas;
-
-    }*/
 
     //Method called when none of the spinner is selected.
     @Override
@@ -200,10 +177,14 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
     //method used to fetch the activity points from the database.
     private void fetchActivityPointsRequest() {
-        final String activityId = ActivitiesHashMap.
-                mConcurrentHashMap.get(mSubActivityString).toString();
-        final String activityLevel = ActivitiesHashMap.mActivityLevelMap.
-                get(mActivityLevelString);
+        ConcurrentHashMap<String,Integer> mSubActivityHashmap = ActivitiesHashMap.generateActivityHashMap();
+        final String activityId = mSubActivityHashmap.get(mSubActivityString).toString();
+
+
+        ConcurrentHashMap<String,String> mActivityLevelMap = ActivitiesHashMap.
+                getActivityLevelMap();
+        final String activityLevel = mActivityLevelMap.get(mActivityLevelString);
+
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 URLManager.FETCH_ACTIVITY_POINTS,
@@ -212,18 +193,25 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                     public void onResponse(String response) {
 //                        mActivityDatas = parseActivityDataResponse(response);
                         mPoints = Integer.parseInt(response);
+                        if(mWinnerCheckbox.isChecked()){
+                            mTotalPoints = mPoints + 3;
+                        }else{
+                            mTotalPoints = mPoints;
+                        }
+                        mTotalPointsTextView.setText(Integer.toString(mTotalPoints));
+
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Error: " + error.toString());
+                Log.e(TAG, "Fetch Activity Points Error: " + error.toString());
             }
         }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("activityId", activityId);
-                params.put("activityLevel", activityLevel);
+                params.put("activity_id", activityId);
+                params.put("activity_level", activityLevel);
                 return params;
             }
 
@@ -236,6 +224,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
     //method used to submit the activity details in the database.
     private void sendSubmitRequest() {
 
+        //data members used to send the values of various fields of activity in POST request.
         final String erno = SharedPreferencesData.getStoredErno(getActivity());
         final String date = mActivityDateButton.getText().toString();
         final String description = mActivityDescriptionEditText.getText().toString();
@@ -252,7 +241,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG,error.toString());
+                Log.e(TAG,"Submit Error:"+error.toString());
 
             }
         }) {
@@ -260,13 +249,13 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("enrollment_number",erno);
-                params.put("activity",mActivityString);
+                params.put("enrollmentnumber",erno);
+                params.put("activity_name",mActivityString);
                 params.put("sub_activity",mSubActivityString);
-                params.put("description",description);
-                params.put("date",date);
+                params.put("activity_description",description);
+                params.put("activity_date",date);
                 params.put("activity_level",mActivityLevelString);
-                params.put("points",totalPoints);
+                params.put("activity_points",totalPoints);
                 return params;
             }
 
@@ -313,7 +302,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                 arrayId = R.array.leadership_management_sub_activities;
                 break;
         }
-        setAdapter(arrayId, mActivitySubTpyeSpinner);
+        setAdapter(arrayId, mActivitySubTypeSpinner);
 
     }
 
@@ -340,14 +329,8 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
     }
 
-    //method used to calculate the total points.
-    private int calcTotalPoints(){
-        if(mWinnerFlag){
-            return (mPoints + 3);
-        }else{
-            return mPoints;
-        }
-    }
+
+
     private Date getDate() {
         return mDate;
     }
