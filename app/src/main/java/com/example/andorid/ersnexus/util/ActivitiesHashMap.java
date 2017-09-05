@@ -2,20 +2,14 @@ package com.example.andorid.ersnexus.util;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Created by Shrung on 28-Aug-17.
- */
-
 
 //This class is used to generate the hashMap used to fetch the corresponding code of activity to
 //send request to the database.
 public class ActivitiesHashMap {
-    public static ConcurrentHashMap<String,Integer> mConcurrentHashMap;
-    public static ConcurrentHashMap<String,String> mActivityLevelMap;
+    private static ConcurrentHashMap<String,Integer> mConcurrentHashMap;
+    private static ConcurrentHashMap<String,String> mActivityLevelMap;
 
-    public ActivitiesHashMap(){
 
-    }
 
     public static ConcurrentHashMap<String,Integer> generateActivityHashMap(){
 
@@ -63,8 +57,6 @@ public class ActivitiesHashMap {
         mConcurrentHashMap.put("Special Initiatives",4);
         mConcurrentHashMap.put("GTU Innovation Club / S4 Extension Centre",5);
         mConcurrentHashMap.put("GIC Associates",6);
-
-
 
         return mConcurrentHashMap;
     }

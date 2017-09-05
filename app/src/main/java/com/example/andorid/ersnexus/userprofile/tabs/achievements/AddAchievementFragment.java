@@ -24,7 +24,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.andorid.ersnexus.R;
-import com.example.andorid.ersnexus.models.ActivityData;
 import com.example.andorid.ersnexus.util.ActivitiesHashMap;
 import com.example.andorid.ersnexus.util.DatePickerFragment;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
@@ -34,7 +33,6 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -59,8 +57,6 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
     private int mPoints;
     private int mTotalPoints;
     private CheckBox mWinnerCheckbox;
-    private boolean mWinnerFlag;
-    private ActivitiesHashMap mActivitiesHashMap;
     private Button mCalculatePointsButton;
     private TextView mTotalPointsTextView;
 
@@ -75,7 +71,6 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
         //Method used to generate the key pair of activities and what code does it represent
         //in the online database.
-        mActivitiesHashMap = new ActivitiesHashMap();
     }
 
     @Override
@@ -132,6 +127,8 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         mTotalPointsTextView = (TextView)v.findViewById(R.id.total_points_textView);
 
 
+
+
         return v;
     }
 
@@ -145,6 +142,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
             //If main activity spinner is selected.
             case R.id.type_of_activity_spinner:
                 mActivitySelectedPosition = i;
+                activityWinnerConditionCheck();
                 mActivityString = mActivityTypeSpinner.getSelectedItem().toString();
                 setSubActivityAdapter(mActivitySelectedPosition);
                 if (mActivitySelectedPosition == 5) {//condition used to switch the mActivityLevelSpinner's array adapter.
@@ -181,6 +179,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         final String activityId = mSubActivityHashmap.get(mSubActivityString).toString();
 
 
+        //Hashmap used to get the sub activity name and activity level.
         ConcurrentHashMap<String,String> mActivityLevelMap = ActivitiesHashMap.
                 getActivityLevelMap();
         final String activityLevel = mActivityLevelMap.get(mActivityLevelString);
@@ -258,8 +257,6 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                 params.put("activity_points",totalPoints);
                 return params;
             }
-
-
         };
 
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
@@ -329,6 +326,17 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
     }
 
+    //Method used to disable the checkBox if activities other than A2 and A3 are selected.
+    private void activityWinnerConditionCheck(){
+        if(mActivitySelectedPosition == 0 || mActivitySelectedPosition == 3 ||
+                mActivitySelectedPosition == 4 || mActivitySelectedPosition == 5){
+            mWinnerCheckbox.setEnabled(false);
+
+        }else{
+            mWinnerCheckbox.setEnabled(true);
+        }
+
+    }
 
 
     private Date getDate() {
