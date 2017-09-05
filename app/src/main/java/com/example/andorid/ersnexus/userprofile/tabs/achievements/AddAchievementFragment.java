@@ -175,7 +175,8 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
     //method used to fetch the activity points from the database.
     private void fetchActivityPointsRequest() {
-        ConcurrentHashMap<String,Integer> mSubActivityHashmap = ActivitiesHashMap.generateActivityHashMap();
+        ConcurrentHashMap<String,Integer> mSubActivityHashmap = ActivitiesHashMap.
+                generateActivityHashMap();
         final String activityId = mSubActivityHashmap.get(mSubActivityString).toString();
 
 
