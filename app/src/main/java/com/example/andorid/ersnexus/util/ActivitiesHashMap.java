@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ActivitiesHashMap {
     private static ConcurrentHashMap<String,Integer> mConcurrentHashMap;
     private static ConcurrentHashMap<String,String> mActivityLevelMap;
+    private static ConcurrentHashMap<String,Integer> mActivityA6HashMap;
 
 
 
@@ -70,6 +71,17 @@ public class ActivitiesHashMap {
         mActivityLevelMap.put("International","international");
 
         return mActivityLevelMap;
+    }
+
+    public static ConcurrentHashMap<String,Integer> getActivityA6HashMap(){
+        mActivityA6HashMap = new ConcurrentHashMap<>();
+        mActivityA6HashMap.put("Hobby Club Activities / ECell / Placement Cell / Media Club, etc.",1);
+        mActivityA6HashMap.put("Festival (Technical / Business / Others) Events",2);
+        mActivityA6HashMap.put("Professional Societies(ASME / ACM / IEEE / SAE, etc.)",3);
+        mActivityA6HashMap.put("Special Initiatives",4);
+        mActivityA6HashMap.put("GTU Innovation Club / S4 Extension Centre",5);
+
+        return mActivityA6HashMap;
     }
 
 }

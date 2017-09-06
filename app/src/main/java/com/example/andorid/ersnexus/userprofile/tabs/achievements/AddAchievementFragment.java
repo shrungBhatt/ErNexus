@@ -141,11 +141,23 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
             //If main activity spinner is selected.
             case R.id.type_of_activity_spinner:
+
+                //get the position of the activity selected in the type of activity spinner.
                 mActivitySelectedPosition = i;
+
+                //condition check to see whether appropriate main activity is selected
+                //so that we can disable the checkbox corresponding to the activity.
                 activityWinnerConditionCheck();
+
+                //store the string of the selected item of type of activity spinner.
                 mActivityString = mActivityTypeSpinner.getSelectedItem().toString();
+
+                //set the subActivity spinner according to the item selected in type of activity
+                //spinner.
                 setSubActivityAdapter(mActivitySelectedPosition);
-                if (mActivitySelectedPosition == 5) {//condition used to switch the mActivityLevelSpinner's array adapter.
+
+                //condition used to switch the mActivityLevelSpinner's array adapter.
+                if (mActivitySelectedPosition == 5) {
                     setAdapter(R.array.participation_level, mActivityLevelSpinner);
                 } else {
                     setAdapter(R.array.competition_level, mActivityLevelSpinner);
@@ -175,9 +187,9 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
     //method used to fetch the activity points from the database.
     private void fetchActivityPointsRequest() {
-        ConcurrentHashMap<String,Integer> mSubActivityHashmap = ActivitiesHashMap.
+        ConcurrentHashMap<String,Integer> mSubActivityHashMap = ActivitiesHashMap.
                 generateActivityHashMap();
-        final String activityId = mSubActivityHashmap.get(mSubActivityString).toString();
+        final String activityId = mSubActivityHashMap.get(mSubActivityString).toString();
 
 
         //Hashmap used to get the sub activity name and activity level.
@@ -191,7 +203,6 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-//                        mActivityDatas = parseActivityDataResponse(response);
                         mPoints = Integer.parseInt(response);
                         if(mWinnerCheckbox.isChecked()){
                             mTotalPoints = mPoints + 3;
