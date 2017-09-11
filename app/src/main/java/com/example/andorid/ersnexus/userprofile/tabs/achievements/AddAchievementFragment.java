@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -46,19 +47,31 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
     private Spinner mActivityTypeSpinner;
     private Spinner mActivitySubTypeSpinner;
     private Spinner mActivityLevelSpinner;
+
     private EditText mActivityDescriptionEditText;
+
     private Button mActivityDateButton;
     private Button mActivitySubmitButton;
+    private Button mCalculatePointsButton;
+
     private int mActivitySelectedPosition;
+    private int mSubActivitySelectedPosition;
+    private int mPoints;
+    private int mTotalPoints;
+
     private Date mDate;
+
     private String mActivityString;
     private String mSubActivityString;
     private String mActivityLevelString;
-    private int mPoints;
-    private int mTotalPoints;
+
     private CheckBox mWinnerCheckbox;
-    private Button mCalculatePointsButton;
+
     private TextView mTotalPointsTextView;
+
+    private boolean mCalculateButtonToggle;
+
+
 
     //variable used to change the dateFormat.
     DateFormat formatDate = DateFormat.getDateInstance();
@@ -79,6 +92,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         View v = inflater.inflate(R.layout.fragment_add_achievement, container, false);
 
         mWinnerCheckbox = (CheckBox) v.findViewById(R.id.are_you_a_winner_checkbox);
+
 
         //Main activity category spinner.
         mActivityTypeSpinner = (Spinner) v.findViewById(R.id.type_of_activity_spinner);
@@ -120,7 +134,12 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         mCalculatePointsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fetchActivityPointsRequest();
+                if(mSubActivitySelectedPosition == 0){
+                    Toast.makeText(getActivity(),"Select Sub-type of activity",Toast.LENGTH_SHORT).
+                            show();
+                }else {
+                    fetchActivityPointsRequest();
+                }
             }
         });
 
@@ -167,6 +186,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
             //If sub activity spinner is selected.
             case R.id.sub_activity_spinner:
                 mSubActivityString = mActivitySubTypeSpinner.getSelectedItem().toString();
+                mSubActivitySelectedPosition = i;
                 break;
 
             //If the competition level spinner is selected.
@@ -192,7 +212,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         final String activityId = mSubActivityHashMap.get(mSubActivityString).toString();
 
 
-        //Hashmap used to get the sub activity name and activity level.
+        //HashMap used to get the sub activity name and activity level.
         ConcurrentHashMap<String,String> mActivityLevelMap = ActivitiesHashMap.
                 getActivityLevelMap();
         final String activityLevel = mActivityLevelMap.get(mActivityLevelString);
@@ -203,7 +223,9 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        //store the response in the form of integer as what we get in response is the points.
                         mPoints = Integer.parseInt(response);
+                        //condition used to increase the total points by 3 if the winner checkbox is ticked.
                         if(mWinnerCheckbox.isChecked()){
                             mTotalPoints = mPoints + 3;
                         }else{
@@ -247,7 +269,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
+                        Log.e(TAG,"sendSubmitRequest: "+response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -343,7 +365,6 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         if(mActivitySelectedPosition == 0 || mActivitySelectedPosition == 3 ||
                 mActivitySelectedPosition == 4 || mActivitySelectedPosition == 5){
             mWinnerCheckbox.setEnabled(false);
-
         }else{
             mWinnerCheckbox.setEnabled(true);
         }

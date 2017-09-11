@@ -29,10 +29,7 @@ public class URLManager {
     //These are the URLs to submit and fetch the activity points from the database.
     public static final String FETCH_ACTIVITY_POINTS = URL + "fetch_activity_points.php";
     public static final String SUBMIT_ACTIVITY = URL + "submit_activity.php";
-
- /*   This URL is used in the AssignmentPagerFragment.
-    public static final String FETCH_ASSIGNMENTS_DETAILS_URL =
-            URL + "fetch_assignments_details.php";*/
+    public static final String FETCH_ACTIVITY_A6_POINTS = URL +"fetch_activity_points_a6.php";
 
     /*public static HttpURLConnection getConnection (String url) throws IOException {
         URL mUrl = new URL(url);
