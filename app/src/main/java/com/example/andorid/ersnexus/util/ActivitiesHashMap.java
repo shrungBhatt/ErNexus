@@ -9,6 +9,7 @@ public class ActivitiesHashMap {
     private static ConcurrentHashMap<String,Integer> mConcurrentHashMap;
     private static ConcurrentHashMap<String,String> mActivityLevelMap;
     private static ConcurrentHashMap<String,Integer> mActivityA6HashMap;
+    private static ConcurrentHashMap<String,String> mActivityA6LevelHashMap;
 
 
 
@@ -82,6 +83,15 @@ public class ActivitiesHashMap {
         mActivityA6HashMap.put("GTU Innovation Club / S4 Extension Centre",5);
 
         return mActivityA6HashMap;
+    }
+
+    public static ConcurrentHashMap<String,String> getmActivityA6LevelHashMap(){
+        mActivityA6LevelHashMap = new ConcurrentHashMap<>();
+        mActivityA6LevelHashMap.put("Volunteer","volunteer");
+        mActivityA6LevelHashMap.put("Sub-Coordinator","sub_coordinator");
+        mActivityA6LevelHashMap.put("Core-Coordinator","core_coordinator");
+
+        return mActivityA6LevelHashMap;
     }
 
 }

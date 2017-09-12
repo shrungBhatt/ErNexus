@@ -138,7 +138,11 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                     Toast.makeText(getActivity(),"Select Sub-type of activity",Toast.LENGTH_SHORT).
                             show();
                 }else {
-                    fetchActivityPointsRequest();
+                    if(mActivitySelectedPosition == 5){
+                        fetchActivityA6Points();
+                    }else {
+                        fetchActivityPointsRequest();
+                    }
                 }
             }
         });
@@ -249,6 +253,50 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
             }
 
         };
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(stringRequest);
+    }
+
+    private void fetchActivityA6Points(){
+        ConcurrentHashMap<String,Integer> mSubActivityHashMap = ActivitiesHashMap.
+                getActivityA6HashMap();
+        final String activityId = mSubActivityHashMap.get(mSubActivityString).toString();
+
+
+        //HashMap used to get the sub activity name and activity level.
+        ConcurrentHashMap<String,String> mActivityLevelMap = ActivitiesHashMap.
+                getmActivityA6LevelHashMap();
+        final String activityLevel = mActivityLevelMap.get(mActivityLevelString);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                URLManager.FETCH_ACTIVITY_A6_POINTS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        mPoints = Integer.parseInt(response);
+
+                        mTotalPointsTextView.setText(Integer.toString(mPoints));
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "Fetch Activity Points A6 Error: " + error.toString());
+
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("activity_id", activityId);
+                params.put("activity_level", activityLevel);
+                return params;
+            }
+        };
+
+
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(stringRequest);
     }
