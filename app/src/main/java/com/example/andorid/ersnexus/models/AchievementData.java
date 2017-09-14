@@ -10,6 +10,7 @@ public class AchievementData {
     private String mSubActivity;
     private int mPoints;
     private String mDate;
+    private String mActivityLevel;
 
 
     public int getId() {
@@ -58,5 +59,13 @@ public class AchievementData {
 
     public void setDate(String date) {
         mDate = date;
+    }
+
+    public String getActivityLevel() {
+        return mActivityLevel;
+    }
+
+    public void setActivityLevel(String activityLevel) {
+        mActivityLevel = activityLevel;
     }
 }

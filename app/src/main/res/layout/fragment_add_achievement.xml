@@ -6,13 +6,24 @@
     android:layout_height="match_parent"
     android:layout_margin="16dp">
 
+    <Button
+        android:id="@+id/register_achievement_button"
+        style="@style/TextAppearance.AppCompat.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@color/colorPrimary"
+        android:text="@string/submit"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"/>
+
     <LinearLayout
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
 
         <Spinner
             android:id="@+id/type_of_activity_spinner"
@@ -57,8 +68,8 @@
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
                 android:layout_gravity="bottom"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"/>
 
             <Button
@@ -83,8 +94,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginRight="28dp"
                 android:layout_marginEnd="28dp"
+                android:layout_marginRight="28dp"
                 android:text="@string/are_you_a_winner"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
@@ -97,6 +108,7 @@
 
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -108,10 +120,11 @@
                 style="@style/TextAppearance.AppCompat.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="28dp"
-                android:layout_marginEnd="28dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="28dp"
+                android:layout_marginRight="28dp"
                 android:background="@color/colorPrimary"
+                android:padding="8dp"
                 android:text="Calculate Points"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"/>
@@ -121,30 +134,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginRight="28dp"
                 android:layout_marginEnd="28dp"
+                android:layout_marginRight="28dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
 
-
         </LinearLayout>
 
 
-
-
-
     </LinearLayout>
-
-    <Button
-        android:id="@+id/register_achievement_button"
-        style="@style/TextAppearance.AppCompat.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:background="@color/colorPrimary"
-        android:text="@string/submit"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"/>
 </FrameLayout>

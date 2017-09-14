@@ -31,6 +31,9 @@ public class URLManager {
     public static final String SUBMIT_ACTIVITY = URL + "submit_activity.php";
     public static final String FETCH_ACTIVITY_A6_POINTS = URL +"fetch_activity_points_a6.php";
 
+    //This url is used to fetch the JSON of achievements_data from the database.
+    public static final String FETCH_ACHIEVEMENT_DATA = URL + "fetch_achievement_data.php";
+
     /*public static HttpURLConnection getConnection (String url) throws IOException {
         URL mUrl = new URL(url);
         HttpURLConnection httpURLConnection = (HttpURLConnection) mUrl.openConnection();

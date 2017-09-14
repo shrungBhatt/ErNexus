@@ -318,6 +318,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                     @Override
                     public void onResponse(String response) {
                         Log.e(TAG,"sendSubmitRequest: "+response);
+                        Toast.makeText(getActivity(),"Submitted !",Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
             @Override

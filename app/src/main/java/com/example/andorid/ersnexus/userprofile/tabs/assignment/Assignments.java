@@ -129,7 +129,7 @@ public class Assignments extends Fragment {
         }
 
         //Method to bind the data of viewholder called in the adapter class.
-        public void bindAssignments(AssignmentData assignmentData) {
+        private void bindAssignments(AssignmentData assignmentData) {
             mAssignmentData = assignmentData;
             mAssignmentNameTextView.setText(mAssignmentData.getAssignmentName());
             mSubjectCodeTextView.setText(mAssignmentData.getSubjectCode());
