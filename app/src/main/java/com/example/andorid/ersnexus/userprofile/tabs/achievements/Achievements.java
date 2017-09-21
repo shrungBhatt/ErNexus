@@ -61,6 +61,7 @@ public class Achievements extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View v =inflater.inflate(R.layout.tab_achievements,container,false);
 
+        //Floating action button events when it is clicked.
         mAddAchievementsFAB = (FloatingActionButton)v.findViewById(R.id.add_achievements_fab);
         mAddAchievementsFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +73,7 @@ public class Achievements extends Fragment {
             }
         });
 
+        //The achievement recyclerView.
         mAchievementRecyclerView = (RecyclerView)v.findViewById(R.id.achievement_recyclerView);
         mAchievementRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -109,11 +111,13 @@ public class Achievements extends Fragment {
         return v;
     }
 
+
+    //Class used for recyclerView's viewHolder.
     private class AchievementHolder extends RecyclerView.ViewHolder{
 
         private AchievementData mAchievementData;
 
-        public AchievementHolder(LayoutInflater inflater,ViewGroup container){
+        AchievementHolder(LayoutInflater inflater,ViewGroup container){
             super(inflater.inflate(R.layout.list_item_achievement_recycler_view,container,
                     false));
 
@@ -134,6 +138,7 @@ public class Achievements extends Fragment {
 
         }
 
+        //method used to bind the data using AchievementData model class to the viewHolder.
         private void bindAchievements(AchievementData achievementData){
 
             mAchievementData = achievementData;
@@ -150,11 +155,12 @@ public class Achievements extends Fragment {
 
     }
 
+    //adapter class for recyclerView, used to set up the adpater of the recyclerView.
     private class AchievementAdapter extends RecyclerView.Adapter<AchievementHolder>{
 
         private List<AchievementData> mAchievementDatas;
 
-        public AchievementAdapter(List<AchievementData> achievementDatas){
+        AchievementAdapter(List<AchievementData> achievementDatas){
             mAchievementDatas = achievementDatas;
         }
 
@@ -178,6 +184,8 @@ public class Achievements extends Fragment {
         }
     }
 
+    //method using volley to fetch the achievements data from the database and set up in
+    //the recyclerView.
     private void fetchAchievements(){
 
         final String erno = SharedPreferencesData.getStoredErno(getActivity());
@@ -193,10 +201,7 @@ public class Achievements extends Fragment {
                         if(mAchievementDatas != null){
                             mAchievementRecyclerView.
                                     setAdapter(new AchievementAdapter(mAchievementDatas));
-
                         }
-
-
                     }
                 },
                 new Response.ErrorListener() {
@@ -221,6 +226,7 @@ public class Achievements extends Fragment {
     }
 
 
+    //method used to parse the JSON which we get from the fetchActivityResults() method.
     private List<AchievementData> getAssignmentDatas(String result) {
 
         int points = 0;
