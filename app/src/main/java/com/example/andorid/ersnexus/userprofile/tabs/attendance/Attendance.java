@@ -349,5 +349,4 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         }
     }
 
-
 }
