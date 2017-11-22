@@ -218,7 +218,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         private TextView mDateTextView, mFacultyTextView, mSubjectTextView;
         private AttendanceData mAttendanceData;
 
-        public AttendanceHolder(LayoutInflater layoutInflater, ViewGroup container) {
+        AttendanceHolder(LayoutInflater layoutInflater, ViewGroup container) {
             super(layoutInflater.inflate(R.layout.list_item_attendance_recycler_view, container,
                     false));
 
@@ -234,7 +234,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         }
 
         //Method to bind the holder to the adapter, called in the adapter class.
-        public void bindAttendance(AttendanceData attendancedata) {
+        void bindAttendance(AttendanceData attendancedata) {
             mAttendanceData = attendancedata;
             mDateTextView.setText(mAttendanceData.getDate());
             mFacultyTextView.setText(mAttendanceData.getFacultyCode());
@@ -248,7 +248,7 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
     private class AttendanceAdapter extends RecyclerView.Adapter<AttendanceHolder> {
         private List<AttendanceData> mAttendanceDatas;
 
-        public AttendanceAdapter(List<AttendanceData> attendanceDatas) {
+        AttendanceAdapter(List<AttendanceData> attendanceDatas) {
             mAttendanceDatas = attendanceDatas;
         }
 
@@ -335,7 +335,10 @@ public class Attendance extends Fragment implements AdapterView.OnItemSelectedLi
         ConnectivityManager cm = (ConnectivityManager) getActivity().
                 getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        boolean isNetworkAvailable = cm.getActiveNetworkInfo() != null;
+        boolean isNetworkAvailable = false;
+        if (cm != null) {
+            isNetworkAvailable = cm.getActiveNetworkInfo() != null;
+        }
 
         return isNetworkAvailable &&
                 cm.getActiveNetworkInfo().isConnected();
