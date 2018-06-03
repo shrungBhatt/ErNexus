@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
@@ -12,6 +15,13 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name=".util.MyFileContentProvider"
+            android:authorities="${applicationId}"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name=".userlogin.UserLoginActivity"
             android:screenOrientation="portrait">
@@ -57,6 +67,9 @@
 
         <activity android:name=".userprofile.tabs.achievements.AddAchievementActivity"
                   android:screenOrientation="portrait"/>
+
+        <activity android:name=".userprofile.tabs.achievements.UploadPhotoFragment"
+            android:screenOrientation="portrait"/>
 
 
     </application>

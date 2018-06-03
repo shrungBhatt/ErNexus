@@ -1,17 +1,23 @@
 package com.example.andorid.ersnexus.userprofile.tabs.achievements;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -23,12 +29,14 @@ import com.android.volley.toolbox.Volley;
 import com.baoyz.widget.PullRefreshLayout;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.models.AchievementData;
+import com.example.andorid.ersnexus.util.Const;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
 import com.example.andorid.ersnexus.webservices.URLManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,26 +67,26 @@ public class Achievements extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View v =inflater.inflate(R.layout.tab_achievements,container,false);
+        View v = inflater.inflate(R.layout.tab_achievements, container, false);
 
         //Floating action button events when it is clicked.
-        mAddAchievementsFAB = (FloatingActionButton)v.findViewById(R.id.add_achievements_fab);
+        mAddAchievementsFAB = (FloatingActionButton) v.findViewById(R.id.add_achievements_fab);
         mAddAchievementsFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(getActivity(),AddAchievementActivity.class);
+                Intent i = new Intent(getActivity(), AddAchievementActivity.class);
                 startActivity(i);
 
             }
         });
 
         //The achievement recyclerView.
-        mAchievementRecyclerView = (RecyclerView)v.findViewById(R.id.achievement_recyclerView);
+        mAchievementRecyclerView = (RecyclerView) v.findViewById(R.id.achievement_recyclerView);
         mAchievementRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
-        mTotalPointsTextView = (TextView)v.findViewById(R.id.show_total_points_textView);
+        mTotalPointsTextView = (TextView) v.findViewById(R.id.show_total_points_textView);
 
         fetchAchievements();
 
@@ -105,88 +113,12 @@ public class Achievements extends Fragment {
                 });
 
 
-
-
-
         return v;
-    }
-
-
-    //Class used for recyclerView's viewHolder.
-    private class AchievementHolder extends RecyclerView.ViewHolder{
-
-        private AchievementData mAchievementData;
-
-        AchievementHolder(LayoutInflater inflater,ViewGroup container){
-            super(inflater.inflate(R.layout.list_item_achievement_recycler_view,container,
-                    false));
-
-            mActivityNameTextView = (TextView)itemView.findViewById(R.id.activity_name_textView);
-
-            mSubActivityNameTextView = (TextView)itemView.
-                    findViewById(R.id.sub_activity_name_textView);
-
-            mActivityDescriptionTextView = (TextView)itemView.
-                    findViewById(R.id.activity_description_name_textView);
-
-            mActivityDateTextView = (TextView)itemView.
-                    findViewById(R.id.activity_date_textView);
-
-            mPointsTextView = (TextView)itemView.findViewById(R.id.activity_points_textView);
-
-            mActivityLevelTextView = (TextView)itemView.findViewById(R.id.activity_level_textView);
-
-        }
-
-        //method used to bind the data using AchievementData model class to the viewHolder.
-        private void bindAchievements(AchievementData achievementData){
-
-            mAchievementData = achievementData;
-
-            mActivityNameTextView.setText(mAchievementData.getActivity());
-            mSubActivityNameTextView.setText(mAchievementData.getSubActivity());
-            mActivityDescriptionTextView.setText(mAchievementData.getDescription());
-            mActivityDateTextView.setText(mAchievementData.getDate());
-            mPointsTextView.setText(Integer.toString(mAchievementData.getPoints()));
-            mActivityLevelTextView.setText(mAchievementData.getActivityLevel());
-
-        }
-
-
-    }
-
-    //adapter class for recyclerView, used to set up the adpater of the recyclerView.
-    private class AchievementAdapter extends RecyclerView.Adapter<AchievementHolder>{
-
-        private List<AchievementData> mAchievementDatas;
-
-        AchievementAdapter(List<AchievementData> achievementDatas){
-            mAchievementDatas = achievementDatas;
-        }
-
-
-        @Override
-        public AchievementHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            return new AchievementHolder(inflater,parent);
-        }
-
-        @Override
-        public void onBindViewHolder(AchievementHolder holder, int position) {
-            AchievementData achievementData = mAchievementDatas.get(position);
-            holder.bindAchievements(achievementData);
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return mAchievementDatas.size();
-        }
     }
 
     //method using volley to fetch the achievements data from the database and set up in
     //the recyclerView.
-    private void fetchAchievements(){
+    private void fetchAchievements() {
 
         final String erno = SharedPreferencesData.getStoredErno(getActivity());
 
@@ -198,7 +130,7 @@ public class Achievements extends Fragment {
 
                         mAchievementDatas = getAssignmentDatas(response);
                         Collections.reverse(mAchievementDatas);
-                        if(mAchievementDatas != null){
+                        if (mAchievementDatas != null) {
                             mAchievementRecyclerView.
                                     setAdapter(new AchievementAdapter(mAchievementDatas));
                         }
@@ -209,7 +141,7 @@ public class Achievements extends Fragment {
                     public void onErrorResponse(VolleyError error) {
 
                     }
-                }){
+                }) {
 
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -224,7 +156,6 @@ public class Achievements extends Fragment {
 
 
     }
-
 
     //method used to parse the JSON which we get from the fetchActivityResults() method.
     private List<AchievementData> getAssignmentDatas(String result) {
@@ -250,6 +181,8 @@ public class Achievements extends Fragment {
                 achievementData.setActivityLevel(jsonObject.getString("activity_level"));
                 achievementData.setDate(jsonObject.getString("activity_date"));
                 achievementData.setPoints(jsonObject.getInt("activity_points"));
+                achievementData.setStatus(jsonObject.getString("status"));
+                achievementData.setImage(jsonObject.getString("activity_image"));
 
                 achievementDatas.add(achievementData);
 
@@ -258,14 +191,13 @@ public class Achievements extends Fragment {
 
             }
 
-            for(int i = 0; i<totalPoints.size(); i++){
+            for (int i = 0; i < totalPoints.size(); i++) {
 
                 points = points + totalPoints.get(i);
             }
             mTotalPoints = points;
-            Log.v(TAG,"Total Points: " + mTotalPoints);
+            Log.v(TAG, "Total Points: " + mTotalPoints);
             mTotalPointsTextView.setText(Integer.toString(mTotalPoints));
-
 
 
         } catch (JSONException e) {
@@ -273,6 +205,120 @@ public class Achievements extends Fragment {
         }
         return achievementDatas;
     }
+
+    //Class used for recyclerView's viewHolder.
+    private class AchievementHolder extends RecyclerView.ViewHolder {
+
+        private AchievementData mAchievementData;
+        private LinearLayout mStatusBg;
+        private TextView mStatus;
+
+        AchievementHolder(LayoutInflater inflater, ViewGroup container) {
+            super(inflater.inflate(R.layout.list_item_achievement_recycler_view, container,
+                    false));
+
+            mActivityNameTextView = (TextView) itemView.findViewById(R.id.activity_name_textView);
+
+            mSubActivityNameTextView = (TextView) itemView.
+                    findViewById(R.id.sub_activity_name_textView);
+
+            mActivityDescriptionTextView = (TextView) itemView.
+                    findViewById(R.id.activity_description_name_textView);
+
+            mActivityDateTextView = (TextView) itemView.
+                    findViewById(R.id.activity_date_textView);
+
+            mPointsTextView = (TextView) itemView.findViewById(R.id.activity_points_textView);
+
+            mActivityLevelTextView = (TextView) itemView.findViewById(R.id.activity_level_textView);
+
+            mStatusBg = (LinearLayout) itemView.findViewById(R.id.status_bg);
+
+            mStatus = (TextView) itemView.findViewById(R.id.status_tv);
+
+        }
+
+        //method used to bind the data using AchievementData model class to the viewHolder.
+        private void bindAchievements(AchievementData achievementData) {
+
+            mAchievementData = achievementData;
+
+            mActivityNameTextView.setText(mAchievementData.getActivity());
+            mSubActivityNameTextView.setText(mAchievementData.getSubActivity());
+            mActivityDescriptionTextView.setText(mAchievementData.getDescription());
+            mActivityDateTextView.setText(mAchievementData.getDate());
+            mPointsTextView.setText(Integer.toString(mAchievementData.getPoints()));
+            mActivityLevelTextView.setText(mAchievementData.getActivityLevel());
+
+        }
+
+
+    }
+
+    //adapter class for recyclerView, used to set up the adpater of the recyclerView.
+    private class AchievementAdapter extends RecyclerView.Adapter<AchievementHolder> {
+
+        private List<AchievementData> mAchievementDatas;
+
+        AchievementAdapter(List<AchievementData> achievementDatas) {
+            mAchievementDatas = achievementDatas;
+        }
+
+
+        @Override
+        public AchievementHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            return new AchievementHolder(inflater, parent);
+        }
+
+        @Override
+        public void onBindViewHolder(AchievementHolder holder, int position) {
+            AchievementData achievementData = mAchievementDatas.get(position);
+
+            appointmentStatusDisplay(holder,position,getActivity());
+
+            holder.bindAchievements(achievementData);
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return mAchievementDatas.size();
+        }
+
+
+        private void appointmentStatusDisplay(AchievementHolder holder, int position, Context context) {
+
+            Drawable icon = ContextCompat.getDrawable(context, R.drawable.token_textview_background).mutate();
+
+            int statusId = Integer.valueOf(mAchievementDatas.get(position).getStatus());
+
+            switch (statusId) {
+                case Const.Pending:
+                    setData(holder,context.getResources().getColor(R.color.pending),
+                            context.getResources().getColor(R.color.pending),
+                            "Pending",icon);
+                    break;
+                case Const.Approved:
+                    setData(holder,context.getResources().getColor(R.color.approved),
+                            context.getResources().getColor(R.color.approved),
+                            "Approved",icon);
+                    break;
+            }
+
+
+        }
+
+        private void setData(AchievementHolder holder, int colorBg, int colorText, String stringId, Drawable icon) {
+            icon.setColorFilter(new PorterDuffColorFilter(colorBg, PorterDuff.Mode.SRC_IN));
+            holder.mStatusBg.setBackground(icon);
+            holder.mStatusBg.setVisibility(View.VISIBLE);
+            holder.mStatus.setText(stringId);
+            holder.mStatus.setTextColor(colorText);
+        }
+    }
+
+
 
 
 }

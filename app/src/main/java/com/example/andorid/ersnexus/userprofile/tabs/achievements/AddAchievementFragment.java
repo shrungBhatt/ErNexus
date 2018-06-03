@@ -42,6 +42,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
     private static final String TAG = "AddAchievementFragment";
     private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_IMAGE = 2;
     private static final String DIALOG_DATE = "dialog_date";
 
     private Spinner mActivityTypeSpinner;
@@ -67,9 +68,10 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
     private CheckBox mWinnerCheckbox;
 
-    private TextView mTotalPointsTextView;
+    private Button mUploadPhotoButton;
 
     private boolean mCalculateButtonToggle;
+    private String mImageDesc,mImage;
 
 
 
@@ -126,7 +128,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         mActivitySubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendSubmitRequest();
+                sendSubmitRequest(mImageDesc,mImage);
             }
         });
 
@@ -147,8 +149,15 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
             }
         });
 
-        mTotalPointsTextView = (TextView)v.findViewById(R.id.total_points_textView);
 
+        mUploadPhotoButton = (Button) v.findViewById(R.id.upload_photo);
+        mUploadPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivityForResult(new Intent(getActivity(),UploadPhotoFragment.class),REQUEST_IMAGE);
+            }
+        });
 
 
 
@@ -235,7 +244,8 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                         }else{
                             mTotalPoints = mPoints;
                         }
-                        mTotalPointsTextView.setText(Integer.toString(mTotalPoints));
+                        String points = "Total Points: " + mTotalPoints;
+                        mCalculatePointsButton.setText(points);
 
                     }
                 }, new Response.ErrorListener() {
@@ -276,7 +286,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
                         mPoints = Integer.parseInt(response);
 
-                        mTotalPointsTextView.setText(Integer.toString(mPoints));
+                        mCalculatePointsButton.setText("Total Points: " + Integer.toString(mPoints));
 
                     }
                 },
@@ -303,7 +313,7 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
 
     //method used to submit the activity details in the database.
-    private void sendSubmitRequest() {
+    private void sendSubmitRequest(final String imageDesc, final String image) {
 
         //data members used to send the values of various fields of activity in POST request.
         final String erno = SharedPreferencesData.getStoredErno(getActivity());
@@ -338,6 +348,10 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                 params.put("activity_date",date);
                 params.put("activity_level",mActivityLevelString);
                 params.put("activity_points",totalPoints);
+                if(mImage != null && mImage.length()>0) {
+                    params.put("image_desc", imageDesc);
+                    params.put("image", image);
+                }
                 return params;
             }
         };
@@ -390,6 +404,8 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
     //On activity result used fot the date dialog fragment.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
@@ -400,6 +416,12 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
             calendar.setTime(date);
             setDate(date);
             updateDate();
+        }
+
+        if(requestCode == REQUEST_IMAGE){
+            mImage = data.getStringExtra(UploadPhotoFragment.EXTRA_IMAGE);
+            mImageDesc = data.getStringExtra(UploadPhotoFragment.EXTRA_IMAGE_DESC);
+
         }
     }
 

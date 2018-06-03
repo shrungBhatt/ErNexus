@@ -11,7 +11,34 @@ public class AchievementData {
     private int mPoints;
     private String mDate;
     private String mActivityLevel;
+    private String mStatus;
+    private String mImage;
+    private String mImageDesc;
 
+
+    public String getStatus() {
+        return mStatus;
+    }
+
+    public void setStatus(String status) {
+        mStatus = status;
+    }
+
+    public String getImage() {
+        return mImage;
+    }
+
+    public void setImage(String image) {
+        mImage = image;
+    }
+
+    public String getImageDesc() {
+        return mImageDesc;
+    }
+
+    public void setImageDesc(String imageDesc) {
+        mImageDesc = imageDesc;
+    }
 
     public int getId() {
         return mId;

@@ -4,15 +4,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp">
+    android:padding="15dp">
 
     <Button
         android:id="@+id/register_achievement_button"
-        style="@style/TextAppearance.AppCompat.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:background="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimary"
+        android:textAllCaps="false"
         android:text="@string/submit"
         android:textColor="@android:color/white"
         android:textStyle="bold"/>
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:background="@color/colorPrimary"
+                android:backgroundTint="@color/colorPrimary"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"/>
 
@@ -117,27 +117,29 @@
 
             <Button
                 android:id="@+id/calculate_points"
-                style="@style/TextAppearance.AppCompat.Small"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="28dp"
-                android:layout_marginRight="28dp"
-                android:background="@color/colorPrimary"
-                android:padding="8dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:textAllCaps="false"
                 android:text="Calculate Points"
+                android:drawableStart="@drawable/calculate"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/total_points_textView"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/upload_photo"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="28dp"
-                android:layout_marginRight="28dp"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
+                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
+
+                android:backgroundTint="@color/colorAccent"
+                android:textAllCaps="false"
+                android:text="Upload Photo"
+                android:drawableStart="@drawable/upload"
+                android:textColor="@android:color/white"
                 android:textStyle="bold"/>
 
 

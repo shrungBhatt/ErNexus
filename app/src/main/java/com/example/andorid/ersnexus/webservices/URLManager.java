@@ -34,13 +34,4 @@ public class URLManager {
     //This url is used to fetch the JSON of achievements_data from the database.
     public static final String FETCH_ACHIEVEMENT_DATA = URL + "fetch_achievement_data.php";
 
-    /*public static HttpURLConnection getConnection (String url) throws IOException {
-        URL mUrl = new URL(url);
-        HttpURLConnection httpURLConnection = (HttpURLConnection) mUrl.openConnection();
-        httpURLConnection.setRequestMethod("POST");
-        httpURLConnection.setDoOutput(true);
-        httpURLConnection.setDoInput(true);
-
-        return httpURLConnection;
-    }*/
 }
