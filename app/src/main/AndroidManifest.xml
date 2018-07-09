@@ -74,6 +74,9 @@
         <activity android:name=".usersignup.FacultySignUpActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".userprofile.homeactivity.FacultyHomeScreenActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

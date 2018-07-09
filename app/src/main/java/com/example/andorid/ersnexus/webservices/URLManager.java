@@ -34,4 +34,6 @@ public class URLManager {
     //This url is used to register the user.
     public static final String REGISTER_FACULTY = URL + "register_faculty.php";
 
+    //This url is used for login of faculty
+    public static final String LOGIN_FACULTY = URL + "login_faculty.php";
 }

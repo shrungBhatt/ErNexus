@@ -7,8 +7,10 @@ import android.preference.PreferenceManager;
 
 public class SharedPreferencesData {
     private static final String PREF_ERNO = "enrollmentNumber";
+    private static final String PREF_FAC_CODE = "fac_code";
     private static final String PREF_USERNAME = "username";
     private static final String PREF_LOGIN_STATE = "login state";
+    private static final String PREF_FAC_LOGIN_STATE = "fac login state";
     private static final String PREF_CURRENT_TIME_STAMP = "current timeStamp";
 
     public static String getStoredErno(Context context){
@@ -20,6 +22,18 @@ public class SharedPreferencesData {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putString(PREF_ERNO,erno)
+                .apply();
+    }
+
+    public static String getStoredFacCode(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(PREF_FAC_CODE,null);
+    }
+
+    public static void setFacCode(Context context,String erno){
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putString(PREF_FAC_CODE,erno)
                 .apply();
     }
 
@@ -44,6 +58,18 @@ public class SharedPreferencesData {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putBoolean(PREF_LOGIN_STATE,status)
+                .apply();
+    }
+
+    public static Boolean getFacLoginStatus (Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(PREF_FAC_LOGIN_STATE,false);
+    }
+
+    public static void setFacLoginStatus (Context context, Boolean status){
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(PREF_FAC_LOGIN_STATE,status)
                 .apply();
     }
 

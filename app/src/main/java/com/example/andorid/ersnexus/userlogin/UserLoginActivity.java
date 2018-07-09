@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.andorid.ersnexus.R;
+import com.example.andorid.ersnexus.userprofile.homeactivity.FacultyHomeScreenActivity;
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
 import com.example.andorid.ersnexus.usersignup.FacultySignUpActivity;
 import com.example.andorid.ersnexus.usersignup.UserSignUpActivity;
@@ -49,6 +51,7 @@ public class UserLoginActivity extends AppCompatActivity {
     public static Activity mActivity;
     public static Boolean mActive;
 
+    private CheckBox mCheckBox;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,14 +61,20 @@ public class UserLoginActivity extends AppCompatActivity {
 
         mActivity = this;
 
+
+
         Boolean status = SharedPreferencesData.getStoredLoginStatus(UserLoginActivity.this);
         if (status) {
             Intent i = new Intent(UserLoginActivity.this, UserProfileHomeActivity.class);
             startActivity(i);
+        }else if(SharedPreferencesData.getFacLoginStatus(mContext)){
+            startActivity(new Intent(mContext,FacultyHomeScreenActivity.class));
         }
 
         //mHelper = new UserBaseHelper(this);
 
+
+        mCheckBox = (CheckBox) findViewById(R.id.sign_in_as_faculty);
 
         //user UserName editText in activity_user_login
         mUserName = (EditText) findViewById(R.id.login_user_name);
@@ -109,43 +118,12 @@ public class UserLoginActivity extends AppCompatActivity {
                     pass = mUserPassword.getText().toString();
 
 
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, URLManager.
-                            LOGIN_URL, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            if (response != null &&
-                                    !response.equals("Wrong Username or Password")) {
-                                SharedPreferencesData.setStoredLoginStatus(mContext, true);
-                                SharedPreferencesData.setStoredErno(mContext, response);
-                                mContext.startActivity(new Intent(mContext,
-                                        UserProfileHomeActivity.class));
-                            } else {
-                                Toast.makeText(mContext, "Wrong Username or Password!",
-                                        Toast.LENGTH_SHORT)
-                                        .show();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(UserLoginActivity.this, error.toString(),
-                                    Toast.LENGTH_SHORT).show();
+                    if(mCheckBox.isChecked()){
+                        loginFaculty(userName,pass);
+                    }else{
+                        loginStudent(userName,pass);
+                    }
 
-                        }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() {
-                            Map<String, String> params = new HashMap<>();
-                            params.put(KEY_USERNAME, userName);
-                            params.put(KEY_PASSWORD, pass);
-                            return params;
-                        }
-                    };
-
-                    SharedPreferencesData.setStoredUsername(UserLoginActivity.this, userName);
-
-                    RequestQueue requestQueue = Volley.newRequestQueue(UserLoginActivity.this);
-                    requestQueue.add(stringRequest);
 
                 } else {
                     Toast.makeText(UserLoginActivity.this,
@@ -154,6 +132,90 @@ public class UserLoginActivity extends AppCompatActivity {
 
             }
         });
+
+
+    }
+
+    private void loginStudent(final String userName, final String pass){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URLManager.
+                LOGIN_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (response != null &&
+                        !response.equals("Wrong Username or Password")) {
+                    SharedPreferencesData.setStoredLoginStatus(mContext, true);
+                    SharedPreferencesData.setStoredErno(mContext, response);
+                    mContext.startActivity(new Intent(mContext,
+                            UserProfileHomeActivity.class));
+                } else {
+                    Toast.makeText(mContext, "Wrong Username or Password!",
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(UserLoginActivity.this, error.toString(),
+                        Toast.LENGTH_SHORT).show();
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put(KEY_USERNAME, userName);
+                params.put(KEY_PASSWORD, pass);
+                return params;
+            }
+        };
+
+        SharedPreferencesData.setStoredUsername(UserLoginActivity.this, userName);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(UserLoginActivity.this);
+        requestQueue.add(stringRequest);
+    }
+
+    private void loginFaculty(final String userName, final String pass){
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                URLManager.LOGIN_FACULTY,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null &&
+                                !response.equals("Wrong Username or Password")) {
+//                            SharedPreferencesData.setStoredLoginStatus(mContext, true);
+                            SharedPreferencesData.setFacLoginStatus(mContext,true);
+                            SharedPreferencesData.setFacCode(mContext, response);
+                            mContext.startActivity(new Intent(mContext,
+                                    FacultyHomeScreenActivity.class));
+                        } else {
+                            Toast.makeText(mContext, "Wrong Username or Password!",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(UserLoginActivity.this, error.toString(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put(KEY_USERNAME, userName);
+                params.put(KEY_PASSWORD, pass);
+                return params;
+            }
+
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
 
     }
 
