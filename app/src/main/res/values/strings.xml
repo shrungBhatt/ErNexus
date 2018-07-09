@@ -3,7 +3,8 @@
     <string name="password">Password</string>
     <string name="username">Username</string>
     <string name="login">Login</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="sign_up_as_student">Sign up as a student</string>
+    <string name="sign_up_as_faculty">Sign up as a faculty</string>
     <string name="enrollment_number">Enrollment Number</string>
     <string name="user_name">User Name:</string>
     <string name="full_name">Full Name :</string>
@@ -29,6 +30,9 @@
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="achievements_description_editText">Description</string>
     <string name="are_you_a_winner">Are you a winner?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="faculty_code">Faculty Code</string>
+    <string name="faculty_name">Name</string>
     <string-array name="sort_attendance_by">
         <item>Sort By</item>
         <item>Subject Code</item>

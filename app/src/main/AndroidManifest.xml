@@ -71,6 +71,8 @@
         <activity android:name=".userprofile.tabs.achievements.UploadPhotoFragment"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".usersignup.FacultySignUpActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 

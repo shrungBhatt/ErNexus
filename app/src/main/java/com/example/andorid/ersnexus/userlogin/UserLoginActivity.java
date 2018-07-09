@@ -19,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
+import com.example.andorid.ersnexus.usersignup.FacultySignUpActivity;
 import com.example.andorid.ersnexus.usersignup.UserSignUpActivity;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
 import com.example.andorid.ersnexus.webservices.URLManager;
@@ -38,6 +39,7 @@ public class UserLoginActivity extends AppCompatActivity {
     private EditText mUserPassword;
     private Button mLoginButton;
     private Button mSignUpButton;
+    private Button mFacultySignup;
     //private UserBaseHelper mHelper;
     private String userName;
     private String pass;
@@ -50,7 +52,7 @@ public class UserLoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_login);
+        setContentView(R.layout.activity_new_login);
 
         mContext = this;
 
@@ -74,7 +76,7 @@ public class UserLoginActivity extends AppCompatActivity {
 
 
         //SignUp button
-        mSignUpButton = (Button) findViewById(R.id.sign_up_button);
+        mSignUpButton = (Button) findViewById(R.id.sign_up_as_a_student_button);
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,6 +85,17 @@ public class UserLoginActivity extends AppCompatActivity {
 
             }
         });
+
+        mFacultySignup = (Button) findViewById(R.id.sign_up_as_a_faculty_button);
+        mFacultySignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(UserLoginActivity.this,
+                        FacultySignUpActivity.class));
+            }
+        });
+
+
 
 
         //Login Button
