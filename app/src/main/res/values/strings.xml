@@ -33,6 +33,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="faculty_code">Faculty Code</string>
     <string name="faculty_name">Name</string>
+    <string name="subect_code">Subject Code</string>
     <string-array name="sort_attendance_by">
         <item>Sort By</item>
         <item>Subject Code</item>

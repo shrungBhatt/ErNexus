@@ -77,6 +77,9 @@
         <activity android:name=".userprofile.homeactivity.FacultyHomeScreenActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".faculty_dashboard.QrCodeGeneratorActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>
