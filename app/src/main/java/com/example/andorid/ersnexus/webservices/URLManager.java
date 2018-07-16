@@ -31,6 +31,9 @@ public class URLManager {
     //This url is used to fetch the JSON of achievements_data from the database.
     public static final String FETCH_ACHIEVEMENT_DATA = URL + "fetch_achievement_data.php";
 
+    //This url is used to fatch all the assignments for faculty dashboard list
+    public static final String FETCH_ALL_ACHIEVEMENT_DATA = URL + "fetch_all_achievement_data.php";
+
     //This url is used to register the user.
     public static final String REGISTER_FACULTY = URL + "register_faculty.php";
 

@@ -1,20 +1,50 @@
 package com.example.andorid.ersnexus.models;
 
 
+import com.google.gson.annotations.SerializedName;
+
 //Model class of AchievementData.
 public class AchievementData {
 
+    @SerializedName("id")
     private int mId;
+
+    @SerializedName("activity_description")
     private String mDescription;
+
+    @SerializedName("activity_name")
     private String mActivity;
+
+    @SerializedName("sub_activity")
     private String mSubActivity;
+
+    @SerializedName("activity_points")
     private int mPoints;
+
+    @SerializedName("activity_date")
     private String mDate;
+
+    @SerializedName("activity_level")
     private String mActivityLevel;
+
+    @SerializedName("status")
     private String mStatus;
+
+    @SerializedName("activity_image")
     private String mImage;
     private String mImageDesc;
 
+    @SerializedName("enrollmentnumber")
+    private String mErno;
+
+
+    public String getErno() {
+        return mErno;
+    }
+
+    public void setErno(String erno) {
+        mErno = erno;
+    }
 
     public String getStatus() {
         return mStatus;

@@ -4,6 +4,7 @@ public class Const {
 
     public static final int Pending = 0;
     public static final int Approved = 1;
+    public static final int Rejected = 2;
 
     public static final int OpenCamera = 100;
 

@@ -9,4 +9,10 @@
     <color name="darkgray">#777</color>
     <color name="pending">#dab03e</color>
     <color name="approved">#00923f</color>
+    <color name="card_background">#eee</color>
+
+    <color name="rejected">#e94848</color>
+    <color name="postponed">#2390d5</color>
+    <color name="brown">#b17f31</color>
+    <color name="dark_blue">#217ba0</color>
 </resources>

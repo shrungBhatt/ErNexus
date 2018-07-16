@@ -9,4 +9,10 @@
     <dimen name="layout_marginRight">12dp</dimen>
     <dimen name="layout_marginTop">12dp</dimen>
     <dimen name="layout_marginBottom">12dp</dimen>
+
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
 </resources>
