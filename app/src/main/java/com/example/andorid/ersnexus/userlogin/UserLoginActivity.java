@@ -214,6 +214,9 @@ public class UserLoginActivity extends AppCompatActivity {
 
         };
 
+        SharedPreferencesData.setStoredUsername(UserLoginActivity.this, userName);
+
+
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
 
