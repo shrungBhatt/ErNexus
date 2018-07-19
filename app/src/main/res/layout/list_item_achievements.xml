@@ -50,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/holo_green_dark"
                 android:text="Approve"
+                android:visibility="gone"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_gravity="center_vertical"

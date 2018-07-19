@@ -39,4 +39,7 @@ public class URLManager {
 
     //This url is used for login of faculty
     public static final String LOGIN_FACULTY = URL + "login_faculty.php";
+
+    //This url is used to update the faculty status..
+    public static final String UPDATE_ACHIEVEMENT_STATUS = URL + "update_achievement_status.php";
 }

@@ -99,4 +99,10 @@ public class AchievementsRecordActivity extends AppCompatActivity implements Int
     public void updateStatus(String activityId, int statusId) {
         Toast.makeText(getApplicationContext(),"Click received",Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onClick(AchievementDataGSON.List achievementDataGSON, int position) {
+        startActivity(ViewAchievementActivity.newIntent(this,achievementDataGSON,position));
+
+    }
 }

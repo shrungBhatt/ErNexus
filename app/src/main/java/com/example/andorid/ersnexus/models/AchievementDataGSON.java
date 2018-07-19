@@ -3,9 +3,10 @@ package com.example.andorid.ersnexus.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class AchievementDataGSON {
+public class AchievementDataGSON implements Serializable{
 
 
     @SerializedName("list")
@@ -20,7 +21,7 @@ public class AchievementDataGSON {
         this.list = list;
     }
 
-    public class List {
+    public class List implements Serializable{
 
         @SerializedName("id")
         @Expose

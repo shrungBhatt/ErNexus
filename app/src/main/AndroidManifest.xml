@@ -83,6 +83,9 @@
         <activity android:name=".faculty_dashboard.AchievementsRecordActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".faculty_dashboard.ViewAchievementActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

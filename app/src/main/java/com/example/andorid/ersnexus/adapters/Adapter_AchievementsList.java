@@ -44,7 +44,7 @@ public class Adapter_AchievementsList extends RecyclerView.Adapter<Adapter_Achie
     }
 
     @Override
-    public void onBindViewHolder(Viewholder_Achievements holder, final int position) {
+    public void onBindViewHolder(final Viewholder_Achievements holder, final int position) {
 
         appointmentStatusDisplay(holder,position,mContext);
         holder.bindData(mAchievementDatas.get(position));
@@ -54,6 +54,13 @@ public class Adapter_AchievementsList extends RecyclerView.Adapter<Adapter_Achie
             public void onClick(View view) {
                 mInterfaceStatusChangeListener.updateStatus(mAchievementDatas.get(position).getId(),
                         Const.Approved);
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mInterfaceStatusChangeListener.onClick(mAchievementDatas.get(position), position);
             }
         });
 
@@ -73,7 +80,7 @@ public class Adapter_AchievementsList extends RecyclerView.Adapter<Adapter_Achie
 
         switch (statusId) {
             case Const.Pending:
-                holder.mStatusButton.setVisibility(View.VISIBLE);
+                holder.mStatusButton.setVisibility(View.GONE);
                 setData(holder,context.getResources().getColor(R.color.pending),
                         context.getResources().getColor(R.color.pending),
                         HashMapGenerator.getStatusFromHashMap(statusId),icon);
