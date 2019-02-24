@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -23,6 +24,7 @@ import com.example.andorid.ersnexus.userprofile.homeactivity.FacultyHomeScreenAc
 import com.example.andorid.ersnexus.userprofile.homeactivity.UserProfileHomeActivity;
 import com.example.andorid.ersnexus.usersignup.FacultySignUpActivity;
 import com.example.andorid.ersnexus.usersignup.UserSignUpActivity;
+import com.example.andorid.ersnexus.util.BaseActivity;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
 import com.example.andorid.ersnexus.webservices.URLManager;
 
@@ -33,7 +35,10 @@ import java.util.Map;
 //This is the main activity of the app.
 //It is the user login screen where users logs in or sign up's.
 
-public class UserLoginActivity extends AppCompatActivity {
+public class UserLoginActivity extends BaseActivity {
+
+
+    private final String TAG = "UserLoginActivity";
 
     private static final String KEY_USERNAME = "username";
     private static final String KEY_PASSWORD = "password";
@@ -42,6 +47,7 @@ public class UserLoginActivity extends AppCompatActivity {
     private Button mLoginButton;
     private Button mSignUpButton;
     private Button mFacultySignup;
+    private ImageView mAppLogo;
     //private UserBaseHelper mHelper;
     private String userName;
     private String pass;
@@ -133,14 +139,19 @@ public class UserLoginActivity extends AppCompatActivity {
             }
         });
 
+        mAppLogo = findViewById(R.id.app_logo_iv);
+
+        initSoftKeyboardListener(mAppLogo);
 
     }
 
     private void loginStudent(final String userName, final String pass){
+        showProgressBar(TAG);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URLManager.
                 LOGIN_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                hideProgressBar();
                 if (response != null &&
                         !response.equals("Wrong Username or Password")) {
                     SharedPreferencesData.setStoredLoginStatus(mContext, true);
@@ -156,6 +167,7 @@ public class UserLoginActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                hideProgressBar();
                 Toast.makeText(UserLoginActivity.this, error.toString(),
                         Toast.LENGTH_SHORT).show();
 
@@ -177,12 +189,13 @@ public class UserLoginActivity extends AppCompatActivity {
     }
 
     private void loginFaculty(final String userName, final String pass){
-
+        showProgressBar(TAG);
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 URLManager.LOGIN_FACULTY,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        hideProgressBar();
                         if (response != null &&
                                 !response.equals("Wrong Username or Password")) {
 //                            SharedPreferencesData.setStoredLoginStatus(mContext, true);
@@ -199,6 +212,7 @@ public class UserLoginActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                hideProgressBar();
                 Toast.makeText(UserLoginActivity.this, error.toString(),
                         Toast.LENGTH_SHORT).show();
             }
