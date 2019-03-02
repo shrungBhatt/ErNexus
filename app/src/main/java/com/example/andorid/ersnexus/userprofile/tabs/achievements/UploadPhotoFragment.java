@@ -49,7 +49,7 @@ public class UploadPhotoFragment extends AppCompatActivity {
     private ImageView mDocumentsImageView;
     private TextView mUploadDocumentTv;
     private Button mOkButton;
-    private String mImage;
+    private Bitmap mImage;
 
 
     @Override
@@ -63,22 +63,13 @@ public class UploadPhotoFragment extends AppCompatActivity {
         mOkButton = (Button) findViewById(R.id.ok_button);
 
 
-        mUploadDocumentImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                requestPersmission();
-            }
-        });
+        mUploadDocumentImage.setOnClickListener(view -> requestPersmission());
 
-        mOkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.putExtra(EXTRA_IMAGE,mImage);
-                intent.putExtra(EXTRA_IMAGE_DESC, UUID.randomUUID()+"img");
-                setResult(RESULT_OK,intent);
-                finish();
-            }
+        mOkButton.setOnClickListener(view -> {
+            AddAchievementFragment.setmImage(getImage());
+            AddAchievementFragment.setmImageDesc(UUID.randomUUID() + "img");
+            setResult(RESULT_OK);
+            finish();
         });
 
     }
@@ -90,14 +81,9 @@ public class UploadPhotoFragment extends AppCompatActivity {
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CAMERA)) {
             new AlertDialog.Builder(this)
-                    .setMessage("EM needs storage, location, camera,sms permissions in order to use all functionality")
+                    .setMessage("ErNexus needs storage permission in order to take photo")
                     .setCancelable(false)
-                    .setPositiveButton("Give Permission", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            requestReadStoragePermission();
-                        }
-                    })
+                    .setPositiveButton("Give Permission", (dialogInterface, i) -> requestReadStoragePermission())
                     .create().show();
         } else {
             requestReadStoragePermission();
@@ -174,7 +160,7 @@ public class UploadPhotoFragment extends AppCompatActivity {
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.fromFile(out));
                     mDocumentsImageView.setImageBitmap(bitmap);
-                    setImage(getStringImage(bitmap));
+                    setImage(bitmap);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -191,11 +177,11 @@ public class UploadPhotoFragment extends AppCompatActivity {
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
-    public String getImage() {
+    public Bitmap getImage() {
         return mImage;
     }
 
-    public void setImage(String image) {
+    public void setImage(Bitmap image) {
         mImage = image;
     }
 }

@@ -2,6 +2,7 @@ package com.example.andorid.ersnexus.userprofile.tabs.achievements;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -26,10 +30,16 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.util.ActivitiesHashMap;
+import com.example.andorid.ersnexus.util.BaseFragment;
 import com.example.andorid.ersnexus.util.DatePickerFragment;
 import com.example.andorid.ersnexus.util.SharedPreferencesData;
+import com.example.andorid.ersnexus.util.VolleyMultipartRequest;
 import com.example.andorid.ersnexus.webservices.URLManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,7 +48,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-public class AddAchievementFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class AddAchievementFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
 
     private static final String TAG = "AddAchievementFragment";
     private static final int REQUEST_DATE = 0;
@@ -71,9 +81,24 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
     private Button mUploadPhotoButton;
 
     private boolean mCalculateButtonToggle;
-    private String mImageDesc,mImage;
+    private static String mImageDesc;
+    public static Bitmap mImage;
 
+    public static String getmImageDesc() {
+        return mImageDesc;
+    }
 
+    public static void setmImageDesc(String mImageDesc) {
+        AddAchievementFragment.mImageDesc = mImageDesc;
+    }
+
+    public static Bitmap getmImage() {
+        return mImage;
+    }
+
+    public static void setmImage(Bitmap mImage) {
+        AddAchievementFragment.mImage = mImage;
+    }
 
     //variable used to change the dateFormat.
     DateFormat formatDate = DateFormat.getDateInstance();
@@ -128,21 +153,21 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         mActivitySubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendSubmitRequest(mImageDesc,mImage);
+                sendSubmitRequest(mImageDesc, mImage);
             }
         });
 
-        mCalculatePointsButton = (Button)v.findViewById(R.id.calculate_points);
+        mCalculatePointsButton = (Button) v.findViewById(R.id.calculate_points);
         mCalculatePointsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mSubActivitySelectedPosition == 0){
-                    Toast.makeText(getActivity(),"Select Sub-type of activity",Toast.LENGTH_SHORT).
+                if (mSubActivitySelectedPosition == 0) {
+                    Toast.makeText(getActivity(), "Select Sub-type of activity", Toast.LENGTH_SHORT).
                             show();
-                }else {
-                    if(mActivitySelectedPosition == 5){
+                } else {
+                    if (mActivitySelectedPosition == 5) {
                         fetchActivityA6Points();
-                    }else {
+                    } else {
                         fetchActivityPointsRequest();
                     }
                 }
@@ -155,10 +180,9 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
             @Override
             public void onClick(View view) {
 
-                startActivityForResult(new Intent(getActivity(),UploadPhotoFragment.class),REQUEST_IMAGE);
+                startActivityForResult(new Intent(getActivity(), UploadPhotoFragment.class), REQUEST_IMAGE);
             }
         });
-
 
 
         return v;
@@ -220,13 +244,13 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
     //method used to fetch the activity points from the database.
     private void fetchActivityPointsRequest() {
-        ConcurrentHashMap<String,Integer> mSubActivityHashMap = ActivitiesHashMap.
+        ConcurrentHashMap<String, Integer> mSubActivityHashMap = ActivitiesHashMap.
                 generateActivityHashMap();
         final String activityId = mSubActivityHashMap.get(mSubActivityString).toString();
 
 
         //HashMap used to get the sub activity name and activity level.
-        ConcurrentHashMap<String,String> mActivityLevelMap = ActivitiesHashMap.
+        ConcurrentHashMap<String, String> mActivityLevelMap = ActivitiesHashMap.
                 getActivityLevelMap();
         final String activityLevel = mActivityLevelMap.get(mActivityLevelString);
 
@@ -239,9 +263,9 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
                         //store the response in the form of integer as what we get in response is the points.
                         mPoints = Integer.parseInt(response);
                         //condition used to increase the total points by 3 if the winner checkbox is ticked.
-                        if(mWinnerCheckbox.isChecked()){
+                        if (mWinnerCheckbox.isChecked()) {
                             mTotalPoints = mPoints + 3;
-                        }else{
+                        } else {
                             mTotalPoints = mPoints;
                         }
                         String points = "Total Points: " + mTotalPoints;
@@ -267,36 +291,27 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         requestQueue.add(stringRequest);
     }
 
-    private void fetchActivityA6Points(){
-        ConcurrentHashMap<String,Integer> mSubActivityHashMap = ActivitiesHashMap.
+    private void fetchActivityA6Points() {
+        ConcurrentHashMap<String, Integer> mSubActivityHashMap = ActivitiesHashMap.
                 getActivityA6HashMap();
         final String activityId = mSubActivityHashMap.get(mSubActivityString).toString();
 
 
         //HashMap used to get the sub activity name and activity level.
-        ConcurrentHashMap<String,String> mActivityLevelMap = ActivitiesHashMap.
+        ConcurrentHashMap<String, String> mActivityLevelMap = ActivitiesHashMap.
                 getmActivityA6LevelHashMap();
         final String activityLevel = mActivityLevelMap.get(mActivityLevelString);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 URLManager.FETCH_ACTIVITY_A6_POINTS,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+                response -> {
 
-                        mPoints = Integer.parseInt(response);
+                    mPoints = Integer.parseInt(response);
 
-                        mCalculatePointsButton.setText("Total Points: " + Integer.toString(mPoints));
+                    mCalculatePointsButton.setText("Total Points: " + Integer.toString(mPoints));
 
-                    }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e(TAG, "Fetch Activity Points A6 Error: " + error.toString());
-
-                    }
-                }){
+                error -> Log.e(TAG, "Fetch Activity Points A6 Error: " + error.toString())) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -313,8 +328,9 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
 
 
     //method used to submit the activity details in the database.
-    private void sendSubmitRequest(final String imageDesc, final String image) {
+    private void sendSubmitRequest(final String imageDesc, final Bitmap image) {
 
+        showProgressBar(TAG);
         //data members used to send the values of various fields of activity in POST request.
         final String erno = SharedPreferencesData.getStoredErno(getActivity());
         final String date = mActivityDateButton.getText().toString();
@@ -322,43 +338,55 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
         final String totalPoints = Integer.toString(mTotalPoints);
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+        VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST,
                 URLManager.SUBMIT_ACTIVITY,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.e(TAG,"sendSubmitRequest: "+response);
-                        Toast.makeText(getActivity(),"Submitted !",Toast.LENGTH_SHORT).show();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG,"Submit Error:"+error.toString());
-
-            }
-        }) {
+                response -> {
+                    hideProgressBar();
+                    Log.e(TAG, "sendSubmitRequest: " + response);
+                    Toast.makeText(getActivity(), "Submitted !", Toast.LENGTH_SHORT).show();
+                },
+                error -> {
+                    hideProgressBar();
+                    Log.e(TAG, "Submit Error:" + error.toString());
+                }) {
 
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("enrollmentnumber",erno);
-                params.put("activity_name",mActivityString);
-                params.put("sub_activity",mSubActivityString);
-                params.put("activity_description",description);
-                params.put("activity_date",date);
-                params.put("activity_level",mActivityLevelString);
-                params.put("activity_points",totalPoints);
-                if(mImage != null && mImage.length()>0) {
-                    params.put("image_desc", imageDesc);
-                    params.put("image", image);
-                }
+                params.put("enrollmentnumber", erno.trim());
+                params.put("activity_name", mActivityString.trim());
+                params.put("sub_activity", mSubActivityString.trim());
+                params.put("activity_description", description.trim());
+                params.put("activity_date", date.trim());
+                params.put("activity_level", mActivityLevelString.trim());
+                params.put("activity_points", totalPoints.trim());
+                params.put("image_desc", mImageDesc.trim());
+                return params;
+            }
+
+            @Override
+            protected Map<String, DataPart> getByteData() {
+                Map<String, DataPart> params = new HashMap<>();
+                params.put("image", new DataPart(imageDesc + ".jpg", getFileDataFromBitmap(image)));
                 return params;
             }
         };
 
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        requestQueue.add(stringRequest);
 
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        volleyMultipartRequest.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(volleyMultipartRequest);
+
+
+    }
+
+    public byte[] getFileDataFromBitmap(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
     }
 
 
@@ -418,11 +446,11 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
             updateDate();
         }
 
-        if(requestCode == REQUEST_IMAGE){
-            mImage = data.getStringExtra(UploadPhotoFragment.EXTRA_IMAGE);
-            mImageDesc = data.getStringExtra(UploadPhotoFragment.EXTRA_IMAGE_DESC);
-
-        }
+//        if (requestCode == REQUEST_IMAGE) {
+//            mImage = data.getStringExtra(UploadPhotoFragment.EXTRA_IMAGE);
+//            mImageDesc = data.getStringExtra(UploadPhotoFragment.EXTRA_IMAGE_DESC);
+//
+//        }
     }
 
     //Method used to set the simple style of selected data.
@@ -432,11 +460,11 @@ public class AddAchievementFragment extends Fragment implements AdapterView.OnIt
     }
 
     //Method used to disable the checkBox if activities other than A2 and A3 are selected.
-    private void activityWinnerConditionCheck(){
-        if(mActivitySelectedPosition == 0 || mActivitySelectedPosition == 3 ||
-                mActivitySelectedPosition == 4 || mActivitySelectedPosition == 5){
+    private void activityWinnerConditionCheck() {
+        if (mActivitySelectedPosition == 0 || mActivitySelectedPosition == 3 ||
+                mActivitySelectedPosition == 4 || mActivitySelectedPosition == 5) {
             mWinnerCheckbox.setEnabled(false);
-        }else{
+        } else {
             mWinnerCheckbox.setEnabled(true);
         }
 
