@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,12 +18,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.andorid.ersnexus.R;
 import com.example.andorid.ersnexus.userlogin.UserLoginActivity;
+import com.example.andorid.ersnexus.util.BaseActivity;
 import com.example.andorid.ersnexus.webservices.URLManager;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FacultySignUpActivity extends AppCompatActivity {
+public class FacultySignUpActivity extends BaseActivity {
 
 
     private EditText mFacultyCodeEdtTxt;
@@ -31,6 +33,7 @@ public class FacultySignUpActivity extends AppCompatActivity {
     private EditText mConfirmPasswordEdtTxt;
 
     private Button mSubmitButton;
+    private String TAG = "FacultySignUp";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,7 +77,7 @@ public class FacultySignUpActivity extends AppCompatActivity {
 
 
     private void registerFaculty() {
-
+        showProgressBar(TAG);
         final String facCode = mFacultyCodeEdtTxt.getText().toString().trim();
         final String facName = mFacultyNameEdtTxt.getText().toString().trim();
         final String facPass = mFacultyPasswordEdtTxt.getText().toString().trim();
@@ -82,26 +85,20 @@ public class FacultySignUpActivity extends AppCompatActivity {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 URLManager.REGISTER_FACULTY,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        if(response.equals("Insert SuccessFul")){
-                            Toast.makeText(getApplicationContext(),"Registration Successful",Toast.LENGTH_SHORT).show();
-                            onBackPressed();
-                        }else{
-                            Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
-
-                        }
+                response -> {
+                    hideProgressBar();
+                    if (response.trim().equals("Insert SuccessFul")) {
+                        Toast.makeText(getApplicationContext(), "Registration Successful", Toast.LENGTH_SHORT).show();
+                        onBackPressed();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Something Went Wrong", Toast.LENGTH_SHORT).show();
 
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
 
-                throw new RuntimeException(error.getMessage());
+                }, error -> {
+            hideProgressBar();
+            Log.e(TAG, error.getMessage());
 
-            }
         }) {
 
             @Override
