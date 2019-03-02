@@ -50,5 +50,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.2.4'
     implementation 'com.jsibbold:zoomage:1.1.0'
     implementation 'com.squareup.picasso:picasso:2.3.2'
+    implementation 'com.mobsandgeeks:android-saripaar:2.0.0'
+
 }
 apply plugin: 'com.google.gms.google-services'

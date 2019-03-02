@@ -11,6 +11,6 @@ public class UserSignUpActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment(){
-        return new UserSignUpFragment();
+        return new UserSignUpFragmentNew();
     }
 }
