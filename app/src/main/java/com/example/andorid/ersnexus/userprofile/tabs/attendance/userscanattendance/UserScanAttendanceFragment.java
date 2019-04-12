@@ -3,6 +3,7 @@ package com.example.andorid.ersnexus.userprofile.tabs.attendance.userscanattenda
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,8 @@ import java.util.Map;
 //This class is used for scanning the Qr code and submitting the attendance to the database.
 
 public class UserScanAttendanceFragment extends Fragment {
+
+    private static final String TAG = "UserScanFragment";
 
     private static final String KEY_SUBJECT_CODE = "subjectCode";
     private static final String KEY_FACULTY_CODE = "facultyCode";
@@ -86,55 +89,47 @@ public class UserScanAttendanceFragment extends Fragment {
         mDate.setText(formatDate.format(date));
 
         mSubmitButton = (Button) v.findViewById(R.id.attendance_submit_button);
-        mSubmitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mSubmitButton.setOnClickListener(v1 -> {
 
-                if (mSubjectCode.length() == 0 && mFacultyCode.length() == 0) {
-                    Toast.makeText(getActivity(), "Scan Attendance First", Toast.LENGTH_SHORT).
-                            show();
-                } else {
+            if (mSubjectCode.length() == 0 && mFacultyCode.length() == 0) {
+                Toast.makeText(getActivity(), "Scan Attendance First", Toast.LENGTH_SHORT).
+                        show();
+            } else {
 
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                            URLManager.REGISTER_ATTENDANCE_URL,
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
+                StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                        URLManager.REGISTER_ATTENDANCE_URL,
+                        response -> {
 
-                                    if (response.equals("Insert Successful")) {
-                                        Toast.makeText(getActivity(),
-                                                "Submitted", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getActivity(),
-                                                UserProfileHomeActivity.class);
-                                        startActivity(intent);
-                                        getActivity().finish();
-                                    }
+                            if (response.trim().equals("Insert Successful")) {
+                                Toast.makeText(getActivity(),
+                                        "Submitted", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getActivity(),
+                                        UserProfileHomeActivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                            }else{
+                                Toast.makeText(getActivity(),"Submit attendance failure", Toast.LENGTH_SHORT).show();
+                            }
 
-                                }
-                            },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
+                        },
+                        error ->
+                                Log.e("VolleyError!",error.getMessage())) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("enrollmentnumber", erNo);
+                        params.put("subject_code", subjectCode);
+                        params.put("faculty_code", facultyCode);
+                        params.put("date", mDate.getText().toString());
 
-                                }
-                            }) {
-                        @Override
-                        protected Map<String, String> getParams() {
-                            Map<String, String> params = new HashMap<>();
-                            params.put("enrollmentnumber", erNo);
-                            params.put("subject_code", subjectCode);
-                            params.put("faculty_code", facultyCode);
-                            params.put("date", mDate.getText().toString());
-
-                            return params;
-                        }
+                        return params;
+                    }
 
 
-                    };
+                };
 
-                    RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-                    requestQueue.add(stringRequest);
-                }
+                RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+                requestQueue.add(stringRequest);
             }
         });
 

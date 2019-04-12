@@ -261,7 +261,7 @@ public class AddAchievementFragment extends BaseFragment implements AdapterView.
                     @Override
                     public void onResponse(String response) {
                         //store the response in the form of integer as what we get in response is the points.
-                        mPoints = Integer.parseInt(response);
+                        mPoints = Integer.parseInt(response.trim());
                         //condition used to increase the total points by 3 if the winner checkbox is ticked.
                         if (mWinnerCheckbox.isChecked()) {
                             mTotalPoints = mPoints + 3;
@@ -306,7 +306,7 @@ public class AddAchievementFragment extends BaseFragment implements AdapterView.
                 URLManager.FETCH_ACTIVITY_A6_POINTS,
                 response -> {
 
-                    mPoints = Integer.parseInt(response);
+                    mPoints = Integer.parseInt(response.trim());
 
                     mCalculatePointsButton.setText("Total Points: " + Integer.toString(mPoints));
 

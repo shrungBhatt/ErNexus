@@ -42,9 +42,14 @@ public class AchievementsRecordActivity extends AppCompatActivity implements Int
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-        fetchAchievements();
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchAchievements();
+    }
 
     private void fetchAchievements() {
 

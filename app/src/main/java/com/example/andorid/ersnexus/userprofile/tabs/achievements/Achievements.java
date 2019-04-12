@@ -88,7 +88,6 @@ public class Achievements extends Fragment {
 
         mTotalPointsTextView = (TextView) v.findViewById(R.id.show_total_points_textView);
 
-        fetchAchievements();
 
         mSwipeRefresh = (PullRefreshLayout) v.findViewById(R.id.swipe_refresh_achievements_tab);
         mSwipeRefresh.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
@@ -154,6 +153,13 @@ public class Achievements extends Fragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(stringRequest);
 
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchAchievements();
 
     }
 

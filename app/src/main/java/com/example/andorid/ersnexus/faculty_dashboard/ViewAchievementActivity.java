@@ -63,7 +63,8 @@ public class ViewAchievementActivity extends AppCompatActivity {
 
         if (mAchievementData != null) {
             if (mAchievementData.getActivityImage() != null && !mAchievementData.getActivityImage().equalsIgnoreCase("")) {
-                Picasso.with(this).load(mAchievementData.getActivityImage()).into(mAchievementDataImageView);
+                Picasso.with(this).load(mAchievementData.getActivityImage())
+                        .into(mAchievementDataImageView);
             }
 
 
@@ -91,9 +92,10 @@ public class ViewAchievementActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if (response.equalsIgnoreCase("Updated status")) {
+                        if (response.trim().equalsIgnoreCase("Updated status")) {
                             Toast.makeText(getApplicationContext(), "Status Updated!",
                                     Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     }
                 }, new Response.ErrorListener() {
