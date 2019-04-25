@@ -155,7 +155,7 @@ public class UserLoginActivity extends BaseActivity {
                 if (response != null &&
                         !response.equals("Wrong Username or Password")) {
                     SharedPreferencesData.setStoredLoginStatus(mContext, true);
-                    SharedPreferencesData.setStoredErno(mContext, response);
+                    SharedPreferencesData.setStoredErno(mContext, response.trim());
                     mContext.startActivity(new Intent(mContext,
                             UserProfileHomeActivity.class));
                 } else {

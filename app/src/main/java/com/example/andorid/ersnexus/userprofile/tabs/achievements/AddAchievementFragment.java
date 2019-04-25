@@ -153,6 +153,8 @@ public class AddAchievementFragment extends BaseFragment implements AdapterView.
         mActivitySubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                mImage.compress(Bitmap.CompressFormat.JPEG, 10, baos);
                 sendSubmitRequest(mImageDesc, mImage);
             }
         });
@@ -385,7 +387,7 @@ public class AddAchievementFragment extends BaseFragment implements AdapterView.
 
     public byte[] getFileDataFromBitmap(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
 
